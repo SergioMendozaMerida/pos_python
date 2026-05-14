@@ -41,14 +41,16 @@ class VentanaInventario(tk.Frame):
         label_frame.pack(fill="x")
 
         tk.Label(label_frame, text="Nombre:", bg=self.color_fondo, fg=self.color_primario, font=("Arial", 9)).pack(side="left", padx=(0, 5))
-        entry_nombre = tk.Entry(label_frame, width=20, font=("Arial", 9))
-        entry_nombre.pack(side="left", padx=(0, 20))
-        entry_nombre.bind("<Return>", lambda e:self.buscar_producto(entry_nombre.get(), entry_descripcion.get()))
+        self.entry_nombre = tk.Entry(label_frame, width=20, font=("Arial", 9))
+        self.entry_nombre.pack(side="left", padx=(0, 20))
+        self.entry_nombre.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
+        self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
 
         tk.Label(label_frame, text="Descripción:", bg=self.color_fondo, fg=self.color_primario, font=("Arial", 9)).pack(side="left", padx=(0, 5))
-        entry_descripcion = tk.Entry(label_frame, width=20, font=("Arial", 9))
-        entry_descripcion.pack(side="left", padx=(0, 20))
-        entry_descripcion.bind("<Return>", lambda e:self.buscar_producto(entry_nombre.get(), entry_descripcion.get()))
+        self.entry_descripcion = tk.Entry(label_frame, width=20, font=("Arial", 9))
+        self.entry_descripcion.pack(side="left", padx=(0, 20))
+        self.entry_descripcion.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
+        self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
 
         btn_buscar = tk.Button(
             label_frame, 
@@ -57,7 +59,7 @@ class VentanaInventario(tk.Frame):
             fg="white",
             font=("Arial", 9, "bold"),
             padx=15,
-            command=lambda: self.buscar_producto(entry_nombre.get(), entry_descripcion.get())
+            command=lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get())
         )
         btn_buscar.pack(side="left")
 
@@ -160,6 +162,13 @@ class VentanaInventario(tk.Frame):
 
         self.cargar_productos()
 
+        self.timer_id = None
+
+    def iniciar_espera(self, event):
+        if self.timer_id:
+            self.after_cancel(self.timer_id)
+        self.timer_id = self.after(700, lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
+
     def abrir_formulario(self):
         formulario = FP.FormProductos(self, self.inventario, self.actualizar_tabla)
 
@@ -186,8 +195,12 @@ class VentanaInventario(tk.Frame):
                 producto.stock
             ))
 
-    def buscar_producto(self, nombre, descripcion):
-        self.inventario.buscar_producto(nombre,descripcion)
+    def buscar_producto(self, nombre="", descripcion=""):
+        if self.timer_id:
+            self.after_cancel(self.timer_id)
+            self.timer_id = None
+
+        self.inventario.buscar_producto(nombre, descripcion)
         for item in self.tabla_productos.get_children():
             self.tabla_productos.delete(item)
 
