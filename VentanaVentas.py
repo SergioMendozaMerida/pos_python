@@ -304,9 +304,9 @@ class VentanaVentas(tk.Frame):
         )
         btn_finalizar.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
 
-        btn_eliminar_producto = tk.Button(
+        btn_Cantidad = tk.Button(
             self.frame_concretar_venta,
-            text="Remover",
+            text="Cantidad",
             bg=self.danger_color,
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -315,7 +315,7 @@ class VentanaVentas(tk.Frame):
             cursor='hand2',
             command=self.quitar_producto
         )
-        btn_eliminar_producto.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
+        btn_Cantidad.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
 
         btn_cancelar = tk.Button(
             self.frame_concretar_venta,
@@ -452,12 +452,18 @@ class VentanaVentas(tk.Frame):
         item = int(self.tabla_carrito.selection()[0])
         cantidad = simpledialog.askinteger("Remover", "Escriba la cantidad final")
 
-        for p in self.carrito.productos:
-            if p["id_producto"] == item:
-                p["cantidad"] = cantidad
-                messagebox.showinfo("Cantidad", "Cantidad cambiada exitosamente.")
-                self.show_carrito()
-                return
+        if cantidad is not None:
+            for p in self.carrito.productos:
+                if p["id_producto"] == item:
+                    if cantidad == 0:
+                        self.tabla_carrito.delete(item)
+                        return
+                    if cantidad < 0:
+                        messagebox.showerror("Cantidad Invalida", "La Cantidad no puede ser un número negativo.")
+                    p["cantidad"] = cantidad
+                    messagebox.showinfo("Cantidad", "Cantidad cambiada exitosamente.")
+                    self.show_carrito()
+                    return
 
     def show_carrito(self):
         for item in self.tabla_carrito.get_children():
@@ -468,6 +474,11 @@ class VentanaVentas(tk.Frame):
                                                          producto["cantidad"], f"Q  {producto["sub_total"]:.2f}"))
 
     def concretar_venta(self):
+
+        if self.carrito.productos == []:
+            messagebox.showwarning("Carrito vacío", "No hay productos agregados al carrito")
+            return
+
         nombre = self.entry_nombre_cliente.get()
         direccion = self.entry_direccion.get()
         dpi = self.entry_dpi.get()
@@ -476,11 +487,8 @@ class VentanaVentas(tk.Frame):
 
         self.carrito.set_datos_cliente(nombre, direccion, dpi, nit, telefono)
 
-        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito.numero_recibo,self.carrito.total,self.entry_nombre_cliente.get())
+        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito)
         #frm_ter_venta
 
-        self.carrito.concretar_venta()
 
         self.show_carrito()
-
-        messagebox.showinfo("Exito", "Venta registrada exitosamente.")

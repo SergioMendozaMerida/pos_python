@@ -43,10 +43,12 @@ class VentanaInventario(tk.Frame):
         tk.Label(label_frame, text="Nombre:", bg=self.color_fondo, fg=self.color_primario, font=("Arial", 9)).pack(side="left", padx=(0, 5))
         entry_nombre = tk.Entry(label_frame, width=20, font=("Arial", 9))
         entry_nombre.pack(side="left", padx=(0, 20))
+        entry_nombre.bind("<Return>", lambda e:self.buscar_producto(entry_nombre.get(), entry_descripcion.get()))
 
         tk.Label(label_frame, text="Descripción:", bg=self.color_fondo, fg=self.color_primario, font=("Arial", 9)).pack(side="left", padx=(0, 5))
         entry_descripcion = tk.Entry(label_frame, width=20, font=("Arial", 9))
         entry_descripcion.pack(side="left", padx=(0, 20))
+        entry_descripcion.bind("<Return>", lambda e:self.buscar_producto(entry_nombre.get(), entry_descripcion.get()))
 
         btn_buscar = tk.Button(
             label_frame, 
