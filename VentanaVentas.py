@@ -331,9 +331,18 @@ class VentanaVentas(tk.Frame):
         btn_cancelar.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
 
         self.carrito = CV.CarrtioVenta()
+        self.timer_id = None
 
         self.show_productos()
         self.show_carrito()
+
+        self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
+        self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
+
+    def iniciar_espera(self, event):
+        if self.timer_id:
+            self.after_cancel(self.timer_id)
+        self.timer_id = self.after(750, lambda: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get()))
 
     def buscar(self, nombre, descripcion):
         self.inventario.buscar_producto(nombre,descripcion)

@@ -50,7 +50,6 @@ class CarrtioVenta:
                 return True
 
         if cantidad > int(p[7]):
-            print(f"Cantidad no disponible: cantidad actual = {p[7]}.")
             return False
         else: 
             p_carrito = {
