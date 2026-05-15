@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 
 class FrameTerminarVenta(tk.Toplevel):
-    def __init__(self, parent, carrito):
+    def __init__(self, parent, carrito, limpiar_carrito):
         super().__init__(parent)
         self.title("Resumen de Venta")
         self.geometry("400x350")
@@ -10,6 +10,7 @@ class FrameTerminarVenta(tk.Toplevel):
         self.configure(bg="#f0f0f0")
 
         self.carrito = carrito
+        self.limpiar_carrito = limpiar_carrito
 
         if self.carrito.nombre_cliente == "":
             self.carrito.nombre_cliente = "CF"
@@ -77,4 +78,5 @@ class FrameTerminarVenta(tk.Toplevel):
     def concretar_venta(self):
         self.carrito.concretar_venta()
         messagebox.showinfo("Venta exitosa", "Venta registrada exitosamente.")
+        self.limpiar_carrito()
         self.destroy()

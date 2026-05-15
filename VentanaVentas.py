@@ -368,10 +368,16 @@ class VentanaVentas(tk.Frame):
             )
             lbl_nombre.place(x=10, y=10) # 10px de margen desde arriba y la izquierda
 
+            stock_menos_carrito = producto.stock
+
+            for pc in self.carrito.productos:
+                if pc["id_producto"] == producto.id_producto:
+                    stock_menos_carrito = producto.stock - pc["cantidad"]
+
             # Stock: Debajo del nombre
             lbl_stock = tk.Label(
                 frame,
-                text=f"Stock: {producto.stock}", # Añadí la palabra "Stock:" para más claridad
+                text=f"Stock: {stock_menos_carrito}", # Añadí la palabra "Stock:" para más claridad
                 bg="white",
                 fg="#7f8c8d", # Un tono gris para que no compita con el precio
                 font=("Segoe UI", 10)
@@ -408,22 +414,12 @@ class VentanaVentas(tk.Frame):
         
         if cantidad is None:
             return
-        for pr in self.inventario.productos:
-            if producto.id_producto == pr.id_producto:
-                if cantidad > pr.stock:
-                    messagebox.showerror("Error", f"Cantidad no disponible. Cantidad actual: {pr.stock}")
-                    return
-                pr.stock -= cantidad
-                print(pr.stock)
+        
         res = self.carrito.agregar_producto(producto.id_producto, cantidad)
         if res == False:
             messagebox.showerror("Error", "Cantidad No disponible.")
             return
         self.show_carrito()
-        """for p in self.inventario.productos:
-            if p.id_producto == producto.id_producto:
-                p.stock -= cantidad"""
-        #self.inventario.obtener_productos()
         self.show_productos()
         self.entry_nombre.delete(0, tk.END)
         self.entry_descripcion.delete(0, tk.END)
@@ -434,8 +430,7 @@ class VentanaVentas(tk.Frame):
         self.lbl_total.configure(text=f"Q   {self.carrito.total:,.2f}")
 
     def cancelar(self):
-        respuesta = messagebox.askyesno("Cancelar", """¿Está seguro que desea cancelar la venta?
-        Los productos y la información del cliente se borraran.""")
+        respuesta = messagebox.askyesno("Cancelar", "¿Está seguro que desea cancelar la venta? Los productos y la información del cliente se borraran.")
         if respuesta == False:
             return
         
@@ -449,21 +444,22 @@ class VentanaVentas(tk.Frame):
         messagebox.showinfo("Canelado", "La venta se ha cancelado")
 
     def quitar_producto(self):
-        item = int(self.tabla_carrito.selection()[0])
+        selection = self.tabla_carrito.selection()
+
+        if not selection:
+            messagebox.showerror("Error", "Por Favor seleccione un producto.")
+            return
+
+        item = int(selection[0])
+        print(item)
         cantidad = simpledialog.askinteger("Remover", "Escriba la cantidad final")
 
         if cantidad is not None:
-            for p in self.carrito.productos:
-                if p["id_producto"] == item:
-                    if cantidad == 0:
-                        self.tabla_carrito.delete(item)
-                        return
-                    if cantidad < 0:
-                        messagebox.showerror("Cantidad Invalida", "La Cantidad no puede ser un número negativo.")
-                    p["cantidad"] = cantidad
-                    messagebox.showinfo("Cantidad", "Cantidad cambiada exitosamente.")
-                    self.show_carrito()
-                    return
+            respuesta = self.carrito.cambiar_cantidad(cantidad,item)
+            if respuesta == False:
+                messagebox.showerror("Error", "Cantidad no disponible.")
+            self.show_productos()
+            self.show_carrito()
 
     def show_carrito(self):
         for item in self.tabla_carrito.get_children():
@@ -487,8 +483,18 @@ class VentanaVentas(tk.Frame):
 
         self.carrito.set_datos_cliente(nombre, direccion, dpi, nit, telefono)
 
-        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito)
-        #frm_ter_venta
+        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito)
 
+        self.show_carrito()
 
+    def limpiar_carrito(self):
+        for item in self.tabla_carrito.get_children():
+            self.tabla_carrito.delete(item)
+
+        self.entry_nombre_cliente.delete(0, tk.END)
+        self.entry_direccion.delete(0, tk.END)
+        self.entry_nit.delete(0, tk.END)
+        self.entry_dpi.delete(0, tk.END)
+        self.entry_telefono.delete(0, tk.END)
+    
         self.show_carrito()

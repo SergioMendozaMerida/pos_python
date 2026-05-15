@@ -35,16 +35,19 @@ class CarrtioVenta:
         conexion.close()
 
     def agregar_producto(self, id, cantidad):
-        for prod in self.productos:
-            if prod["id_producto"] == id:
-                prod["cantidad"] += cantidad
-                return
             
         conexion = sqlite3.connect("db_inventario.db")
         cursor = conexion.cursor()
         cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
         p = cursor.fetchone()
         conexion.close()
+
+        for prod in self.productos:
+            if prod["id_producto"] == id:
+                if cantidad + prod["cantidad"] > int(p[7]):
+                    return False
+                prod["cantidad"] += cantidad
+                return True
 
         if cantidad > int(p[7]):
             print(f"Cantidad no disponible: cantidad actual = {p[7]}.")
@@ -67,6 +70,21 @@ class CarrtioVenta:
         self.total = 0
         for producto in self.productos:
             self.total += producto["sub_total"]
+
+    def cambiar_cantidad(self, nueva_cantidad, id):
+
+        conexion = sqlite3.connect("db_inventario.db")
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
+        p = cursor.fetchone()
+        conexion.close()
+
+        for prod in self.productos:
+            if prod["id_producto"] == id:
+                if nueva_cantidad > int(p[7]):
+                    return False
+                prod["cantidad"] = nueva_cantidad
+                return True
     
     def cancelar_venta(self):
         self.productos.clear()
