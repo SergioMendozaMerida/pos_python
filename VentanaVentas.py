@@ -244,10 +244,14 @@ class VentanaVentas(tk.Frame):
         self.tabla_carrito.heading('sub_total', text="SubTotal")
         self.tabla_carrito.column('producto', width=300)
         self.tabla_carrito.column('precio', width=100)
-        self.tabla_carrito.column('cantidad', width=100)
-        self.tabla_carrito.column('sub_total', width=90)
+        self.tabla_carrito.column('cantidad', width=50)
+        self.tabla_carrito.column('sub_total', width=140)
         style = ttk.Style()
         style.theme_use("clam") # El tema 'clam' es el más personalizable
+
+        self.scrollbar_table = ttk.Scrollbar(self.tabla_carrito, orient="vertical", command=self.tabla_carrito.yview)
+        self.tabla_carrito.configure(yscrollcommand=self.scrollbar_table.set)
+        self.scrollbar_table.pack(side="right", fill="y")
 
         # Configurar el estilo general de la Tabla (Treeview)
         style.configure("Treeview",
