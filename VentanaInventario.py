@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import Inventario as inv
 import FormProductos as FP
 import EditarProducto as EP
+import FrameIngresoStock as FIS
 
 
 class VentanaInventario(tk.Frame):
@@ -160,6 +161,19 @@ class VentanaInventario(tk.Frame):
         )
         self.btn_eliminar.pack(side="left", padx=(0, 10), pady=10)
 
+        self.btn_ingreso_stock = tk.Button(
+            self.frame_botones,
+            text="📦 Ingreso de Stock",
+            bg="#8e44ad",
+            fg="white",
+            font=("Arial", 11, "bold"),
+            padx=20,
+            pady=12,
+            cursor="hand2",
+            command=self.abrir_ingreso_stock
+        )
+        self.btn_ingreso_stock.pack(side="left", padx=(0, 10), pady=10)
+
         self.cargar_productos()
 
         self.timer_id = None
@@ -171,6 +185,10 @@ class VentanaInventario(tk.Frame):
 
     def abrir_formulario(self):
         formulario = FP.FormProductos(self, self.inventario, self.actualizar_tabla)
+
+    def abrir_ingreso_stock(self):
+        ingreso_stock = FIS.FrameIngresoStock(self, self.inventario, self.actualizar_tabla)
+        ingreso_stock.focus()
 
     def cargar_productos(self):
         self.inventario.obtener_productos()

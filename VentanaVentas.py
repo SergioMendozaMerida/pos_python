@@ -36,7 +36,26 @@ class VentanaVentas(tk.Frame):
         ).place(x=10, y=10)
 
         search_panel = tk.Frame(self.frame_buscar, bg=self.panel_bg, bd=1, relief="solid")
-        search_panel.place(x=10, y=45, width=600, height=42)
+        search_panel.place(x=10, y=45, width=750, height=42)
+
+        tk.Label(
+            search_panel,
+            text="Código:",
+            font=("Segoe UI", 10),
+            bg=self.panel_bg,
+            fg=self.sub_text
+        ).place(x=10, y=10)
+        self.entry_codigo = tk.Entry(
+            search_panel,
+            font=("Segoe UI", 10),
+            bd=0,
+            bg="#f8f9fb",
+            fg=self.text_color,
+            highlightthickness=1,
+            highlightcolor=self.primary_color,
+            highlightbackground=self.border_color
+        )
+        self.entry_codigo.place(x=70, y=8, width=150, height=26)
 
         tk.Label(
             search_panel,
@@ -44,7 +63,7 @@ class VentanaVentas(tk.Frame):
             font=("Segoe UI", 10),
             bg=self.panel_bg,
             fg=self.sub_text
-        ).place(x=10, y=10)
+        ).place(x=240, y=10)
         self.entry_nombre = tk.Entry(
             search_panel,
             font=("Segoe UI", 10),
@@ -55,7 +74,7 @@ class VentanaVentas(tk.Frame):
             highlightcolor=self.primary_color,
             highlightbackground=self.border_color
         )
-        self.entry_nombre.place(x=75, y=8, width=190, height=26)
+        self.entry_nombre.place(x=310, y=8, width=150, height=26)
 
         tk.Label(
             search_panel,
@@ -63,7 +82,7 @@ class VentanaVentas(tk.Frame):
             font=("Segoe UI", 10),
             bg=self.panel_bg,
             fg=self.sub_text
-        ).place(x=280, y=10)
+        ).place(x=480, y=10)
         self.entry_descripcion = tk.Entry(
             search_panel,
             font=("Segoe UI", 10),
@@ -74,7 +93,7 @@ class VentanaVentas(tk.Frame):
             highlightcolor=self.primary_color,
             highlightbackground=self.border_color
         )
-        self.entry_descripcion.place(x=365, y=8, width=190, height=26)
+        self.entry_descripcion.place(x=570, y=8, width=160, height=26)
 
         btn_buscar = tk.Button(
             self.frame_buscar,
@@ -87,8 +106,9 @@ class VentanaVentas(tk.Frame):
             cursor="hand2",
             command=lambda: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get())
         )
-        btn_buscar.place(x=630, y=50, width=100, height=30)
+        btn_buscar.place(x=780, y=50, width=100, height=30)
 
+        self.entry_codigo.bind("<Return>", lambda e: self.buscar_por_codigo(self.entry_codigo.get()))
         self.entry_nombre.bind("<Return>", lambda e: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get()))
         self.entry_descripcion.bind("<Return>", lambda e: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get()))
 
@@ -340,8 +360,22 @@ class VentanaVentas(tk.Frame):
         self.show_productos()
         self.show_carrito()
 
+        self.entry_codigo.focus()
         self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
         self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
+
+    def buscar_por_codigo(self, codigo):
+        if not codigo:
+            return
+
+        producto = self.inventario.buscar_producto_por_codigo(codigo)
+        if producto is None:
+            messagebox.showerror("Error", "Código no encontrado.")
+            return
+
+        self.carrito.agregar_producto(producto.id_producto, 1)
+        self.show_carrito()
+        self.entry_codigo.delete(0, tk.END)
 
     def iniciar_espera(self, event):
         if self.timer_id:
@@ -349,7 +383,7 @@ class VentanaVentas(tk.Frame):
         self.timer_id = self.after(750, lambda: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get()))
 
     def buscar(self, nombre, descripcion):
-        self.inventario.buscar_producto(nombre,descripcion)
+        self.inventario.buscar_producto(nombre, descripcion)
         self.show_productos()
 
     def show_productos(self):
@@ -434,6 +468,7 @@ class VentanaVentas(tk.Frame):
             return
         self.show_carrito()
         self.show_productos()
+        self.entry_codigo.delete(0, tk.END)
         self.entry_nombre.delete(0, tk.END)
         self.entry_descripcion.delete(0, tk.END)
         self.calcular_total()

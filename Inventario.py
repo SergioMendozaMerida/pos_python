@@ -14,7 +14,7 @@ class Inventario:
         self.productos.clear()
         self.cursor.execute("SELECT * FROM productos")
         productos = self.cursor.fetchall()
-
+        
         for producto in productos:
             self.agregar_productos(Prod.Producto(
                 producto[0],
@@ -24,7 +24,8 @@ class Inventario:
                 producto[4],
                 producto[5],
                 producto[6],
-                producto[7]
+                producto[7],
+                producto[8]
             ))
 
     def ingresar_producto(self, nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, stock):
@@ -50,8 +51,45 @@ class Inventario:
                 producto[4],
                 producto[5],
                 producto[6],
-                producto[7]
+                producto[7],
+                producto[8]
             ))
+
+    def buscar_producto_por_codigo(self, codigo):
+        self.cursor.execute("SELECT * FROM productos WHERE codigo_producto=?", (codigo,))
+        producto = self.cursor.fetchone()
+        if producto:
+            return Prod.Producto(
+                producto[0],
+                producto[1],
+                producto[2],
+                producto[3],
+                producto[4],
+                producto[5],
+                producto[6],
+                producto[7],
+                producto[8]
+            )
+        else:
+            return None
+        
+    def buscar_ingresar_stock_por_codigo(self, codigo):
+        self.cursor.execute("SELECT * FROM productos WHERE codigo_producto=?", (codigo,))
+        producto = self.cursor.fetchone()
+        if producto:
+            return Prod.Producto(
+                producto[0],
+                producto[1],
+                producto[2],
+                producto[3],
+                producto[4],
+                producto[5],
+                producto[6],
+                producto[7],
+                producto[8]
+            )
+        else:
+            return None
 
     def editar_producto(self, id_producto, nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, stock):
         self.cursor.execute("UPDATE productos SET nombre=?, descripcion=?, presentacion=?, categoria=?, precio_compra=?, precio_venta=?, stock=? WHERE id_producto=?",
