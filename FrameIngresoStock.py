@@ -47,14 +47,30 @@ class FrameIngresoStock(tk.Toplevel):
             bg=self.color_fondo,
             fg=self.color_texto
         ).pack(anchor="w", pady=(0, 5))
+        codigo_frame = tk.Frame(self.main_frame, bg=self.color_fondo)
+        codigo_frame.pack(fill="x", pady=(0, 10))
         self.entry_codigo_producto = tk.Entry(
-            self.main_frame,
+            codigo_frame,
             font=("Arial", 10),
             bg=self.color_entrada,
             bd=1,
             relief="solid"
         )
-        self.entry_codigo_producto.pack(fill="x", pady=(0, 10))
+        self.entry_codigo_producto.pack(side="left", fill="x", expand=True)
+        self.entry_codigo_producto.bind("<Return>", lambda event: self.buscar_producto_codigo())
+        self.btn_buscar_codigo = tk.Button(
+            codigo_frame,
+            text="Buscar por código",
+            bg=self.color_primario,
+            fg="white",
+            font=("Arial", 10, "bold"),
+            bd=0,
+            padx=12,
+            pady=8,
+            cursor="hand2",
+            command=self.buscar_producto_codigo
+        )
+        self.btn_buscar_codigo.pack(side="left", padx=(10, 0))
 
         # Nombre del producto
         tk.Label(
@@ -64,14 +80,30 @@ class FrameIngresoStock(tk.Toplevel):
             bg=self.color_fondo,
             fg=self.color_texto
         ).pack(anchor="w", pady=(0, 5))
+        nombre_frame = tk.Frame(self.main_frame, bg=self.color_fondo)
+        nombre_frame.pack(fill="x", pady=(0, 10))
         self.entry_nombre_producto = tk.Entry(
-            self.main_frame,
+            nombre_frame,
             font=("Arial", 10),
             bg=self.color_entrada,
             bd=1,
             relief="solid"
         )
-        self.entry_nombre_producto.pack(fill="x", pady=(0, 10))
+        self.entry_nombre_producto.pack(side="left", fill="x", expand=True)
+        self.entry_nombre_producto.bind("<Return>", lambda event: self.buscar_producto_nombre())
+        self.btn_buscar_nombre = tk.Button(
+            nombre_frame,
+            text="Buscar por nombre",
+            bg=self.color_primario,
+            fg="white",
+            font=("Arial", 10, "bold"),
+            bd=0,
+            padx=12,
+            pady=8,
+            cursor="hand2",
+            command=self.buscar_producto_nombre
+        )
+        self.btn_buscar_nombre.pack(side="left", padx=(10, 0))
 
         # Cantidad a ingresar
         tk.Label(
@@ -97,45 +129,53 @@ class FrameIngresoStock(tk.Toplevel):
             font=("Arial", 10, "bold"),
             bg=self.color_fondo,
             fg=self.color_texto,
-            padx=10,
-            pady=10
+            padx=15,
+            pady=15,
+            bd=2,
+            relief="groove",
+            labelanchor="n"
         )
         result_frame.pack(fill="both", expand=True, pady=(10, 0))
 
-        self.lbl_producto_encontrado = tk.Label(
+        self.lbl_nombre_producto_encontrado = tk.Label(
             result_frame,
             text="Ingrese código o nombre y presione Buscar.",
-            font=("Arial", 10),
+            font=("Arial", 14, "bold"),
             bg=self.color_fondo,
-            fg="#2c3e50",
+            fg=self.color_primario,
             justify="left",
             anchor="nw"
         )
-        self.lbl_producto_encontrado.pack(fill="both", expand=True)
+        self.lbl_nombre_producto_encontrado.pack(fill="x", pady=(0, 10))
+
+        self.lbl_descripcion_producto = tk.Label(
+            result_frame,
+            text="Descripción: -",
+            font=("Arial", 11),
+            bg=self.color_fondo,
+            fg=self.color_texto,
+            justify="left",
+            anchor="nw",
+            wraplength=600
+        )
+        self.lbl_descripcion_producto.pack(fill="x", pady=(0, 8))
+
+        self.lbl_stock_actual = tk.Label(
+            result_frame,
+            text="Stock actual: -",
+            font=("Arial", 11, "bold"),
+            bg=self.color_fondo,
+            fg=self.color_texto,
+            justify="left",
+            anchor="nw"
+        )
+        self.lbl_stock_actual.pack(fill="x")
 
         # Frame para botones con mejor diseño
         button_frame = tk.Frame(self.main_frame, bg=self.color_fondo)
         button_frame.pack(fill="x", pady=(20, 0))
 
-        # Primera fila: Botón Buscar centrado
-        search_frame = tk.Frame(button_frame, bg=self.color_fondo)
-        search_frame.pack(fill="x", pady=(0, 10))
-
-        self.btn_buscar = tk.Button(
-            search_frame,
-            text="🔍 Buscar",
-            bg=self.color_primario,
-            fg="white",
-            font=("Arial", 11, "bold"),
-            bd=0,
-            padx=30,
-            pady=12,
-            cursor="hand2",
-            command=self.buscar_producto_codigo
-        )
-        self.btn_buscar.pack(anchor="center")
-
-        # Segunda fila: Botones Guardar y Cancelar
+        # Botones Guardar y Cancelar
         action_frame = tk.Frame(button_frame, bg=self.color_fondo)
         action_frame.pack(fill="x")
 
@@ -169,16 +209,53 @@ class FrameIngresoStock(tk.Toplevel):
 
         self.protocol("WM_DELETE_WINDOW", self.cerrar)
         self.grab_set()
-        self.entry_codigo_producto.focus()
+        self.after(0, self.entry_codigo_producto.focus_set)#para que el focus aplicque despues de que se muestre la ventana
 
     def buscar_producto_codigo(self):
         codigo = self.entry_codigo_producto.get()
         if codigo:
             self.producto_encontrado = self.inventario.buscar_ingresar_stock_por_codigo(codigo)
             if self.producto_encontrado:
-                self.lbl_producto_encontrado.config(text=f"Producto encontrado: {self.producto_encontrado.nombre}")
+                self.lbl_nombre_producto_encontrado.config(
+                    text=self.producto_encontrado.nombre,
+                    fg=self.color_primario
+                )
+                self.lbl_descripcion_producto.config(
+                    text=f"Descripción: {self.producto_encontrado.descripcion}"
+                )
+                self.lbl_stock_actual.config(
+                    text=f"Stock actual: {self.producto_encontrado.stock}"
+                )
             else:
-                self.lbl_producto_encontrado.config(text="Producto no encontrado.")
+                self.lbl_nombre_producto_encontrado.config(
+                    text="Producto no encontrado.",
+                    fg="#e74c3c"
+                )
+                self.lbl_descripcion_producto.config(text="Descripción: -")
+                self.lbl_stock_actual.config(text="Stock actual: -")
+
+    def buscar_producto_nombre(self):
+        nombre = self.entry_nombre_producto.get()
+        if nombre:
+            self.producto_encontrado = self.inventario.buscar_ingresar_stock_por_nombre(nombre)
+            if self.producto_encontrado:
+                self.lbl_nombre_producto_encontrado.config(
+                    text=self.producto_encontrado.nombre,
+                    fg=self.color_primario
+                )
+                self.lbl_descripcion_producto.config(
+                    text=f"Descripción: {self.producto_encontrado.descripcion}"
+                )
+                self.lbl_stock_actual.config(
+                    text=f"Stock actual: {self.producto_encontrado.stock}"
+                )
+            else:
+                self.lbl_nombre_producto_encontrado.config(
+                    text="Producto no encontrado.",
+                    fg="#e74c3c"
+                )
+                self.lbl_descripcion_producto.config(text="Descripción: -")
+                self.lbl_stock_actual.config(text="Stock actual: -")
 
     def guardar_stock(self):
         cantidad = self.entry_cantidad.get()

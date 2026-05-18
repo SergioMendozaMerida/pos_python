@@ -73,8 +73,44 @@ class Inventario:
         else:
             return None
         
+    def buscar_producto_por_nombre(self, nombre):
+        self.cursor.execute("SELECT * FROM productos WHERE nombre=?", (nombre,))
+        producto = self.cursor.fetchone()
+        if producto:
+            return Prod.Producto(
+                producto[0],
+                producto[1],
+                producto[2],
+                producto[3],
+                producto[4],
+                producto[5],
+                producto[6],
+                producto[7],
+                producto[8]
+            )
+        else:
+            return None
+        
     def buscar_ingresar_stock_por_codigo(self, codigo):
         self.cursor.execute("SELECT * FROM productos WHERE codigo_producto=?", (codigo,))
+        producto = self.cursor.fetchone()
+        if producto:
+            return Prod.Producto(
+                producto[0],
+                producto[1],
+                producto[2],
+                producto[3],
+                producto[4],
+                producto[5],
+                producto[6],
+                producto[7],
+                producto[8]
+            )
+        else:
+            return None
+        
+    def buscar_ingresar_stock_por_nombre(self, nombre):
+        self.cursor.execute("SELECT * FROM productos WHERE nombre LIKE ?", (f"%{nombre}%",))
         producto = self.cursor.fetchone()
         if producto:
             return Prod.Producto(
