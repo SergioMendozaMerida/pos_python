@@ -181,8 +181,14 @@ class FrameIngresoStock(tk.Toplevel):
                 self.lbl_producto_encontrado.config(text="Producto no encontrado.")
 
     def guardar_stock(self):
-        # TODO: Implementar lógica de ingreso de stock
-        pass
+        cantidad = self.entry_cantidad.get()
+        if cantidad is None or cantidad == "":
+            tk.messagebox.showerror("Error", "Ingrese una cantidad válida.")
+            return
+        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, int(cantidad))
+        tk.messagebox.showinfo("Éxito", "Stock actualizado correctamente.")
+        self.actualizar_callback()
+        self.cerrar()
 
     def cerrar(self):
         self.destroy()
