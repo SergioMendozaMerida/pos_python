@@ -49,6 +49,7 @@ class CarrtioVenta:
                     messagebox.showwarning("Stock insuficiente", f"No hay suficiente stock para agregar {cantidad} unidades de {prod['nombre']}. Stock disponible: {p[7] - prod['cantidad']}")
                     return False
                 prod["cantidad"] += cantidad
+                prod["sub_total"] = prod["precio_venta"] * prod["cantidad"]
                 return True
 
         if cantidad > int(p[7]):

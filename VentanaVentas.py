@@ -24,8 +24,13 @@ class VentanaVentas(tk.Frame):
 
         self.configure(bg=self.app_bg)
 
+        # Configuración de grid para el frame principal
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+
         self.frame_buscar = tk.Frame(self, bg=self.app_bg)
-        self.frame_buscar.place(x=10, y=5, width=1180, height=95)
+        self.frame_buscar.grid(row=0, column=0, sticky="ew", padx=10, pady=5)
+        self.frame_buscar.grid_columnconfigure(0, weight=1)
 
         tk.Label(
             self.frame_buscar,
@@ -33,70 +38,35 @@ class VentanaVentas(tk.Frame):
             bg=self.app_bg,
             fg=self.text_color,
             font=("Segoe UI", 13, "bold")
-        ).place(x=10, y=10)
+        ).grid(row=0, column=0, sticky="w", padx=10, pady=(10, 5))
 
-        search_panel = tk.Frame(self.frame_buscar, bg=self.panel_bg, bd=1, relief="solid")
-        search_panel.place(x=10, y=45, width=750, height=42)
+        # Contenedor para inputs y botón buscar
+        search_controls_frame = tk.Frame(self.frame_buscar, bg=self.app_bg)
+        search_controls_frame.grid(row=1, column=0, sticky="ew", padx=10, pady=(0, 10))
+        search_controls_frame.grid_columnconfigure(0, weight=1) # search_panel
+        search_controls_frame.grid_columnconfigure(1, weight=0) # btn_buscar
 
-        tk.Label(
-            search_panel,
-            text="Código:",
-            font=("Segoe UI", 10),
-            bg=self.panel_bg,
-            fg=self.sub_text
-        ).place(x=10, y=10)
-        self.entry_codigo = tk.Entry(
-            search_panel,
-            font=("Segoe UI", 10),
-            bd=0,
-            bg="#f8f9fb",
-            fg=self.text_color,
-            highlightthickness=1,
-            highlightcolor=self.primary_color,
-            highlightbackground=self.border_color
-        )
-        self.entry_codigo.place(x=70, y=8, width=150, height=26)
+        search_panel = tk.Frame(search_controls_frame, bg=self.panel_bg, bd=1, relief="solid")
+        search_panel.grid(row=0, column=0, sticky="ew")
+        # Configurar columnas para que los Entry se expandan
+        search_panel.grid_columnconfigure(1, weight=1)
+        search_panel.grid_columnconfigure(3, weight=1)
+        search_panel.grid_columnconfigure(5, weight=1)
 
-        tk.Label(
-            search_panel,
-            text="Nombre:",
-            font=("Segoe UI", 10),
-            bg=self.panel_bg,
-            fg=self.sub_text
-        ).place(x=240, y=10)
-        self.entry_nombre = tk.Entry(
-            search_panel,
-            font=("Segoe UI", 10),
-            bd=0,
-            bg="#f8f9fb",
-            fg=self.text_color,
-            highlightthickness=1,
-            highlightcolor=self.primary_color,
-            highlightbackground=self.border_color
-        )
-        self.entry_nombre.place(x=310, y=8, width=150, height=26)
+        tk.Label(search_panel, text="Código:", font=("Segoe UI", 10), bg=self.panel_bg, fg=self.sub_text).grid(row=0, column=0, padx=(10, 5), pady=8, sticky="w")
+        self.entry_codigo = tk.Entry(search_panel, font=("Segoe UI", 10), bd=0, bg="#f8f9fb", fg=self.text_color, highlightthickness=1, highlightcolor=self.primary_color, highlightbackground=self.border_color)
+        self.entry_codigo.grid(row=0, column=1, sticky="ew", padx=5, pady=8)
 
-        tk.Label(
-            search_panel,
-            text="Descripción:",
-            font=("Segoe UI", 10),
-            bg=self.panel_bg,
-            fg=self.sub_text
-        ).place(x=480, y=10)
-        self.entry_descripcion = tk.Entry(
-            search_panel,
-            font=("Segoe UI", 10),
-            bd=0,
-            bg="#f8f9fb",
-            fg=self.text_color,
-            highlightthickness=1,
-            highlightcolor=self.primary_color,
-            highlightbackground=self.border_color
-        )
-        self.entry_descripcion.place(x=570, y=8, width=160, height=26)
+        tk.Label(search_panel, text="Nombre:", font=("Segoe UI", 10), bg=self.panel_bg, fg=self.sub_text).grid(row=0, column=2, padx=(10, 5), pady=8, sticky="w")
+        self.entry_nombre = tk.Entry(search_panel, font=("Segoe UI", 10), bd=0, bg="#f8f9fb", fg=self.text_color, highlightthickness=1, highlightcolor=self.primary_color, highlightbackground=self.border_color)
+        self.entry_nombre.grid(row=0, column=3, sticky="ew", padx=5, pady=8)
+
+        tk.Label(search_panel, text="Descripción:", font=("Segoe UI", 10), bg=self.panel_bg, fg=self.sub_text).grid(row=0, column=4, padx=(10, 5), pady=8, sticky="w")
+        self.entry_descripcion = tk.Entry(search_panel, font=("Segoe UI", 10), bd=0, bg="#f8f9fb", fg=self.text_color, highlightthickness=1, highlightcolor=self.primary_color, highlightbackground=self.border_color)
+        self.entry_descripcion.grid(row=0, column=5, sticky="ew", padx=(5, 10), pady=8)
 
         btn_buscar = tk.Button(
-            self.frame_buscar,
+            search_controls_frame,
             text="Buscar",
             bg=self.primary_color,
             fg="white",
@@ -106,27 +76,37 @@ class VentanaVentas(tk.Frame):
             cursor="hand2",
             command=lambda: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get())
         )
-        btn_buscar.place(x=780, y=50, width=100, height=30)
+        btn_buscar.grid(row=0, column=1, padx=(10, 0), sticky="ns", ipadx=15)
 
         self.entry_codigo.bind("<Return>", lambda e: self.buscar_por_codigo(self.entry_codigo.get()))
         self.entry_nombre.bind("<Return>", lambda e: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get()))
         self.entry_descripcion.bind("<Return>", lambda e: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get()))
 
-        self.canvas_productos = tk.Canvas(self, bg=self.card_bg, highlightthickness=0, bd=0)
+        # Contenedor central para las 3 columnas
+        self.main_container = tk.Frame(self, bg=self.app_bg)
+        self.main_container.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
+        self.main_container.grid_columnconfigure(0, weight=1, minsize=380) # Productos
+        self.main_container.grid_columnconfigure(1, weight=2, minsize=450) # Carrito
+        self.main_container.grid_columnconfigure(2, weight=1, minsize=250) # Resumen
+        self.main_container.grid_rowconfigure(0, weight=1)
+
+        # 1. Columna Productos
+        self.canvas_productos = tk.Canvas(self.main_container, bg=self.card_bg, highlightthickness=0, bd=0)
         self.scrollbar = ttk.Scrollbar(self.canvas_productos, orient="vertical", command=self.canvas_productos.yview)
         self.canvas_productos.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side="right", fill="y")
-        self.canvas_productos.place(x=10, y=110, width=400, height=520)
+        self.canvas_productos.grid(row=0, column=0, sticky="nsew", padx=(0, 5))
 
         self.frame_item_productos = tk.Frame(self.canvas_productos, bg=self.card_bg)
-        self.frame_item_productos.place(x=5, y=5)
 
-        self.canvas_productos.create_window(
+        self.product_window = self.canvas_productos.create_window(
             (0, 0),
             window=self.frame_item_productos,
-            anchor="nw",
-            width=380
+            anchor="nw"
         )
+
+        # Ajustar ancho de tarjetas al redimensionar canvas
+        self.canvas_productos.bind("<Configure>", lambda e: self.canvas_productos.itemconfig(self.product_window, width=e.width))
 
         self.frame_item_productos.bind(
             "<Configure>",
@@ -134,7 +114,6 @@ class VentanaVentas(tk.Frame):
                 scrollregion=self.canvas_productos.bbox("all")
             )
         )
-
         self.canvas_productos.bind_all(
             "<MouseWheel>",
             lambda e: self.canvas_productos.yview_scroll(
@@ -143,11 +122,12 @@ class VentanaVentas(tk.Frame):
             )
         )
 
-        self.frame_item_carritos = tk.Frame(self, bg=self.app_bg)
-        self.frame_item_carritos.place(x=420, y=110, width=600, height=520)
+        # 2. Columna Carrito
+        self.frame_item_carritos = tk.Frame(self.main_container, bg=self.app_bg)
+        self.frame_item_carritos.grid(row=0, column=1, sticky="nsew", padx=5)
 
         self.frame_cliente = tk.Frame(self.frame_item_carritos, bg=self.panel_bg, bd=1, relief="solid")
-        self.frame_cliente.place(x=10, y=10, width=580, height=130)
+        self.frame_cliente.pack(fill="x", pady=(0, 10))
 
         tk.Label(
             self.frame_cliente,
@@ -155,7 +135,10 @@ class VentanaVentas(tk.Frame):
             bg=self.panel_bg,
             fg=self.text_color,
             font=("Segoe UI", 11, "bold")
-        ).place(x=10, y=10)
+        ).grid(row=0, column=0, columnspan=6, sticky="w", padx=10, pady=10)
+
+        # Configurar columnas internas del frame_cliente para que los Entry se expandan
+        self.frame_cliente.grid_columnconfigure((1, 3, 5), weight=1)
 
         self.entry_nombre_cliente = tk.Entry(
             self.frame_cliente,
@@ -244,17 +227,17 @@ class VentanaVentas(tk.Frame):
             font=("Segoe UI", 10, "bold")
         )
 
-        lbl_nombre_cliente.place(x=10, y=40, width=70)
-        self.entry_nombre_cliente.place(x=90, y=40, width=190, height=26)
-        lbl_direccion.place(x=300, y=40, width=70)
-        self.entry_direccion.place(x=380, y=40, width=190, height=26)
+        lbl_nombre_cliente.grid(row=1, column=0, padx=(10, 5), pady=5, sticky="w")
+        self.entry_nombre_cliente.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+        lbl_direccion.grid(row=1, column=2, padx=(10, 5), pady=5, sticky="w")
+        self.entry_direccion.grid(row=1, column=3, columnspan=3, padx=(5, 10), pady=5, sticky="ew")
 
-        lbl_dpi.place(x=10, y=76, width=40)
-        self.entry_dpi.place(x=55, y=76, width=120, height=26)
-        lbl_nit.place(x=190, y=76, width=40)
-        self.entry_nit.place(x=235, y=76, width=120, height=26)
-        lbl_telefono.place(x=370, y=76, width=70)
-        self.entry_telefono.place(x=445, y=76, width=130, height=26)
+        lbl_dpi.grid(row=2, column=0, padx=(10, 5), pady=5, sticky="w")
+        self.entry_dpi.grid(row=2, column=1, padx=5, pady=5, sticky="ew")
+        lbl_nit.grid(row=2, column=2, padx=(10, 5), pady=5, sticky="w")
+        self.entry_nit.grid(row=2, column=3, padx=5, pady=5, sticky="ew")
+        lbl_telefono.grid(row=2, column=4, padx=(10, 5), pady=5, sticky="w")
+        self.entry_telefono.grid(row=2, column=5, padx=(5, 10), pady=5, sticky="ew")
 
         columnas = ['producto', 'precio', 'cantidad', 'sub_total']
         self.tabla_carrito = ttk.Treeview(self.frame_item_carritos, columns=columnas, show="headings")
@@ -262,10 +245,10 @@ class VentanaVentas(tk.Frame):
         self.tabla_carrito.heading('precio', text="Precio")
         self.tabla_carrito.heading('cantidad', text="Cantidad")
         self.tabla_carrito.heading('sub_total', text="SubTotal")
-        self.tabla_carrito.column('producto', width=300)
-        self.tabla_carrito.column('precio', width=100)
-        self.tabla_carrito.column('cantidad', width=50)
-        self.tabla_carrito.column('sub_total', width=140)
+        self.tabla_carrito.column('producto', width=150) # Ajustado para mejor responsividad
+        self.tabla_carrito.column('precio', width=80)    # Ajustado
+        self.tabla_carrito.column('cantidad', width=60)  # Ajustado
+        self.tabla_carrito.column('sub_total', width=100) # Ajustado
         style = ttk.Style()
         style.theme_use("clam") # El tema 'clam' es el más personalizable
 
@@ -293,10 +276,11 @@ class VentanaVentas(tk.Frame):
         style.map("Treeview", 
                 background=[('selected', "#74b9ff")], # Azul suave al seleccionar
                 foreground=[('selected', "white")])
-        self.tabla_carrito.place(x=10, y=120, width=580, height=370)
+        self.tabla_carrito.pack(fill="both", expand=True, padx=0, pady=0)
 
-        self.frame_concretar_venta = tk.Frame(self, bg=self.panel_bg, bd=1, relief="solid")
-        self.frame_concretar_venta.place(x=1030, y=110, width=160, height=520)
+        # 3. Columna Resumen y Botones
+        self.frame_concretar_venta = tk.Frame(self.main_container, bg=self.panel_bg, bd=1, relief="solid")
+        self.frame_concretar_venta.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
 
         tk.Label(
             self.frame_concretar_venta,
@@ -395,7 +379,6 @@ class VentanaVentas(tk.Frame):
             frame = tk.Frame(
                 self.frame_item_productos,
                 bg="white",
-                width=360,
                 height=96,
                 bd=1,
                 relief="solid",
@@ -403,8 +386,8 @@ class VentanaVentas(tk.Frame):
                 highlightcolor=self.border_color,
                 highlightthickness=1
             )
-            frame.propagate(False)
-            frame.pack(pady=8)
+            frame.pack_propagate(False) # Mantiene la altura fija
+            frame.pack(fill="x", padx=10, pady=8) # Se expande horizontalmente
 
             # Nombre: Esquina superior izquierda
             lbl_nombre = tk.Label(

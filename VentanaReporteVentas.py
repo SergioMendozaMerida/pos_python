@@ -1,3 +1,4 @@
+import datetime
 import tkinter as tk
 from tkinter import ttk
 
@@ -23,7 +24,7 @@ class VentanaReporteVentas(tk.Frame):
         self.entry_nombre_producto = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
         self.entry_fecha_inicio = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
         self.entry_fecha_fin = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        self.bton_buscar = tk.Button(self.frame_filtros, text="Buscar", bg="#0984e3", fg="white", relief="flat", cursor="hand2")
+        self.bton_buscar = tk.Button(self.frame_filtros, text="Buscar", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.filtrar_ventas)
 
         self.lbl_nombre_producto.grid(row=0, column=0, sticky="w", padx=(0, 5), pady=(0, 5))
         self.entry_nombre_producto.grid(row=1, column=0, sticky="ew", padx=(0, 5), pady=(0, 10))
@@ -41,7 +42,7 @@ class VentanaReporteVentas(tk.Frame):
         self.frame_filtros_predeterminados.grid_columnconfigure(3, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(4, weight=1)
 
-        self.btn_ventas_hoy = tk.Button(self.frame_filtros_predeterminados, text="Ventas de Hoy", bg="#0984e3", fg="white", relief="flat", cursor="hand2")
+        self.btn_ventas_hoy = tk.Button(self.frame_filtros_predeterminados, text="Ventas de Hoy", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.filtrar_ventas_hoy)
         self.btn_ventas_semana = tk.Button(self.frame_filtros_predeterminados, text="Ventas de la Semana", bg="#0984e3", fg="white", relief="flat", cursor="hand2")
         self.btn_ventas_mes = tk.Button(self.frame_filtros_predeterminados, text="Ventas del Mes", bg="#0984e3", fg="white", relief="flat", cursor="hand2")
         self.btn_ventas_año = tk.Button(self.frame_filtros_predeterminados, text="Ventas del Año", bg="#0984e3", fg="white", relief="flat", cursor="hand2")
@@ -110,12 +111,11 @@ class VentanaReporteVentas(tk.Frame):
 
         self.mostrar_ventas(self.reporte_ventas.ventas)
 
-    def buscar_ventas(self, nombre_producto, fecha_inicio, fecha_fin):
-        # Aquí iría la lógica para buscar las ventas según los filtros ingresados
-        pass
-
         #columnas = ("No. Recibo", "Fecha", "Producto", "Cantidad", "Precio Unitario", "Total")
     def mostrar_ventas(self, ventas):
+        for item in self.tabla_ventas.get_children():
+            self.tabla_ventas.delete(item)
+
         for venta in ventas:
             self.tabla_ventas.insert("", "end", values=(
                 venta.id_recibo,
@@ -125,3 +125,18 @@ class VentanaReporteVentas(tk.Frame):
                 venta.precio,
                 venta.sub_total
             ))
+
+        self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
+
+    def filtrar_ventas(self):
+        nombre_producto = self.entry_nombre_producto.get()
+        fecha_inicio = self.entry_fecha_inicio.get()
+        fecha_fin = self.entry_fecha_fin.get()
+        self.reporte_ventas.filtrar_ventas(fecha_inicio, fecha_fin, nombre_producto)
+        self.mostrar_ventas(self.reporte_ventas.ventas)
+
+    def filtrar_ventas_hoy(self):
+        self.reporte_ventas.filtrar_ventas(datetime.date.today(), datetime.date.today(), "")
+
+        print(datetime.date.today())
+        self.mostrar_ventas(self.reporte_ventas.ventas)
