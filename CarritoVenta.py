@@ -1,5 +1,6 @@
 import datetime
 import sqlite3
+from tkinter import messagebox
 
 class CarrtioVenta:
     def __init__(self):
@@ -45,6 +46,7 @@ class CarrtioVenta:
         for prod in self.productos:
             if prod["id_producto"] == id:
                 if cantidad + prod["cantidad"] > int(p[7]):
+                    messagebox.showwarning("Stock insuficiente", f"No hay suficiente stock para agregar {cantidad} unidades de {prod['nombre']}. Stock disponible: {p[7] - prod['cantidad']}")
                     return False
                 prod["cantidad"] += cantidad
                 return True
@@ -97,8 +99,8 @@ class CarrtioVenta:
         conexion = sqlite3.connect("db_inventario.db")
         cursor = conexion.cursor()
         for p in self.productos:
-            cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total) VALUES (?,?,?,?,?)',
-                           (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total']))
+            cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha) VALUES (?,?,?,?,?,?,?)',
+                           (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha))
             conexion.commit()
 
         cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total) VALUES(?,?,?,?,?,?,?)',

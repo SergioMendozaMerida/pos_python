@@ -10,16 +10,17 @@ class EditarProducto(tk.Toplevel):
         self.actualizar_callback = actualizar_callback
 
         # Colores coordinados
-        self.color_fondo = "#f0f0f0"
+        self.color_fondo = "#f8f9fa"
         self.color_header = "#2c3e50"
-        self.color_primario = "#3498db"
-        self.color_exito = "#27ae60"
-        self.color_cancelar = "#e74c3c"
+        self.color_primario = "#0984e3"
+        self.color_exito = "#00b894"
+        self.color_cancelar = "#d63031"
         self.color_entrada = "#ffffff"
-        self.color_texto = "#2c3e50"
+        self.color_texto = "#2d3436"
+        self.color_borde = "#dfe6e9"
 
         self.title("Editar Producto")
-        self.geometry("500x580")
+        self.geometry("520x620")
         self.resizable(False, False)
         self.configure(bg=self.color_fondo)
 
@@ -31,7 +32,7 @@ class EditarProducto(tk.Toplevel):
         tk.Label(
             self.header_frame,
             text="Editar Producto",
-            font=("Arial", 16, "bold"),
+            font=("Segoe UI", 16, "bold"),
             bg=self.color_header,
             fg="white"
         ).pack(pady=15)
@@ -47,26 +48,62 @@ class EditarProducto(tk.Toplevel):
         col1_frame = tk.Frame(row1_frame, bg=self.color_fondo)
         col1_frame.pack(side="left", fill="both", expand=True, padx=(0, 10))
 
-        tk.Label(col1_frame, text="Nombre *", font=("Arial", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_nombre = tk.Entry(col1_frame, font=("Arial", 10), bg=self.color_entrada, relief="solid", bd=1, highlightthickness=1, highlightcolor=self.color_primario)
-        self.entry_nombre.pack(fill="both", expand=True)
+        tk.Label(col1_frame, text="Nombre *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_nombre = tk.Entry(
+            col1_frame, 
+            font=("Segoe UI", 10), 
+            bg=self.color_entrada, 
+            relief="flat", 
+            bd=0, 
+            highlightthickness=1, 
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_nombre.pack(fill="both", expand=True, ipady=4)
 
         col2_frame = tk.Frame(row1_frame, bg=self.color_fondo)
         col2_frame.pack(side="left", fill="both", expand=True)
 
-        tk.Label(col2_frame, text="Categoría", font=("Arial", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_categoria = tk.Entry(col2_frame, font=("Arial", 10), bg=self.color_entrada, relief="solid", bd=1, highlightthickness=1, highlightcolor=self.color_primario)
-        self.entry_categoria.pack(fill="both", expand=True)
+        tk.Label(col2_frame, text="Categoría", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_categoria = tk.Entry(
+            col2_frame, 
+            font=("Segoe UI", 10), 
+            bg=self.color_entrada, 
+            relief="flat", 
+            bd=0, 
+            highlightthickness=1, 
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_categoria.pack(fill="both", expand=True, ipady=4)
 
         # Fila 2: Descripción
-        tk.Label(self.main_frame, text="Descripción", font=("Arial", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_descripcion = tk.Entry(self.main_frame, font=("Arial", 10), bg=self.color_entrada, relief="solid", bd=1, highlightthickness=1, highlightcolor=self.color_primario)
-        self.entry_descripcion.pack(fill="x", pady=(0, 15))
+        tk.Label(self.main_frame, text="Descripción", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_descripcion = tk.Entry(
+            self.main_frame, 
+            font=("Segoe UI", 10), 
+            bg=self.color_entrada, 
+            relief="flat", 
+            bd=0, 
+            highlightthickness=1, 
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_descripcion.pack(fill="x", pady=(0, 15), ipady=4)
 
         # Fila 3: Presentación
-        tk.Label(self.main_frame, text="Presentación", font=("Arial", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_presentacion = tk.Entry(self.main_frame, font=("Arial", 10), bg=self.color_entrada, relief="solid", bd=1, highlightthickness=1, highlightcolor=self.color_primario)
-        self.entry_presentacion.pack(fill="x", pady=(0, 15))
+        tk.Label(self.main_frame, text="Presentación", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_presentacion = tk.Entry(
+            self.main_frame, 
+            font=("Segoe UI", 10), 
+            bg=self.color_entrada, 
+            relief="flat", 
+            bd=0, 
+            highlightthickness=1, 
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_presentacion.pack(fill="x", pady=(0, 15), ipady=4)
 
         # Fila 4: Precios (Compra y Venta)
         row_precios = tk.Frame(self.main_frame, bg=self.color_fondo)
@@ -75,21 +112,48 @@ class EditarProducto(tk.Toplevel):
         col_compra = tk.Frame(row_precios, bg=self.color_fondo)
         col_compra.pack(side="left", fill="both", expand=True, padx=(0, 10))
 
-        tk.Label(col_compra, text="Precio Compra $", font=("Arial", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_precio_compra = tk.Entry(col_compra, font=("Arial", 10), bg=self.color_entrada, relief="solid", bd=1, highlightthickness=1, highlightcolor=self.color_primario)
-        self.entry_precio_compra.pack(fill="both", expand=True)
+        tk.Label(col_compra, text="Precio Compra Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_precio_compra = tk.Entry(
+            col_compra, 
+            font=("Segoe UI", 10), 
+            bg=self.color_entrada, 
+            relief="flat", 
+            bd=0, 
+            highlightthickness=1, 
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_precio_compra.pack(fill="both", expand=True, ipady=4)
 
         col_venta = tk.Frame(row_precios, bg=self.color_fondo)
         col_venta.pack(side="left", fill="both", expand=True)
 
-        tk.Label(col_venta, text="Precio Venta $", font=("Arial", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_precio_venta = tk.Entry(col_venta, font=("Arial", 10), bg=self.color_entrada, relief="solid", bd=1, highlightthickness=1, highlightcolor=self.color_primario)
-        self.entry_precio_venta.pack(fill="both", expand=True)
+        tk.Label(col_venta, text="Precio Venta Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_precio_venta = tk.Entry(
+            col_venta, 
+            font=("Segoe UI", 10), 
+            bg=self.color_entrada, 
+            relief="flat", 
+            bd=0, 
+            highlightthickness=1, 
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_precio_venta.pack(fill="both", expand=True, ipady=4)
 
         # Fila 5: Stock
-        tk.Label(self.main_frame, text="Stock *", font=("Arial", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_stock = tk.Entry(self.main_frame, font=("Arial", 10), bg=self.color_entrada, relief="solid", bd=1, highlightthickness=1, highlightcolor=self.color_primario)
-        self.entry_stock.pack(fill="x", pady=(0, 20))
+        tk.Label(self.main_frame, text="Stock *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_stock = tk.Entry(
+            self.main_frame, 
+            font=("Segoe UI", 10), 
+            bg=self.color_entrada, 
+            relief="flat", 
+            bd=0, 
+            highlightthickness=1, 
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_stock.pack(fill="x", pady=(0, 20), ipady=4)
 
         # Cargar datos del producto
         self.cargar_datos_producto()
@@ -100,13 +164,13 @@ class EditarProducto(tk.Toplevel):
 
         self.btn_guardar = tk.Button(
             btn_frame,
-            text="✓ Actualizar Producto",
-            font=("Arial", 11, "bold"),
+            text="✓ Actualizar",
+            font=("Segoe UI", 11, "bold"),
             bg=self.color_exito,
             fg="white",
             relief="flat",
             bd=0,
-            padx=20,
+            padx=30,
             pady=10,
             cursor="hand2",
             command=self.actualizar_producto
@@ -116,12 +180,12 @@ class EditarProducto(tk.Toplevel):
         self.btn_cancelar = tk.Button(
             btn_frame,
             text="✕ Cancelar",
-            font=("Arial", 11, "bold"),
+            font=("Segoe UI", 11, "bold"),
             bg=self.color_cancelar,
             fg="white",
             relief="flat",
             bd=0,
-            padx=20,
+            padx=30,
             pady=10,
             cursor="hand2",
             command=self.cerrar

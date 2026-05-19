@@ -1,15 +1,19 @@
 import tkinter as tk
 import VentanaInventario as vi
 import VentanaVentas as Vv
+import VentanaReporteVentas as Vrv
+import ReporteVentas as Rv
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self):
         super().__init__()
         self.geometry("1200x700")
-        self.resizable(False,False)
+        #self.resizable(False,False)
         self.title("Inventario")
         self.inventario = vi.VentanaInventario(self)
         self.ventas = Vv.VentanaVentas(self.inventario.inventario)
+        self.reporte_ventas = Rv.ReporteVentas()
+        self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
 
 # 1. Configuración de la barra (Navbar) con un color más sobrio
         # Un azul más profundo o un gris oscuro profesional
@@ -53,7 +57,16 @@ class VentanaPrincipal(tk.Tk):
         )
         self.btn_ventas.pack(side="left", fill="y", padx=2)
 
-        self.frames = [self.inventario, self.ventas]
+        # Botón Reporte de Ventas
+        self.btn_reporte_ventas = tk.Button(
+            self.frm_menu_bar, 
+            text="📊 Reporte de Ventas", 
+            command=lambda: self.draw_frames(self.ventana_reporte_ventas),
+            **btn_style
+        )
+        self.btn_reporte_ventas.pack(side="left", fill="y", padx=2)
+
+        self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas]
         self.ventas.pack(fill="both", expand=True)
 
     def draw_frames(self, new_frame):

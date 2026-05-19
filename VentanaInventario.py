@@ -208,8 +208,8 @@ class VentanaInventario(tk.Frame):
                 producto.descripcion,
                 producto.presentacion,
                 producto.categoria,
-                producto.precio_compra,
-                producto.precio_venta,
+                f"Q{producto.precio_compra:.2f}",
+                f"Q{producto.precio_venta:.2f}",
                 producto.stock
             ))
 
@@ -229,8 +229,8 @@ class VentanaInventario(tk.Frame):
                 producto.descripcion,
                 producto.presentacion,
                 producto.categoria,
-                producto.precio_compra,
-                producto.precio_venta,
+                f"Q{producto.precio_compra:.2f}",
+                f"Q{producto.precio_venta:.2f}",
                 producto.stock
             ))
 

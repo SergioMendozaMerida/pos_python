@@ -375,6 +375,7 @@ class VentanaVentas(tk.Frame):
 
         self.carrito.agregar_producto(producto.id_producto, 1)
         self.show_carrito()
+        self.show_productos()
         self.entry_codigo.delete(0, tk.END)
 
     def iniciar_espera(self, event):
