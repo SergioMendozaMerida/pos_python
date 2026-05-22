@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
+import CrearRecibo as RV
 
 class FrameTerminarVenta(tk.Toplevel):
     def __init__(self, parent, carrito, limpiar_carrito):
@@ -79,4 +80,7 @@ class FrameTerminarVenta(tk.Toplevel):
         self.carrito.concretar_venta()
         messagebox.showinfo("Venta exitosa", "Venta registrada exitosamente.")
         self.limpiar_carrito()
+        cv = RV.CrearRecibo(self.carrito)
+        cv.generar_recibo_pequenio()
+        self.carrito.vaciar_carrito()
         self.destroy()

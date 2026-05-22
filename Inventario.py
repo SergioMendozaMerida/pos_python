@@ -127,8 +127,8 @@ class Inventario:
         else:
             return None
         
-    def aumentar_stock(self, id_producto, cantidad):
-        self.cursor.execute("UPDATE productos SET stock = stock + ? WHERE id_producto=?", (cantidad, id_producto))
+    def aumentar_stock(self, id_producto, cantidad, precio_compra, precio_venta):
+        self.cursor.execute("UPDATE productos SET stock = stock + ?, precio_compra = ?, precio_venta = ? WHERE id_producto=?", (cantidad, precio_compra, precio_venta, id_producto))
         self.conexion.commit()
         self.obtener_productos()
 

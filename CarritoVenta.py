@@ -86,6 +86,8 @@ class CarrtioVenta:
                 if nueva_cantidad > int(p[7]):
                     return False
                 prod["cantidad"] = nueva_cantidad
+                prod["sub_total"] = prod["precio_venta"] * prod["cantidad"]
+                self.calcular_total()
                 return True
     
     def cancelar_venta(self):
@@ -108,6 +110,8 @@ class CarrtioVenta:
                        (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total))
         conexion.commit()
         conexion.close()
+    
+    def vaciar_carrito(self):
         self.productos.clear()
         self.total = 0
         self.nombre_cliente = ""
@@ -115,8 +119,7 @@ class CarrtioVenta:
         self.telefono = ""
         self.dpi = ""
         self.nit = ""
+        self.obtener_numero_recibo()
 
-    
 
 carrito = CarrtioVenta()
-

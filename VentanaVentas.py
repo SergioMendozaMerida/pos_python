@@ -6,10 +6,11 @@ import FrameTerminarVenta as FTV
 
 class VentanaVentas(tk.Frame):
 
-    def __init__(self, inventario):
+    def __init__(self, inventario, reporte_ventas):
         super().__init__(bg="#f5f6fa")
 
         self.inventario = inventario
+        self.reporte_ventas = reporte_ventas
 
         self.app_bg = "#ecf0f3"
         self.panel_bg = "#ffffff"
@@ -321,7 +322,7 @@ class VentanaVentas(tk.Frame):
             bd=0,
             activebackground="#ff7675",
             cursor='hand2',
-            command=self.quitar_producto
+            command=self.cambiar_cantidad
         )
         btn_Cantidad.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
 
@@ -475,7 +476,7 @@ class VentanaVentas(tk.Frame):
         self.show_carrito()
         messagebox.showinfo("Canelado", "La venta se ha cancelado")
 
-    def quitar_producto(self):
+    def cambiar_cantidad(self):
         selection = self.tabla_carrito.selection()
 
         if not selection:

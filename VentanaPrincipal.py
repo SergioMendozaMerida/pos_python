@@ -3,6 +3,7 @@ import VentanaInventario as vi
 import VentanaVentas as Vv
 import VentanaReporteVentas as Vrv
 import ReporteVentas as Rv
+import VentanaRecibos as VR
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self):
@@ -11,10 +12,11 @@ class VentanaPrincipal(tk.Tk):
         #self.resizable(False,False)
         self.title("Inventario")
         self.inventario = vi.VentanaInventario(self)
-        self.ventas = Vv.VentanaVentas(self.inventario.inventario)
         self.reporte_ventas = Rv.ReporteVentas()
         self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
-
+        self.ventas = Vv.VentanaVentas(self.inventario.inventario,self.ventana_reporte_ventas)
+        self.recibos = VR.VentanaRecibos(self)
+        
 # 1. Configuración de la barra (Navbar) con un color más sobrio
         # Un azul más profundo o un gris oscuro profesional
         navbar_color = "#2c3e50" 
@@ -66,7 +68,15 @@ class VentanaPrincipal(tk.Tk):
         )
         self.btn_reporte_ventas.pack(side="left", fill="y", padx=2)
 
-        self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas]
+        self.btn_recibos = tk.Button(
+            self.frm_menu_bar, 
+            text="🧾 Recibos", 
+            command=lambda: self.draw_frames(self.recibos),
+            **btn_style
+        )
+        self.btn_recibos.pack(side="left", fill="y", padx=2)
+
+        self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos]
         self.ventas.pack(fill="both", expand=True)
 
     def draw_frames(self, new_frame):

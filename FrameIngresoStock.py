@@ -26,7 +26,7 @@ class FrameIngresoStock(tk.Toplevel):
         self.color_borde = "#dfe6e9"
 
         self.title("Ingreso de Stock")
-        self.geometry("650x620")
+        self.geometry("650x700")
         self.resizable(False, False)
         self.configure(bg=self.color_fondo)
 
@@ -176,6 +176,48 @@ class FrameIngresoStock(tk.Toplevel):
         self.entry_cantidad.pack(fill="x", pady=(0, 10), ipady=4)
         self.entry_cantidad.bind("<Return>", lambda event: self.guardar_stock())
 
+        # Precio de compra
+        tk.Label(
+            self.main_frame,
+            text="Precio de compra",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.color_fondo,
+            fg=self.color_texto
+        ).pack(anchor="w", pady=(0, 5))
+        self.entry_precio_compra = tk.Entry(
+            self.main_frame,
+            font=("Segoe UI", 11),
+            bg=self.color_entrada,
+            bd=0,
+            relief="flat",
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario,
+            state="disabled"
+        )
+        self.entry_precio_compra.pack(fill="x", pady=(0, 10), ipady=4)
+
+        # Precio de venta
+        tk.Label(
+            self.main_frame,
+            text="Precio de venta",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.color_fondo,
+            fg=self.color_texto
+        ).pack(anchor="w", pady=(0, 5))
+        self.entry_precio_venta = tk.Entry(
+            self.main_frame,
+            font=("Segoe UI", 11),
+            bg=self.color_entrada,
+            bd=0,
+            relief="flat",
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario,
+            state="disabled"
+        )
+        self.entry_precio_venta.pack(fill="x", pady=(0, 10), ipady=4)
+
         # Resultados de búsqueda
         result_frame = tk.Frame(
             self.main_frame,
@@ -299,6 +341,12 @@ class FrameIngresoStock(tk.Toplevel):
                 self.lbl_stock_actual.config(
                     text=f"Stock actual: {self.producto_encontrado.stock}"
                 )
+                self.entry_precio_compra.config(state="normal")
+                self.entry_precio_venta.config(state="normal")
+                self.entry_precio_compra.delete(0, tk.END)
+                self.entry_precio_compra.insert(0, str(self.producto_encontrado.precio_compra))
+                self.entry_precio_venta.delete(0, tk.END)
+                self.entry_precio_venta.insert(0, str(self.producto_encontrado.precio_venta))
                 self.entry_cantidad.focus()
             else:
                 self.lbl_nombre_producto_encontrado.config(
@@ -307,6 +355,10 @@ class FrameIngresoStock(tk.Toplevel):
                 )
                 self.lbl_descripcion_producto.config(text="Descripción: -")
                 self.lbl_stock_actual.config(text="Stock actual: -")
+                self.entry_precio_compra.config(state="disabled")
+                self.entry_precio_venta.config(state="disabled")
+                self.entry_precio_compra.delete(0, tk.END)
+                self.entry_precio_venta.delete(0, tk.END)
 
     def buscar_producto_nombre(self):
         nombre = self.entry_nombre_producto.get()
@@ -323,6 +375,12 @@ class FrameIngresoStock(tk.Toplevel):
                 self.lbl_stock_actual.config(
                     text=f"Stock actual: {self.producto_encontrado.stock}"
                 )
+                self.entry_precio_compra.config(state="normal")
+                self.entry_precio_venta.config(state="normal")
+                self.entry_precio_compra.delete(0, tk.END)
+                self.entry_precio_compra.insert(0, str(self.producto_encontrado.precio_compra))
+                self.entry_precio_venta.delete(0, tk.END)
+                self.entry_precio_venta.insert(0, str(self.producto_encontrado.precio_venta))
                 self.entry_cantidad.focus()
             else:
                 self.lbl_nombre_producto_encontrado.config(
@@ -331,16 +389,48 @@ class FrameIngresoStock(tk.Toplevel):
                 )
                 self.lbl_descripcion_producto.config(text="Descripción: -")
                 self.lbl_stock_actual.config(text="Stock actual: -")
+                self.entry_precio_compra.config(state="disabled")
+                self.entry_precio_venta.config(state="disabled")
+                self.entry_precio_compra.delete(0, tk.END)
+                self.entry_precio_venta.delete(0, tk.END)
 
     def guardar_stock(self):
         cantidad = self.entry_cantidad.get()
         if cantidad is None or cantidad == "":
             tk.messagebox.showerror("Error", "Ingrese una cantidad válida.")
             return
-        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, int(cantidad))
+        precio_compra = self.entry_precio_compra.get()
+        precio_venta = self.entry_precio_venta.get()
+        if precio_compra is None or precio_compra == "" or precio_venta is None or precio_venta == "":
+            tk.messagebox.showerror("Error", "Ingrese precio de compra y precio de venta.")
+            return
+        try:
+            precio_compra_val = float(precio_compra)
+            precio_venta_val = float(precio_venta)
+        except ValueError:
+            tk.messagebox.showerror("Error", "Los precios deben ser valores numéricos.")
+            return
+        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, int(cantidad), precio_compra_val, precio_venta_val)
         tk.messagebox.showinfo("Éxito", "Stock actualizado correctamente.")
         self.actualizar_callback()
-        self.cerrar()
+        self.vaciar_campos()
+        if self.estado_chek_codigo.get():
+            self.entry_codigo_producto.focus()
+        else:
+            self.entry_nombre_producto.focus()
 
     def cerrar(self):
         self.destroy()
+
+    def vaciar_campos(self):
+        self.entry_codigo_producto.delete(0, tk.END)
+        self.entry_nombre_producto.delete(0, tk.END)
+        self.entry_cantidad.delete(0, tk.END)
+        self.entry_precio_compra.delete(0, tk.END)
+        self.entry_precio_venta.delete(0, tk.END)
+        self.lbl_nombre_producto_encontrado.config(
+            text="Ingrese código o nombre y presione Buscar.",
+            fg=self.color_primario
+        )
+        self.lbl_descripcion_producto.config(text="Descripción: -")
+        self.lbl_stock_actual.config(text="Stock actual: -")
