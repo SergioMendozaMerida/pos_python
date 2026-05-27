@@ -1,5 +1,5 @@
 import sqlite3
-import Venta
+import ventas.logica.Venta as Venta
 
 class ReporteVentas:
     def __init__(self):

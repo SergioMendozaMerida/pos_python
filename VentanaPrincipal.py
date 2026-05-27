@@ -1,9 +1,13 @@
 import tkinter as tk
-import VentanaInventario as vi
-import VentanaVentas as Vv
-import VentanaReporteVentas as Vrv
-import ReporteVentas as Rv
-import VentanaRecibos as VR
+import inventario.vistas.VentanaInventario as vi
+import ventas.vistas.VentanaVentas as Vv
+import ventas.vistas.VentanaReporteVentas as Vrv
+import ventas.logica.ReporteVentas as Rv
+import recibos.vistas.VentanaRecibos as VR
+import login.LoginFrame as lf
+import datosDeEmpresa.FrameEmpresa as FE
+import datosDeEmpresa.empresa as E
+import usuarios.FrameUsuarios as FU
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self):
@@ -11,12 +15,23 @@ class VentanaPrincipal(tk.Tk):
         self.geometry("1200x700")
         #self.resizable(False,False)
         self.title("Inventario")
+
+        self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
+        self.login_frame.pack(fill="both", expand=True)
+        
+    def dibujar_frames(self):
+
+        self.usuario = self.login_frame.login.usuario
+        self.empresa = E.Empresa()
+        
         self.inventario = vi.VentanaInventario(self)
         self.reporte_ventas = Rv.ReporteVentas()
         self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
-        self.ventas = Vv.VentanaVentas(self.inventario.inventario,self.ventana_reporte_ventas)
         self.recibos = VR.VentanaRecibos(self)
-        
+        self.ventas = Vv.VentanaVentas(self.inventario.inventario,self.ventana_reporte_ventas,self.recibos.actualizar_recibos,self.ventana_reporte_ventas.actualizar_ventas)
+        self.datos_empresa = FE.FrameEmpresa(self, self.empresa, self.usuario)
+        self.admin_usuarios = FU.FrameUsuarios(self)     
+
 # 1. Configuración de la barra (Navbar) con un color más sobrio
         # Un azul más profundo o un gris oscuro profesional
         navbar_color = "#2c3e50" 
@@ -76,7 +91,28 @@ class VentanaPrincipal(tk.Tk):
         )
         self.btn_recibos.pack(side="left", fill="y", padx=2)
 
-        self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos]
+        # Botón Datos de Empresa
+        self.btn_datos_empresa = tk.Button(
+            self.frm_menu_bar, 
+            text="🏢 Datos Empresa", 
+            command=lambda: self.draw_frames(self.datos_empresa),
+            **btn_style
+        )
+        self.btn_datos_empresa.pack(side="left", fill="y", padx=2)
+
+        if self.usuario.rol == "admin":
+
+            # Botón Usuarios
+            self.btn_usuarios = tk.Button(
+                self.frm_menu_bar, 
+                text="👥 Usuarios", 
+                command=lambda: self.draw_frames(self.admin_usuarios),
+                **btn_style
+            )
+            self.btn_usuarios.pack(side="left", fill="y", padx=2)
+
+        self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos, self.datos_empresa, 
+                       self.admin_usuarios]
         self.ventas.pack(fill="both", expand=True)
 
     def draw_frames(self, new_frame):

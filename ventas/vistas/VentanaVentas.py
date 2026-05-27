@@ -1,16 +1,18 @@
 from collections.abc import Callable
 import tkinter as tk
-import CarritoVenta as CV
+import ventas.logica.CarritoVenta as CV
 from tkinter import messagebox, simpledialog, ttk
-import FrameTerminarVenta as FTV
+import ventas.vistas.FrameTerminarVenta as FTV
 
 class VentanaVentas(tk.Frame):
 
-    def __init__(self, inventario, reporte_ventas):
+    def __init__(self, inventario, reporte_ventas, actualizar_recibos, actualizar_ventas):
         super().__init__(bg="#f5f6fa")
 
         self.inventario = inventario
         self.reporte_ventas = reporte_ventas
+        self.actualizar_recibos = actualizar_recibos
+        self.actualizar_ventas = actualizar_ventas
 
         self.app_bg = "#ecf0f3"
         self.panel_bg = "#ffffff"
@@ -362,6 +364,7 @@ class VentanaVentas(tk.Frame):
         self.show_carrito()
         self.show_productos()
         self.entry_codigo.delete(0, tk.END)
+        self.calcular_total()
 
     def iniciar_espera(self, event):
         if self.timer_id:
@@ -474,6 +477,7 @@ class VentanaVentas(tk.Frame):
         self.entry_telefono.delete(0, tk.END)
         self.carrito.cancelar_venta()
         self.show_carrito()
+        self.show_productos()
         messagebox.showinfo("Canelado", "La venta se ha cancelado")
 
     def cambiar_cantidad(self):
@@ -516,10 +520,10 @@ class VentanaVentas(tk.Frame):
 
         self.carrito.set_datos_cliente(nombre, direccion, dpi, nit, telefono)
 
-        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito)
+        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito, self.actualizar_recibos, self.actualizar_ventas)
 
         self.show_carrito()
-
+        
     def limpiar_carrito(self):
         for item in self.tabla_carrito.get_children():
             self.tabla_carrito.delete(item)

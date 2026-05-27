@@ -1,5 +1,5 @@
 import sqlite3
-import Producto as Prod
+import inventario.logica.Producto as Prod
 
 class Inventario:
     def __init__(self):

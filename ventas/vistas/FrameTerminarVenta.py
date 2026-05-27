@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-import CrearRecibo as RV
+import recibos.logica.CrearRecibo as RV
 
 class FrameTerminarVenta(tk.Toplevel):
-    def __init__(self, parent, carrito, limpiar_carrito):
+    def __init__(self, parent, carrito, limpiar_carrito, actualizar_recibos, actualizar_ventas):
         super().__init__(parent)
         self.title("Resumen de Venta")
         self.geometry("400x350")
@@ -12,6 +12,8 @@ class FrameTerminarVenta(tk.Toplevel):
 
         self.carrito = carrito
         self.limpiar_carrito = limpiar_carrito
+        self.actualizar_recibos = actualizar_recibos
+        self.actualizar_ventas = actualizar_ventas
 
         if self.carrito.nombre_cliente == "":
             self.carrito.nombre_cliente = "CF"
@@ -83,4 +85,6 @@ class FrameTerminarVenta(tk.Toplevel):
         cv = RV.CrearRecibo(self.carrito)
         cv.generar_recibo_pequenio()
         self.carrito.vaciar_carrito()
+        self.actualizar_ventas()
+        self.actualizar_recibos()
         self.destroy()

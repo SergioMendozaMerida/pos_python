@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-import Inventario as inv
-import FormProductos as FP
-import EditarProducto as EP
-import FrameIngresoStock as FIS
+import inventario.logica.Inventario as inv
+import inventario.vistas.FormProductos as FP
+import inventario.vistas.EditarProducto as EP
+import inventario.vistas.FrameIngresoStock as FIS
 
 
 class VentanaInventario(tk.Frame):

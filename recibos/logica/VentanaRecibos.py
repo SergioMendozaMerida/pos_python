@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-import Recibos as R
+import recibos.logica.Recibos as R
 import datetime
-
+import recibos.vistas.FrameDetalleRecibo as FDR
+import os
 
 class VentanaRecibos(tk.Frame):
     def __init__(self, parent):
@@ -53,6 +54,13 @@ class VentanaRecibos(tk.Frame):
 
         self.btn_buscar = tk.Button(self.frame_filtros, text="Buscar", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.filtrar_recibos)
         self.btn_buscar.grid(row=3, column=3, sticky="ew", padx=(5, 0), pady=(0, 10))
+
+        self.entry_no_recibo.bind("<Return>", lambda event: self.filtrar_recibos())
+        self.entry_nombre_cliente.bind("<Return>", lambda event: self.filtrar_recibos())
+        self.entry_dpi.bind("<Return>", lambda event: self.filtrar_recibos())
+        self.entry_nit.bind("<Return>", lambda event: self.filtrar_recibos())
+        self.entry_fecha_inicio.bind("<Return>", lambda event: self.filtrar_recibos())
+        self.entry_fecha_fin.bind("<Return>", lambda event: self.filtrar_recibos())
         
         self.frame_filtros_predeterminados = tk.Frame(self.frame_filtros, bg="#f0f0f0")
         self.frame_filtros_predeterminados.grid(row=4, column=0, columnspan=4, sticky="ew", pady=(5,0))
@@ -106,55 +114,105 @@ class VentanaRecibos(tk.Frame):
         self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
         self.frame_botones_opciones.grid_columnconfigure(1, weight=1)
 
-        self.btn_ver_ventas = tk.Button(self.frame_botones_opciones, text="Ver Ventas del Recibo", bg="#0984e3", fg="white", relief="flat", cursor="hand2")
+        self.btn_ver_ventas = tk.Button(self.frame_botones_opciones, text="Ver Ventas del Recibo", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.ver_detalle)
         self.btn_ver_ventas.pack(side="left", padx=(0, 5), fill="x", expand=True)
-        self.btn_ver_recibo_pdf = tk.Button(self.frame_botones_opciones, text="Ver Recibo PDF", bg="#00b894", fg="white", relief="flat", cursor="hand2")
+        self.btn_ver_recibo_pdf = tk.Button(self.frame_botones_opciones, text="Ver Recibo PDF", bg="#00b894", fg="white", relief="flat", cursor="hand2", command=self.ver_recibo_pdf)
         self.btn_ver_recibo_pdf.pack(side="left", padx=(5, 0), fill="x", expand=True)
 
-        self.mostrar_recibos(self.recibos.recibos)
+        self.mostrar_recibos()
 
-    def mostrar_recibos(self, recibos):
+    def mostrar_recibos(self):
         for item in self.tabla_recibos.get_children():
             self.tabla_recibos.delete(item)
 
+        #self.recibos.obtener_recibos()
+        recibos = self.recibos.recibos
+
         for recibo in recibos:
-            self.tabla_recibos.insert("", "end", values=(
+            self.tabla_recibos.insert("", "end", iid=recibo.no_recibo, values=(
                 recibo.no_recibo,
                 recibo.fecha,
                 recibo.nombre_cliente,
                 f"Q {recibo.total:,.2f}"
             ))
 
+    def actualizar_recibos(self):
+        for item in self.tabla_recibos.get_children():
+            self.tabla_recibos.delete(item)
+
+        self.recibos.obtener_recibos()
+        self.mostrar_recibos()
+
     def filtrar_recibos(self):
-        # Lógica de filtrado de recibos
-        # Aquí deberías llamar a un método en self.recibos para filtrar
-        # y luego actualizar la tabla con self.mostrar_recibos()
+        no_recibo = self.entry_no_recibo.get()
+        nombre_cliente = self.entry_nombre_cliente.get()
+        dpi = self.entry_dpi.get()
+        nit = self.entry_nit.get()
+        fecha_inicio = self.entry_fecha_inicio.get()
+        fecha_fin = self.entry_fecha_fin.get()
+
+        self.recibos.filtrar_recibos(no_recibo, nombre_cliente, dpi, nit, fecha_inicio, fecha_fin)
+
+        self.mostrar_recibos()
+
         self.limpiar_botones_filtros()
-        print("Filtrando recibos...")
 
     def filtrar_recibos_hoy(self):
         self.limpiar_botones_filtros()
         self.btn_recibos_hoy.config(bg=self.color_btn_filtro_seleccionado)
-        # Lógica para filtrar recibos de hoy
-        print("Filtrando recibos de hoy...")
+        
+        self.limpiar_filtros()
+        fecha_inicio = datetime.date.today().strftime("%Y-%m-%d")
+        fecha_fin = datetime.date.today().strftime("%Y-%m-%d")
+
+        self.recibos.filtrar_recibos("", "", "", "", fecha_inicio, fecha_fin)
+
+        self.mostrar_recibos()
+
 
     def filtrar_recibos_semana(self):
         self.limpiar_botones_filtros()
         self.btn_recibos_semana.config(bg=self.color_btn_filtro_seleccionado)
-        # Lógica para filtrar recibos de la semana
-        print("Filtrando recibos de la semana...")
+        
+        self.limpiar_filtros()
+
+        hoy = datetime.date.today()
+        ayer = hoy - datetime.timedelta(days=1)
+        fecha_inicio = hoy - datetime.timedelta(days=hoy.weekday())
+        fecha_fin = fecha_inicio + datetime.timedelta(days=6)
+
+        self.recibos.filtrar_recibos("", "", "", "", fecha_inicio, fecha_fin)
+
+        self.mostrar_recibos()
 
     def filtrar_recibos_mes(self):
         self.limpiar_botones_filtros()
         self.btn_recibios_mes.config(bg=self.color_btn_filtro_seleccionado)
-        # Lógica para filtrar recibos del mes
-        print("Filtrando recibos del mes...")
+
+        self.limpiar_filtros()
+        
+        hoy = datetime.date.today()
+        fecha_inicio = hoy.replace(day=1)
+        # Para obtener el último día del mes, se puede tomar el primer día del siguiente mes y restarle un día
+        if hoy.month == 12:
+            fecha_fin = fecha_inicio.replace(year=hoy.year + 1, month=1) - datetime.timedelta(days=1)
+        else:
+            fecha_fin = fecha_inicio.replace(month=hoy.month + 1) - datetime.timedelta(days=1)
+
+        self.recibos.filtrar_recibos("", "", "", "", fecha_inicio, fecha_fin)
+        self.mostrar_recibos()
 
     def filtrar_recibos_anio(self):
         self.limpiar_botones_filtros()
         self.btn_recibos_anio.config(bg=self.color_btn_filtro_seleccionado)
-        # Lógica para filtrar recibos del año
-        print("Filtrando recibos del año...")
+        
+        self.limpiar_filtros()
+
+        fecha_inicio = datetime.date(datetime.date.today().year, 1, 1)
+        fecha_fin = datetime.date(datetime.date.today().year, 12, 31)
+
+        self.recibos.filtrar_recibos("", "", "", "", fecha_inicio, fecha_fin)
+        self.mostrar_recibos()
 
     def limpiar_filtros(self):
         self.entry_no_recibo.delete(0, tk.END)
@@ -165,9 +223,20 @@ class VentanaRecibos(tk.Frame):
         self.entry_fecha_fin.delete(0, tk.END)
         self.limpiar_botones_filtros()
         self.recibos.obtener_recibos() # Recargar todos los recibos
-        self.mostrar_recibos(self.recibos.recibos)
-        print("Filtros limpiados.")
+        self.mostrar_recibos()
 
     def limpiar_botones_filtros(self):
         for btn in self.btns_filtros:
             btn.config(bg=self.color_btn_filtro)
+        self.mostrar_recibos()
+    def ver_detalle(self):
+        item = self.tabla_recibos.selection()[0]
+        for v in self.recibos.recibos:
+            if int(item) == int(v.no_recibo):
+                print(v.no_recibo)
+                detalle = FDR.FrameDetalleRecibo(self, v)
+                break
+                
+    def ver_recibo_pdf(self):
+        item = self.tabla_recibos.selection()[0]
+        os.startfile(f"recibo_{item}.pdf")

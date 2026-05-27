@@ -1,7 +1,7 @@
 import datetime
 import tkinter as tk
 from tkinter import ttk, messagebox
-import CrearReportes as CR
+import reportes.CrearReportes as CR
 
 class VentanaReporteVentas(tk.Frame):
     def __init__(self, parent, reporte_ventas):
@@ -134,6 +134,30 @@ class VentanaReporteVentas(tk.Frame):
             self.tabla_ventas.delete(item)
 
         for venta in ventas:
+            self.tabla_ventas.insert("", "end", values=(
+                venta.id_recibo,
+                venta.fecha,
+                venta.producto,
+                venta.cantidad,
+                venta.precio,
+                venta.sub_total
+            ))
+
+        self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
+
+        self.lbl_producto_mas_vendido.config(text=f"Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[0]if len(self.reporte_ventas.tres_productos_mas_vendidos) > 0 else None}")
+        self.lbl_segundo_producto_mas_vendido.config(text=f"Segundo Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[1] if len(self.reporte_ventas.tres_productos_mas_vendidos) > 1 else None}")
+        self.lbl_tercer_producto_mas_vendido.config(text=f"Tercer Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[2] if len(self.reporte_ventas.tres_productos_mas_vendidos) > 2 else None}")
+
+        self.nombre_reporte = f"{self.hoy} - reporte ventas"
+
+    def actualizar_ventas(self):
+        for item in self.tabla_ventas.get_children():
+            self.tabla_ventas.delete(item)
+
+        self.reporte_ventas.obtener_ventas()
+
+        for venta in self.reporte_ventas.ventas:
             self.tabla_ventas.insert("", "end", values=(
                 venta.id_recibo,
                 venta.fecha,
