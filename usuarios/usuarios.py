@@ -26,7 +26,7 @@ class Usuarios:
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("INSERT INTO usuarios (nombre, usuario, contrasenia, rol) VALUES (?, ?, ?, ?)", (nombre, usuario, contrasenia, rol))
+            cursor.execute("INSERT INTO usuarios (nombre, usuario, contrasenia, rol, activo) VALUES (?, ?, ?, ?,1)", (nombre, usuario, contrasenia, rol))
             conexion.commit()
             conexion.close()
             self.obtener_usuarios()

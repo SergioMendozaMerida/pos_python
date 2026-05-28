@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import usuarios.usuarios as U
 import usuarios.FormEditarUsuario as FEU
+import usuarios.FormContrasenia as FC
+import usuarios.FormRol as FR
+import usuarios.FormUsuarioNuevo as FUN
 
 class FrameUsuarios(tk.Frame):
     def __init__(self, parent):
@@ -98,7 +101,11 @@ class FrameUsuarios(tk.Frame):
         if not seleccion:
             return messagebox.showwarning("Atención", "Seleccione un usuario de la tabla.")
         id_u = seleccion[0]
-        if messagebox.askyesno("Confirmar", f"¿Está seguro que desea INACTIVAR al usuario ID {id_u}?"):
+        for u in self.usuarios.usuarios:
+            if int(u.id_usuario) == int(id_u):
+                usuario = u.usuario
+                break
+        if messagebox.askyesno("Confirmar", f"¿Está seguro que desea INACTIVAR al usuario {usuario}?"):
             self.usuarios.inactivar_usuario(id_u)
             self.actualizar_tabla()
 
@@ -125,6 +132,33 @@ class FrameUsuarios(tk.Frame):
         formulario = FEU.FormEditarUsuario(self, seleccion, self.usuarios.editar_usuario)
 
 
-    def cambiar_password(self): pass
-    def cambiar_rol(self): pass
-    def abrir_formulario_crear(self): pass
+    def cambiar_password(self):
+        seleccion = self.tabla.selection()
+        if not seleccion:
+            return messagebox.showwarning("Atención", "Seleccione un usuario de la tabla.")
+        id_u = seleccion[0]
+        
+        for u in self.usuarios.usuarios:
+            if int(u.id_usuario) == int(id_u):
+                seleccion = u
+                break
+
+        formulario = FC.FrameContrasenia(self, seleccion, self.usuarios.reestablcer_contrasenia)
+
+    def cambiar_rol(self): 
+        seleccion = self.tabla.selection()
+        if not seleccion:
+            return messagebox.showwarning("Atención", "Seleccione un usuario de la tabla.")
+        id_u = seleccion[0]
+
+        for u in self.usuarios.usuarios:
+            if int(u.id_usuario) == int(id_u):
+                seleccion = u
+                break
+
+        formulario = FR.FormRol(self, seleccion, self.usuarios.cambiar_rol, self.actualizar_tabla)
+
+    def abrir_formulario_crear(self): 
+        formulario = FUN.FormUsuarioNuevo(self, self.usuarios.crear_usuario, self.actualizar_tabla)
+
+        

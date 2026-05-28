@@ -2,6 +2,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import mm
 import os
+from pathlib import Path
 
 class CrearRecibo:
     def __init__(self, carrito_compras):
@@ -16,8 +17,10 @@ class CrearRecibo:
         self.nit = carrito_compras.nit
         self.productos = carrito_compras.productos
 
+        self.ruta_documentos = Path.home() / "Documents/recibos_pos"
+
     def generar_recibo_carga(self):
-        c = canvas.Canvas(f"recibo_{self.numero_recibo}.pdf", pagesize=letter)
+        c = canvas.Canvas(str(self.ruta_documentos / f"recibo_{self.numero_recibo}.pdf"), pagesize=letter)
         width, height = letter
 
         # --- ENCABEZADO ---
@@ -80,7 +83,7 @@ class CrearRecibo:
         c.drawCentredString(width/2, 50, "¡Gracias por su preferencia!")
 
         c.save()
-        os.startfile(f"recibo_{self.numero_recibo}.pdf")
+        os.startfile(str(self.ruta_documentos / f"recibo_{self.numero_recibo}.pdf"))
 
 
     def generar_recibo_pequenio(self):
@@ -91,7 +94,7 @@ class CrearRecibo:
         estimated_height = (70 + (items_count * 12) + 40) * mm
         height = max(150 * mm, estimated_height)
 
-        c = canvas.Canvas(f"recibo_{self.numero_recibo}.pdf", pagesize=(width, height))
+        c = canvas.Canvas(str(self.ruta_documentos / f"recibo_{self.numero_recibo}.pdf"), pagesize=(width, height))
         y = height - 10 * mm
 
         # --- ENCABEZADO ---
@@ -150,4 +153,4 @@ class CrearRecibo:
         c.drawCentredString(width/2, y, "¡Gracias por su compra!")
         
         c.save()
-        os.startfile(f"recibo_{self.numero_recibo}.pdf")
+        os.startfile(str(self.ruta_documentos / f"recibo_{self.numero_recibo}.pdf"))

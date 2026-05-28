@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import inventario.vistas.VentanaInventario as vi
 import ventas.vistas.VentanaVentas as Vv
 import ventas.vistas.VentanaReporteVentas as Vrv
@@ -111,9 +112,30 @@ class VentanaPrincipal(tk.Tk):
             )
             self.btn_usuarios.pack(side="left", fill="y", padx=2)
 
+        # Botón Cerrar Sesión (Alineado a la derecha)
+        self.btn_logout = tk.Button(
+            self.frm_menu_bar, 
+            text="🚪 Cerrar Sesión", 
+            command=self.cerrar_sesion,
+            **btn_style
+        )
+        # Personalización de color para resaltar la acción de salida
+        self.btn_logout.configure(bg="#a93226", activebackground="#e74c3c")
+        self.btn_logout.pack(side="right", fill="y", padx=5)
+
         self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos, self.datos_empresa, 
                        self.admin_usuarios]
         self.ventas.pack(fill="both", expand=True)
+
+    def cerrar_sesion(self):
+        if messagebox.askyesno("Cerrar Sesión", "¿Está seguro de que desea salir del sistema?"):
+            # Limpiar todos los elementos de la ventana actual
+            for widget in self.winfo_children():
+                widget.destroy()
+            
+            # Reiniciar al estado de Login
+            self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
+            self.login_frame.pack(fill="both", expand=True)
 
     def draw_frames(self, new_frame):
         for frame in self.frames:

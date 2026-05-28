@@ -48,7 +48,7 @@ class FrameTerminarVenta(tk.Toplevel):
         self.entry_pago = ttk.Entry(payment_frame, font=("Arial", 12), width=20)
         self.entry_pago.focus_set()
         self.entry_pago.bind("<KeyRelease>", self.iniciar_espera)
-        self.entry_pago.bind("<Return>", self.calcular_cambio)
+        self.entry_pago.bind("<Return>", self.concretar_venta)
         self.entry_pago.pack(pady=(5, 0))
         
         # Change label
@@ -68,7 +68,7 @@ class FrameTerminarVenta(tk.Toplevel):
     def iniciar_espera(self, event):
         if self.timer_id:
             self.after_cancel(self.timer_id)
-        self.timer_id = self.after(1000, self.calcular_cambio)
+        self.timer_id = self.after(500, self.calcular_cambio)
 
     def calcular_cambio(self, event=None):
         if self.timer_id:
@@ -78,7 +78,7 @@ class FrameTerminarVenta(tk.Toplevel):
         cambio = int(self.entry_pago.get()) - self.carrito.total
         self.lbl_cambio.configure(text=f"Q  {cambio:.2f}")
 
-    def concretar_venta(self):
+    def concretar_venta(self, event):
         self.carrito.concretar_venta()
         messagebox.showinfo("Venta exitosa", "Venta registrada exitosamente.")
         self.limpiar_carrito()
