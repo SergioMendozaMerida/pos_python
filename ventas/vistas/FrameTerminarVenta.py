@@ -3,7 +3,7 @@ from tkinter import messagebox, ttk
 import recibos.logica.CrearRecibo as RV
 
 class FrameTerminarVenta(tk.Toplevel):
-    def __init__(self, parent, carrito, limpiar_carrito, actualizar_recibos, actualizar_ventas):
+    def __init__(self, parent, carrito, limpiar_carrito, actualizar_recibos, actualizar_ventas, usuario):
         super().__init__(parent)
         self.title("Resumen de Venta")
         self.geometry("400x350")
@@ -14,6 +14,7 @@ class FrameTerminarVenta(tk.Toplevel):
         self.limpiar_carrito = limpiar_carrito
         self.actualizar_recibos = actualizar_recibos
         self.actualizar_ventas = actualizar_ventas
+        self.usuario = usuario
 
         if self.carrito.nombre_cliente == "":
             self.carrito.nombre_cliente = "CF"
@@ -78,7 +79,7 @@ class FrameTerminarVenta(tk.Toplevel):
         cambio = int(self.entry_pago.get()) - self.carrito.total
         self.lbl_cambio.configure(text=f"Q  {cambio:.2f}")
 
-    def concretar_venta(self, event):
+    def concretar_venta(self, event=None):
         self.carrito.concretar_venta()
         messagebox.showinfo("Venta exitosa", "Venta registrada exitosamente.")
         self.limpiar_carrito()

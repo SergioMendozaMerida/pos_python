@@ -3,7 +3,7 @@ import sqlite3
 from tkinter import messagebox
 
 class CarrtioVenta:
-    def __init__(self):
+    def __init__(self,usuario):
         self.productos = []
         self.numero_recibo = 0
         self.fecha = datetime.date.today()
@@ -13,6 +13,8 @@ class CarrtioVenta:
         self.telefono = ""
         self.dpi = ""
         self.nit = ""
+
+        self.usuario = usuario
 
         self.obtener_numero_recibo()
         
@@ -102,8 +104,8 @@ class CarrtioVenta:
         conexion = sqlite3.connect("db_inventario.db")
         cursor = conexion.cursor()
         for p in self.productos:
-            cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha) VALUES (?,?,?,?,?,?,?)',
-                           (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha))
+            cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha,usuario) VALUES (?,?,?,?,?,?,?,?)',
+                           (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha,self.usuario.usuario))
             conexion.commit()
 
         cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total) VALUES(?,?,?,?,?,?,?)',
@@ -120,6 +122,3 @@ class CarrtioVenta:
         self.dpi = ""
         self.nit = ""
         self.obtener_numero_recibo()
-
-
-carrito = CarrtioVenta()

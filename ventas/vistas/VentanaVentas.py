@@ -6,13 +6,14 @@ import ventas.vistas.FrameTerminarVenta as FTV
 
 class VentanaVentas(tk.Frame):
 
-    def __init__(self, inventario, reporte_ventas, actualizar_recibos, actualizar_ventas):
+    def __init__(self, inventario, reporte_ventas, actualizar_recibos, actualizar_ventas, usuario):
         super().__init__(bg="#f5f6fa")
 
         self.inventario = inventario
         self.reporte_ventas = reporte_ventas
         self.actualizar_recibos = actualizar_recibos
         self.actualizar_ventas = actualizar_ventas
+        self.usuario = usuario
 
         self.app_bg = "#ecf0f3"
         self.panel_bg = "#ffffff"
@@ -341,7 +342,7 @@ class VentanaVentas(tk.Frame):
         )
         btn_cancelar.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
 
-        self.carrito = CV.CarrtioVenta()
+        self.carrito = CV.CarrtioVenta(self.usuario)
         self.timer_id = None
 
         self.show_productos()
@@ -520,7 +521,8 @@ class VentanaVentas(tk.Frame):
 
         self.carrito.set_datos_cliente(nombre, direccion, dpi, nit, telefono)
 
-        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito, self.actualizar_recibos, self.actualizar_ventas)
+        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito, self.actualizar_recibos, 
+                                               self.actualizar_ventas, self.usuario)
 
         self.show_carrito()
         

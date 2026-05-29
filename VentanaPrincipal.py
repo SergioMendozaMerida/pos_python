@@ -29,7 +29,8 @@ class VentanaPrincipal(tk.Tk):
         self.reporte_ventas = Rv.ReporteVentas()
         self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
         self.recibos = VR.VentanaRecibos(self)
-        self.ventas = Vv.VentanaVentas(self.inventario.inventario,self.ventana_reporte_ventas,self.recibos.actualizar_recibos,self.ventana_reporte_ventas.actualizar_ventas)
+        self.ventas = Vv.VentanaVentas(self.inventario.inventario,self.ventana_reporte_ventas,self.recibos.actualizar_recibos,
+                                       self.ventana_reporte_ventas.actualizar_ventas, self.usuario)
         self.datos_empresa = FE.FrameEmpresa(self, self.empresa, self.usuario)
         self.admin_usuarios = FU.FrameUsuarios(self)     
 

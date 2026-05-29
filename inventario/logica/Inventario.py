@@ -1,3 +1,4 @@
+from datetime import datetime
 import sqlite3
 import inventario.logica.Producto as Prod
 
@@ -127,10 +128,17 @@ class Inventario:
         else:
             return None
         
-    def aumentar_stock(self, id_producto, cantidad, precio_compra, precio_venta):
-        self.cursor.execute("UPDATE productos SET stock = stock + ?, precio_compra = ?, precio_venta = ? WHERE id_producto=?", (cantidad, precio_compra, precio_venta, id_producto))
+    def aumentar_stock(self, id_producto, cantidad, precio_compra, precio_venta, proveedor=""):
+        hoy = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.cursor.execute("INSERT INTO ingresos_stock (fecha_ingreso, id_producto, cantidad, precio_compra, precio_venta, proveedor) VALUES (?, ?, ?, ?, ?, ?)", 
+                            (hoy, id_producto, cantidad, precio_compra, precio_venta, proveedor))
+
         self.conexion.commit()
         self.obtener_productos()
+
+        """self.cursor.execute("UPDATE productos SET stock = stock + ?, precio_compra = ?, precio_venta = ? WHERE id_producto=?", (cantidad, precio_compra, precio_venta, id_producto))
+        self.conexion.commit()
+        self.obtener_productos()"""
 
     def editar_producto(self, id_producto, nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, stock):
         self.cursor.execute("UPDATE productos SET nombre=?, descripcion=?, presentacion=?, categoria=?, precio_compra=?, precio_venta=?, stock=? WHERE id_producto=?",

@@ -26,7 +26,7 @@ class FrameIngresoStock(tk.Toplevel):
         self.color_borde = "#dfe6e9"
 
         self.title("Ingreso de Stock")
-        self.geometry("650x700")
+        self.geometry("650x780")
         self.resizable(False, False)
         self.configure(bg=self.color_fondo)
 
@@ -218,6 +218,26 @@ class FrameIngresoStock(tk.Toplevel):
         )
         self.entry_precio_venta.pack(fill="x", pady=(0, 10), ipady=4)
 
+        # Proveedor
+        tk.Label(
+            self.main_frame,
+            text="Proveedor",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.color_fondo,
+            fg=self.color_texto
+        ).pack(anchor="w", pady=(0, 5))
+        self.entry_proveedor = tk.Entry(
+            self.main_frame,
+            font=("Segoe UI", 11),
+            bg=self.color_entrada,
+            bd=0,
+            relief="flat",
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_proveedor.pack(fill="x", pady=(0, 10), ipady=4)
+
         # Resultados de búsqueda
         result_frame = tk.Frame(
             self.main_frame,
@@ -401,6 +421,7 @@ class FrameIngresoStock(tk.Toplevel):
             return
         precio_compra = self.entry_precio_compra.get()
         precio_venta = self.entry_precio_venta.get()
+        proveedor = self.entry_proveedor.get().strip()
         if precio_compra is None or precio_compra == "" or precio_venta is None or precio_venta == "":
             tk.messagebox.showerror("Error", "Ingrese precio de compra y precio de venta.")
             return
@@ -410,7 +431,7 @@ class FrameIngresoStock(tk.Toplevel):
         except ValueError:
             tk.messagebox.showerror("Error", "Los precios deben ser valores numéricos.")
             return
-        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, int(cantidad), precio_compra_val, precio_venta_val)
+        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, int(cantidad), precio_compra_val, precio_venta_val, proveedor)
         tk.messagebox.showinfo("Éxito", "Stock actualizado correctamente.")
         self.actualizar_callback()
         self.vaciar_campos()
@@ -428,6 +449,7 @@ class FrameIngresoStock(tk.Toplevel):
         self.entry_cantidad.delete(0, tk.END)
         self.entry_precio_compra.delete(0, tk.END)
         self.entry_precio_venta.delete(0, tk.END)
+        self.entry_proveedor.delete(0, tk.END)
         self.lbl_nombre_producto_encontrado.config(
             text="Ingrese código o nombre y presione Buscar.",
             fg=self.color_primario
