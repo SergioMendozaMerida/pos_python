@@ -3,10 +3,11 @@ import sqlite3
 import inventario.logica.Producto as Prod
 
 class Inventario:
-    def __init__(self):
+    def __init__(self, usuario):
         self.productos = []
         self.conexion = sqlite3.connect("db_inventario.db")
         self.cursor = self.conexion.cursor()
+        self.usuario = usuario
 
     def agregar_productos(self, producto):
         self.productos.append(producto)
@@ -130,8 +131,8 @@ class Inventario:
         
     def aumentar_stock(self, id_producto, cantidad, precio_compra, precio_venta, proveedor=""):
         hoy = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.cursor.execute("INSERT INTO ingresos_stock (fecha_ingreso, id_producto, cantidad, precio_compra, precio_venta, proveedor) VALUES (?, ?, ?, ?, ?, ?)", 
-                            (hoy, id_producto, cantidad, precio_compra, precio_venta, proveedor))
+        self.cursor.execute("INSERT INTO ingresos_stock (fecha_ingreso, id_producto, cantidad, precio_compra, precio_venta, proveedor, usuario) VALUES (?, ?, ?, ?, ?, ?,?)", 
+                            (hoy, id_producto, cantidad, precio_compra, precio_venta, proveedor, self.usuario.usuario))
 
         self.conexion.commit()
         self.obtener_productos()

@@ -12,7 +12,6 @@ class FrameIngresoStock(tk.Toplevel):
         self.estado_chek_codigo = tk.BooleanVar()
         self.estado_chek_nombre = tk.BooleanVar()
 
-
         self.producto_encontrado = None
 
         self.color_fondo = "#f8f9fa"
@@ -431,7 +430,8 @@ class FrameIngresoStock(tk.Toplevel):
         except ValueError:
             tk.messagebox.showerror("Error", "Los precios deben ser valores numéricos.")
             return
-        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, int(cantidad), precio_compra_val, precio_venta_val, proveedor)
+        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, int(cantidad), precio_compra_val, precio_venta_val, 
+                                       proveedor)
         tk.messagebox.showinfo("Éxito", "Stock actualizado correctamente.")
         self.actualizar_callback()
         self.vaciar_campos()

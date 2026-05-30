@@ -7,7 +7,7 @@ import inventario.vistas.FrameIngresoStock as FIS
 
 
 class VentanaInventario(tk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, usuario):
         super().__init__(parent)
         
         # Configuración de colores
@@ -19,7 +19,8 @@ class VentanaInventario(tk.Frame):
         self.color_boton_hover = "#229954"
         
         self.configure(bg=self.color_fondo)
-        self.inventario = inv.Inventario()
+        self.usuario = usuario
+        self.inventario = inv.Inventario(usuario)
 
         # Frame principal con padding
         self.main_frame = tk.Frame(self, bg=self.color_fondo)

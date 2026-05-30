@@ -60,6 +60,7 @@ class CarrtioVenta:
             p_carrito = {
                 "id_producto": p[0],
                 "nombre": p[1],
+                "precio_compra": p[5],
                 "precio_venta": p[6],
                 "stock": p[7],
                 "cantidad": cantidad,
@@ -104,13 +105,14 @@ class CarrtioVenta:
         conexion = sqlite3.connect("db_inventario.db")
         cursor = conexion.cursor()
         for p in self.productos:
-            cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha,usuario) VALUES (?,?,?,?,?,?,?,?)',
-                           (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha,self.usuario.usuario))
+            cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha,usuario,costo) VALUES (?,?,?,?,?,?,?,?,?)',
+                           (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha,self.usuario.usuario,p['precio_compra']))
             conexion.commit()
 
-        cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total) VALUES(?,?,?,?,?,?,?)',
-                       (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total))
+        cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total,usuario) VALUES(?,?,?,?,?,?,?,?)',
+                       (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total,self.usuario.usuario))
         conexion.commit()
+        self.vaciar_carrito()
         conexion.close()
     
     def vaciar_carrito(self):

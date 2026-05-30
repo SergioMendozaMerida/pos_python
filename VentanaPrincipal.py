@@ -25,7 +25,7 @@ class VentanaPrincipal(tk.Tk):
         self.usuario = self.login_frame.login.usuario
         self.empresa = E.Empresa()
         
-        self.inventario = vi.VentanaInventario(self)
+        self.inventario = vi.VentanaInventario(self, self.usuario)
         self.reporte_ventas = Rv.ReporteVentas()
         self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
         self.recibos = VR.VentanaRecibos(self)
