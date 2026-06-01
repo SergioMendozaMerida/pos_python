@@ -1,9 +1,10 @@
 import sqlite3
 from tkinter import messagebox
+import ventas.logica.Venta as V
 
 
 class Recibo:
-    def __init__(self, no_recibo, nombre_cliente, direccion, dpi, nit, telefono, fecha, total):
+    def __init__(self, no_recibo, nombre_cliente, direccion, dpi, nit, telefono, fecha, total, usuario):
         self.no_recibo = no_recibo
         self.nombre_cliente = nombre_cliente
         self.direccion = direccion
@@ -12,6 +13,8 @@ class Recibo:
         self.telefono = telefono
         self.fecha = fecha
         self.total = total
+        self.utilidad = 0
+        self.usuario = usuario
         self.ventas = []
 
     def obtener_ventas(self):
@@ -22,7 +25,9 @@ class Recibo:
             ventas = cursor.fetchall()
             conexion.close()
             for venta in ventas:
-                self.ventas.append(venta)
+                self.ventas.append(V.Venta(venta[0], venta[1], venta[2], venta[3], venta[4], venta[5], venta[6], venta[7], venta[8], venta[9]))
+                #costo por cantidad menos subtotal
+                self.utilidad += venta[7] - (venta[6] * venta[9])
         except:
             messagebox.showerror("Error", "Se produjo un error al obtener las ventas.")
 

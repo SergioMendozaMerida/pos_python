@@ -7,7 +7,7 @@ import inventario.vistas.FrameIngresoStock as FIS
 
 
 class VentanaInventario(tk.Frame):
-    def __init__(self, parent, usuario):
+    def __init__(self, parent, usuario, actualizar_tabla_ingresos):
         super().__init__(parent)
         
         # Configuración de colores
@@ -20,6 +20,7 @@ class VentanaInventario(tk.Frame):
         
         self.configure(bg=self.color_fondo)
         self.usuario = usuario
+        self.actualizar_tabla_ingresos = actualizar_tabla_ingresos
         self.inventario = inv.Inventario(usuario)
 
         # Frame principal con padding
@@ -81,7 +82,8 @@ class VentanaInventario(tk.Frame):
         tabla_scroll_frame = tk.Frame(self.frame_tabla, bg=self.color_fondo)
         tabla_scroll_frame.pack(fill="both", expand=True)
 
-        self.columnas = ("id", "nombre", "descripcion", "presentacion", "categoria", "precio_compra", "precio_venta", "stock")
+        self.columnas = ("id", "nombre", "descripcion", "presentacion", "categoria", "precio_compra", 
+                         "precio_venta", "stock","utilidad")
         self.tabla_productos = ttk.Treeview(tabla_scroll_frame, columns=self.columnas, show="headings", height=10)
 
         # Configurar headings
@@ -93,6 +95,7 @@ class VentanaInventario(tk.Frame):
         self.tabla_productos.heading("precio_compra", text="P. Compra")
         self.tabla_productos.heading("precio_venta", text="P. Venta")
         self.tabla_productos.heading("stock", text="Stock")
+        self.tabla_productos.heading("utilidad", text="Utilidad")
 
         # Configurar ancho de columnas
         self.tabla_productos.column("id", width=0, stretch=False)  # Columna oculta
@@ -103,6 +106,7 @@ class VentanaInventario(tk.Frame):
         self.tabla_productos.column("precio_compra", width=90, anchor="center")
         self.tabla_productos.column("precio_venta", width=90, anchor="center")
         self.tabla_productos.column("stock", width=70, anchor="center")
+        self.tabla_productos.column("utilidad", width=70)
 
         # Scrollbars
         self.scroll_bar = tk.Scrollbar(tabla_scroll_frame, orient="vertical", command=self.tabla_productos.yview)
@@ -188,7 +192,7 @@ class VentanaInventario(tk.Frame):
         formulario = FP.FormProductos(self, self.inventario, self.actualizar_tabla)
 
     def abrir_ingreso_stock(self):
-        ingreso_stock = FIS.FrameIngresoStock(self, self.inventario, self.actualizar_tabla)
+        ingreso_stock = FIS.FrameIngresoStock(self, self.inventario, self.actualizar_tabla, self.actualizar_tabla_ingresos)
         ingreso_stock.focus()
 
     def cargar_productos(self):
@@ -211,7 +215,8 @@ class VentanaInventario(tk.Frame):
                 producto.categoria,
                 f"Q{producto.precio_compra:.2f}",
                 f"Q{producto.precio_venta:.2f}",
-                producto.stock
+                producto.stock,
+                f"Q{producto.utilidad:.2f}"
             ))
 
     def buscar_producto(self, nombre="", descripcion=""):
@@ -232,7 +237,8 @@ class VentanaInventario(tk.Frame):
                 producto.categoria,
                 f"Q{producto.precio_compra:.2f}",
                 f"Q{producto.precio_venta:.2f}",
-                producto.stock
+                producto.stock,
+                f"Q{producto.utilidad:.2f}"
             ))
 
     def abrir_editar_formulario(self):

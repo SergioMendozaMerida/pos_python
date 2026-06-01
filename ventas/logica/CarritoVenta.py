@@ -112,7 +112,7 @@ class CarrtioVenta:
         cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total,usuario) VALUES(?,?,?,?,?,?,?,?)',
                        (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total,self.usuario.usuario))
         conexion.commit()
-        self.vaciar_carrito()
+        #self.vaciar_carrito()
         conexion.close()
     
     def vaciar_carrito(self):

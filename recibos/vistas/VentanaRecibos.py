@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
+from pathlib import Path
 import recibos.logica.Recibos as R
 import datetime
 import recibos.vistas.FrameDetalleRecibo as FDR
@@ -88,18 +90,22 @@ class VentanaRecibos(tk.Frame):
         self.frame_tabla_recibos.grid_rowconfigure(0, weight=1)
         self.frame_tabla_recibos.grid_columnconfigure(0, weight=1)
 
-        columnas = ("No. Recibo", "Fecha", "Cliente", "Total")
+        columnas = ("No. Recibo", "Fecha", "Cliente", "Total","utilidad", "Usuario")
         self.tabla_recibos = ttk.Treeview(self.frame_tabla_recibos, columns=columnas, show="headings", height=10)
 
         self.tabla_recibos.heading("No. Recibo", text="No. Recibo")
         self.tabla_recibos.heading("Fecha", text="Fecha")
         self.tabla_recibos.heading("Cliente", text="Cliente")
         self.tabla_recibos.heading("Total", text="Total")
+        self.tabla_recibos.heading("utilidad", text="Utilidad")
+        self.tabla_recibos.heading("Usuario", text="Usuario")
 
         self.tabla_recibos.column("No. Recibo", width=100, anchor="center")
         self.tabla_recibos.column("Fecha", width=120, anchor="center")
         self.tabla_recibos.column("Cliente", width=250, anchor="w")
         self.tabla_recibos.column("Total", width=100, anchor="e")
+        self.tabla_recibos.column("utilidad", width=100, anchor="e")
+        self.tabla_recibos.column("Usuario", width=100, anchor="e")
 
         self.scroll_y = tk.Scrollbar(self.frame_tabla_recibos, orient="vertical", command=self.tabla_recibos.yview)
         self.scroll_x = tk.Scrollbar(self.frame_tabla_recibos, orient="horizontal", command=self.tabla_recibos.xview)
@@ -133,7 +139,9 @@ class VentanaRecibos(tk.Frame):
                 recibo.no_recibo,
                 recibo.fecha,
                 recibo.nombre_cliente,
-                f"Q {recibo.total:,.2f}"
+                f"Q {recibo.total:,.2f}",
+                f"Q {recibo.utilidad:,.2f}",
+                recibo.usuario
             ))
 
     def actualizar_recibos(self):
@@ -230,7 +238,14 @@ class VentanaRecibos(tk.Frame):
             btn.config(bg=self.color_btn_filtro)
         self.mostrar_recibos()
     def ver_detalle(self):
-        item = self.tabla_recibos.selection()[0]
+        selection = self.tabla_recibos.selection()
+
+        if not selection:
+            messagebox.showwarning("Seleccionar Recibo", "Por favor, seleccione un recibo para ver su detalle.")
+            return
+
+        item = selection[0]
+
         for v in self.recibos.recibos:
             if int(item) == int(v.no_recibo):
                 print(v.no_recibo)
@@ -238,5 +253,12 @@ class VentanaRecibos(tk.Frame):
                 break
                 
     def ver_recibo_pdf(self):
-        item = self.tabla_recibos.selection()[0]
-        os.startfile(f"recibo_{item}.pdf")
+        selection = self.tabla_recibos.selection()
+
+        if not selection:
+            messagebox.showwarning("Seleccionar Recibo", "Por favor, seleccione un recibo para ver su detalle.")
+            return
+
+        item = selection[0]
+        self.ruta_documentos = Path.home() / "Documents/recibos_pos"
+        os.startfile(f"{self.ruta_documentos}/recibo_{item}.pdf")

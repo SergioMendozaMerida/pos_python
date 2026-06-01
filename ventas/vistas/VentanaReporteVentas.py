@@ -13,12 +13,10 @@ class VentanaReporteVentas(tk.Frame):
         self.hoy = datetime.date.today()
         self.nombre_reporte = f"{self.hoy} - reporte ventas"
         
-
         self.configure(bg="#f0f0f0")
 
         self.color_btn_filtro = "#0984e3"
         self.color_btn_filtro_seleccionado = "#b6d1e6"
-
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -74,7 +72,7 @@ class VentanaReporteVentas(tk.Frame):
         self.frame_tabla.grid_rowconfigure(0, weight=1)
         self.frame_tabla.grid_columnconfigure(0, weight=1)
 
-        columnas = ("No. Recibo", "Fecha", "Producto", "Cantidad", "Precio Unitario", "Total")
+        columnas = ("No. Recibo", "Fecha", "Producto", "Cantidad", "Precio Unitario", "Total","utilidad")
         self.tabla_ventas = tk.ttk.Treeview(self.frame_tabla, columns=columnas, show="headings", height=10)
 
         self.tabla_ventas.heading("No. Recibo", text="No. Recibo")
@@ -83,13 +81,14 @@ class VentanaReporteVentas(tk.Frame):
         self.tabla_ventas.heading("Cantidad", text="Cantidad")
         self.tabla_ventas.heading("Precio Unitario", text="Precio Unitario")
         self.tabla_ventas.heading("Total", text="Total")
-
+        self.tabla_ventas.heading("utilidad", text="Utilidad")
         self.tabla_ventas.column("No. Recibo", width=100, anchor="center")
         self.tabla_ventas.column("Fecha", width=100, anchor="center")
         self.tabla_ventas.column("Producto", width=100, anchor="center")
         self.tabla_ventas.column("Cantidad", width=100, anchor="center")
         self.tabla_ventas.column("Precio Unitario", width=100, anchor="center")
         self.tabla_ventas.column("Total", width=100, anchor="center")
+        self.tabla_ventas.column("utilidad", width=100, anchor="center")
 
         self.scroll_y = tk.Scrollbar(self.frame_tabla, orient="vertical", command=self.tabla_ventas.yview)
         self.scroll_x = tk.Scrollbar(self.frame_tabla, orient="horizontal", command=self.tabla_ventas.xview)
@@ -104,16 +103,10 @@ class VentanaReporteVentas(tk.Frame):
         self.frame_resumen_tabla.grid_columnconfigure(0, weight=1)
 
         self.lbl_total_ventas = tk.Label(self.frame_resumen_tabla, text="Total Ventas: Q 0.00", font=("Arial", 12, "bold"), bg="#ffffff", fg="#333")
-        self.lbl_producto_mas_vendido = tk.Label(self.frame_resumen_tabla, text="Producto Más Vendido: N/A", font=("Arial", 12), bg="#ffffff", fg="#333")
-        self.lbl_segundo_producto_mas_vendido = tk.Label(self.frame_resumen_tabla, text="Segundo Producto Más Vendido: N/A", font=("Arial", 12), bg="#ffffff", fg="#333")
-        self.lbl_tercer_producto_mas_vendido = tk.Label(self.frame_resumen_tabla, text="Tercer Producto Más Vendido: N/A", font=("Arial", 12), bg="#ffffff", fg="#333")
+        self.lbl_total_utilidades = tk.Label(self.frame_resumen_tabla, text="Total Utilidades: Q 0.00", font=("Arial", 12, "bold"), bg="#ffffff", fg="#333")
 
         self.lbl_total_ventas.grid(row=0, column=0, sticky="w", pady=(0, 5))
-        self.lbl_producto_mas_vendido.grid(row=1, column=0, sticky="w", pady=(0, 5))
-        self.lbl_segundo_producto_mas_vendido.grid(row=2, column=0, sticky="w", pady=(0, 5))
-        self.lbl_tercer_producto_mas_vendido.grid(row=3, column=0, sticky="w")
-
-        self.lbl_productos_mas_vendidos = [self.lbl_producto_mas_vendido, self.lbl_segundo_producto_mas_vendido, self.lbl_tercer_producto_mas_vendido]
+        self.lbl_total_utilidades.grid(row=1, column=0, sticky="w", pady=(0, 5))
 
         self.frame_botones_exportar = tk.Frame(self, bg="#f0f0f0", padx=10, pady=10)
         self.frame_botones_exportar.grid(row=3, column=0, sticky="ew", padx=10, pady=(5, 10))
@@ -139,15 +132,15 @@ class VentanaReporteVentas(tk.Frame):
                 venta.fecha,
                 venta.producto,
                 venta.cantidad,
-                venta.precio,
-                venta.sub_total
+                f"Q {float(venta.precio):,.2f}",
+                f"Q {float(venta.sub_total):,.2f}",
+                f"Q {float(venta.utilidad):,.2f}"
             ))
 
         self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
 
-        self.lbl_producto_mas_vendido.config(text=f"Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[0]if len(self.reporte_ventas.tres_productos_mas_vendidos) > 0 else None}")
-        self.lbl_segundo_producto_mas_vendido.config(text=f"Segundo Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[1] if len(self.reporte_ventas.tres_productos_mas_vendidos) > 1 else None}")
-        self.lbl_tercer_producto_mas_vendido.config(text=f"Tercer Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[2] if len(self.reporte_ventas.tres_productos_mas_vendidos) > 2 else None}")
+        total_utilidades = sum(float(v.utilidad) for v in ventas)
+        self.lbl_total_utilidades.config(text=f"Total Utilidades: Q {total_utilidades:,.2f}")
 
         self.nombre_reporte = f"{self.hoy} - reporte ventas"
 
@@ -163,15 +156,15 @@ class VentanaReporteVentas(tk.Frame):
                 venta.fecha,
                 venta.producto,
                 venta.cantidad,
-                venta.precio,
-                venta.sub_total
+                f"Q {float(venta.precio):,.2f}",
+                f"Q {float(venta.sub_total):,.2f}",
+                f"Q {float(venta.utilidad):,.2f}"
             ))
 
         self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
 
-        self.lbl_producto_mas_vendido.config(text=f"Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[0]if len(self.reporte_ventas.tres_productos_mas_vendidos) > 0 else None}")
-        self.lbl_segundo_producto_mas_vendido.config(text=f"Segundo Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[1] if len(self.reporte_ventas.tres_productos_mas_vendidos) > 1 else None}")
-        self.lbl_tercer_producto_mas_vendido.config(text=f"Tercer Producto Más Vendido: {self.reporte_ventas.tres_productos_mas_vendidos[2] if len(self.reporte_ventas.tres_productos_mas_vendidos) > 2 else None}")
+        total_utilidades = sum(float(v.utilidad) for v in self.reporte_ventas.ventas)
+        self.lbl_total_utilidades.config(text=f"Total Utilidades: Q {total_utilidades:,.2f}")
 
         self.nombre_reporte = f"{self.hoy} - reporte ventas"
 

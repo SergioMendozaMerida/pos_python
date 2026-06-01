@@ -92,10 +92,10 @@ class FrameDetalleRecibo(tk.Toplevel):
         # venta[4]=producto, venta[5]=precio, venta[6]=cantidad, venta[7]=subtotal
         for v in self.recibo.ventas:
             self.tabla.insert("", "end", values=(
-                v[4], 
-                f"Q {v[5]:,.2f}", 
-                v[6], 
-                f"Q {v[7]:,.2f}"
+                v.producto, 
+                f"Q {v.precio:,.2f}", 
+                v.cantidad, 
+                f"Q {v.sub_total:,.2f}"
             ))
 
         # --- Footer con Total ---

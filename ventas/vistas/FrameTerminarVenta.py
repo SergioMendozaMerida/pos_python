@@ -86,6 +86,7 @@ class FrameTerminarVenta(tk.Toplevel):
         cv = RV.CrearRecibo(self.carrito)
         cv.generar_recibo_pequenio()
         self.carrito.vaciar_carrito()
+        self.limpiar_carrito()
         self.actualizar_ventas()
         self.actualizar_recibos()
         self.destroy()

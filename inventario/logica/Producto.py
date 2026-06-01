@@ -9,3 +9,4 @@ class Producto:
         self.precio_venta = precio_venta
         self.stock = stock
         self.codigo = codigo_producto
+        self.utilidad = float(self.precio_venta) - float(self.precio_compra)

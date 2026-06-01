@@ -3,10 +3,11 @@ import tkinter as tk
 import ventas.logica.CarritoVenta as CV
 from tkinter import messagebox, simpledialog, ttk
 import ventas.vistas.FrameTerminarVenta as FTV
+import caja.FrameAbrirCerrarCaja as FAC
 
 class VentanaVentas(tk.Frame):
 
-    def __init__(self, inventario, reporte_ventas, actualizar_recibos, actualizar_ventas, usuario):
+    def __init__(self, inventario, reporte_ventas, actualizar_recibos, actualizar_ventas, usuario, caja):
         super().__init__(bg="#f5f6fa")
 
         self.inventario = inventario
@@ -14,7 +15,7 @@ class VentanaVentas(tk.Frame):
         self.actualizar_recibos = actualizar_recibos
         self.actualizar_ventas = actualizar_ventas
         self.usuario = usuario
-
+        self.caja = caja
         self.app_bg = "#ecf0f3"
         self.panel_bg = "#ffffff"
         self.card_bg = "#ffffff"
@@ -286,6 +287,19 @@ class VentanaVentas(tk.Frame):
         self.frame_concretar_venta = tk.Frame(self.main_container, bg=self.panel_bg, bd=1, relief="solid")
         self.frame_concretar_venta.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
 
+        self.btn_abrir_cerrar_caja = tk.Button(
+            self.frame_concretar_venta,
+            text="Abrir Caja" if not self.caja.estado else "Cerrar Caja",
+            bg=self.success_color,
+            fg="white",
+            font=("Segoe UI", 10, "bold"),
+            bd=0,
+            activebackground="#55efc4",
+            cursor='hand2',
+            command=self.cambiar_estado_caja
+        )
+        self.btn_abrir_cerrar_caja.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
+        
         tk.Label(
             self.frame_concretar_venta,
             text="Resumen",
@@ -351,6 +365,13 @@ class VentanaVentas(tk.Frame):
         self.entry_codigo.focus()
         self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
         self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
+
+    def cambiar_estado_caja(self):
+        if self.caja.estado == True:
+            FAC.FrameCerrarCaja(self, self.caja, self.btn_abrir_cerrar_caja, self.show_productos)
+        else:
+            FAC.FrameAbrirCaja(self, self.caja, self.btn_abrir_cerrar_caja, self.show_productos)
+            self.show_productos()
 
     def buscar_por_codigo(self, codigo):
         if not codigo:
@@ -440,7 +461,8 @@ class VentanaVentas(tk.Frame):
                 activebackground="#74b9ff",
                 relief="flat",
                 cursor="hand2",
-                command=lambda p=producto: self.agregar(p)
+                command=lambda p=producto: self.agregar(p),
+                state="normal" if self.caja.estado else "disabled" # Deshabilitado si la caja no está abierta
             )
             # relx=0.95 y rely=0.90 lo mandan abajo a la derecha, anchor="se" ancla la esquina inferior derecha
             btn_agregar.place(relx=0.95, rely=0.90, anchor="se")

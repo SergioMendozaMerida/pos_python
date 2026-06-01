@@ -18,7 +18,8 @@ class Recibos:
             conexion.close()
             self.recibos.clear()
             for recibo in recibos:
-                self.recibos.append(R.Recibo(recibo[0], recibo[1], recibo[2], recibo[3], recibo[4], recibo[5], recibo[6], recibo[7]))
+                self.recibos.append(R.Recibo(recibo[0], recibo[1], recibo[2], recibo[3], recibo[4], recibo[5], 
+                                             recibo[6], recibo[7], recibo[8]))
 
             for recibo in self.recibos:
                 recibo.obtener_ventas()
@@ -66,7 +67,7 @@ class Recibos:
             conexion.close()
             self.recibos.clear()
             for recibo in recibos:
-                self.recibos.append(R.Recibo(recibo[0], recibo[1], recibo[2], recibo[3], recibo[4], recibo[5], recibo[6], recibo[7]))
+                self.recibos.append(R.Recibo(recibo[0], recibo[1], recibo[2], recibo[3], recibo[4], recibo[5], recibo[6], recibo[7], recibo[8]))
 
             for recibo in self.recibos:
                 recibo.obtener_ventas()

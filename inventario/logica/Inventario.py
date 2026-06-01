@@ -129,10 +129,10 @@ class Inventario:
         else:
             return None
         
-    def aumentar_stock(self, id_producto, cantidad, precio_compra, precio_venta, proveedor=""):
+    def aumentar_stock(self, id_producto, nombre_producto,cantidad, precio_compra, precio_venta, proveedor=""):
         hoy = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.cursor.execute("INSERT INTO ingresos_stock (fecha_ingreso, id_producto, cantidad, precio_compra, precio_venta, proveedor, usuario) VALUES (?, ?, ?, ?, ?, ?,?)", 
-                            (hoy, id_producto, cantidad, precio_compra, precio_venta, proveedor, self.usuario.usuario))
+        self.cursor.execute("INSERT INTO ingresos_stock (fecha_ingreso, id_producto, cantidad, precio_compra, precio_venta, proveedor, usuario, producto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+                            (hoy, id_producto, cantidad, precio_compra, precio_venta, proveedor, self.usuario.usuario, nombre_producto))
 
         self.conexion.commit()
         self.obtener_productos()

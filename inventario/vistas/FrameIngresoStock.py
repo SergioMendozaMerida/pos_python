@@ -3,11 +3,12 @@ from tkinter import ttk, messagebox
 
 
 class FrameIngresoStock(tk.Toplevel):
-    def __init__(self, parent, inventario=None, actualizar_callback=None):
+    def __init__(self, parent, inventario=None, actualizar_callback=None, actualizar_tabla_ingresos=None):
         super().__init__(parent)
         self.parent = parent
         self.inventario = inventario
         self.actualizar_callback = actualizar_callback
+        self.actualizar_tabla_ingresos = actualizar_tabla_ingresos
 
         self.estado_chek_codigo = tk.BooleanVar()
         self.estado_chek_nombre = tk.BooleanVar()
@@ -430,10 +431,11 @@ class FrameIngresoStock(tk.Toplevel):
         except ValueError:
             tk.messagebox.showerror("Error", "Los precios deben ser valores numéricos.")
             return
-        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, int(cantidad), precio_compra_val, precio_venta_val, 
+        self.inventario.aumentar_stock(self.producto_encontrado.id_producto, self.producto_encontrado.nombre, int(cantidad), precio_compra_val, precio_venta_val, 
                                        proveedor)
         tk.messagebox.showinfo("Éxito", "Stock actualizado correctamente.")
         self.actualizar_callback()
+        self.actualizar_tabla_ingresos()
         self.vaciar_campos()
         if self.estado_chek_codigo.get():
             self.entry_codigo_producto.focus()

@@ -9,6 +9,8 @@ import login.LoginFrame as lf
 import datosDeEmpresa.FrameEmpresa as FE
 import datosDeEmpresa.empresa as E
 import usuarios.FrameUsuarios as FU
+import ingresos.VentanaIngresosStock as VIS
+import caja.caja as Caja
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self):
@@ -25,15 +27,17 @@ class VentanaPrincipal(tk.Tk):
         self.usuario = self.login_frame.login.usuario
         self.empresa = E.Empresa()
         
-        self.inventario = vi.VentanaInventario(self, self.usuario)
+        self.caja = Caja.Caja(self.usuario)
+        self.ingresos_stock = VIS.VentanaIngresosStock(self)
+        self.inventario = vi.VentanaInventario(self, self.usuario, self.ingresos_stock.actualizar_tabla)
         self.reporte_ventas = Rv.ReporteVentas()
         self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
         self.recibos = VR.VentanaRecibos(self)
         self.ventas = Vv.VentanaVentas(self.inventario.inventario,self.ventana_reporte_ventas,self.recibos.actualizar_recibos,
-                                       self.ventana_reporte_ventas.actualizar_ventas, self.usuario)
+                                       self.ventana_reporte_ventas.actualizar_ventas, self.usuario, self.caja)
         self.datos_empresa = FE.FrameEmpresa(self, self.empresa, self.usuario)
-        self.admin_usuarios = FU.FrameUsuarios(self)     
-
+        self.admin_usuarios = FU.FrameUsuarios(self)   
+        
 # 1. Configuración de la barra (Navbar) con un color más sobrio
         # Un azul más profundo o un gris oscuro profesional
         navbar_color = "#2c3e50" 
@@ -93,6 +97,14 @@ class VentanaPrincipal(tk.Tk):
         )
         self.btn_recibos.pack(side="left", fill="y", padx=2)
 
+        self.btn_ingresos_stock = tk.Button(
+            self.frm_menu_bar,
+            text="📥 Ingresos de Stock", 
+            command=lambda: self.draw_frames(self.ingresos_stock),
+            **btn_style
+        )
+        self.btn_ingresos_stock.pack(side="left", fill="y", padx=2)
+
         # Botón Datos de Empresa
         self.btn_datos_empresa = tk.Button(
             self.frm_menu_bar, 
@@ -125,7 +137,7 @@ class VentanaPrincipal(tk.Tk):
         self.btn_logout.pack(side="right", fill="y", padx=5)
 
         self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos, self.datos_empresa, 
-                       self.admin_usuarios]
+                       self.admin_usuarios, self.ingresos_stock]
         self.ventas.pack(fill="both", expand=True)
 
     def cerrar_sesion(self):
