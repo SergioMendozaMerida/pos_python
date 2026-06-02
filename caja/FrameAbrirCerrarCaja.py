@@ -41,7 +41,13 @@ class FrameAbrirCaja(tk.Toplevel):
         btn_cancelar.pack(fill="x", padx=50, ipady=8)
 
     def abrir_caja(self):
-        self.caja.abrir_caja()
+        saldo_inicial = self.entry_saldo_inicial.get()
+        try:
+            saldo_inicial = int(saldo_inicial)
+            self.caja.abrir_caja(saldo_inicial)
+        except ValueError:
+            messagebox.showerror("Error", "El saldo inicial debe ser un número entero.")
+            return
         self.btn_abrir_cerrar_caja.config(text="Cerrar Caja")
         self.show_productos()
         self.destroy()
@@ -86,7 +92,14 @@ class FrameCerrarCaja(tk.Toplevel):
         btn_cancelar.pack(fill="x", padx=50, ipady=8)
 
     def cerrar_caja(self):
-        self.caja.cerrar_caja()
+        efectivo_final = self.entry_monto_final.get()
+        try:
+            efectivo_final = int(efectivo_final)
+            self.caja.cerrar_caja(efectivo_final)
+        except ValueError:
+            messagebox.showerror("Error", "El saldo inicial debe ser un número entero.")
+            return
+
         self.btn_abrir_cerrar_caja.config(text="Abrir Caja")
         self.show_productos()
         self.destroy()

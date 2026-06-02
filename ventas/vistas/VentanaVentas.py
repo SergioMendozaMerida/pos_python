@@ -381,6 +381,10 @@ class VentanaVentas(tk.Frame):
         if producto is None:
             messagebox.showerror("Error", "Código no encontrado.")
             return
+        
+        if self.caja.estado == False:
+            messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
+            return
 
         self.carrito.agregar_producto(producto.id_producto, 1)
         self.show_carrito()

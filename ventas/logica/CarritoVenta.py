@@ -13,6 +13,7 @@ class CarrtioVenta:
         self.telefono = ""
         self.dpi = ""
         self.nit = ""
+        self.utilidad = 0
 
         self.usuario = usuario
 
@@ -107,11 +108,13 @@ class CarrtioVenta:
         for p in self.productos:
             cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha,usuario,costo) VALUES (?,?,?,?,?,?,?,?,?)',
                            (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha,self.usuario.usuario,p['precio_compra']))
+            self.utilidad += p['sub_total'] - (p['precio_compra'] * p['cantidad'])
             conexion.commit()
 
-        cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total,usuario) VALUES(?,?,?,?,?,?,?,?)',
-                       (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total,self.usuario.usuario))
+        cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total,usuario, utilidad) VALUES(?,?,?,?,?,?,?,?,?)',
+                       (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total,self.usuario.usuario,self.utilidad))
         conexion.commit()
+        self.utilidad = 0
         #self.vaciar_carrito()
         conexion.close()
     
