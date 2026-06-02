@@ -45,16 +45,13 @@ class Caja:
 
     def cerrar_caja(self, efectivo_final):
         self.obtener_sesion_caja()
-        if efectivo_final != self.saldo_final:
-            res = messagebox.askyesno("Error", f"""Existe un descuadre de Q{efectivo_final - self.saldo_final}. ¿Desea cerrar la caja?""")
-            if res == False:
-                return
-            
-        self.estado = False
+                    
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("UPDATE caja SET estado = ?, efectivo_final = ? WHERE id_sesion = ?", (self.estado, efectivo_final, self.id_sesion))
+            self.estado = False
+            cursor.execute("""UPDATE caja SET estado = ?, efectivo_final = ?, diferencia = ? 
+                           WHERE id_sesion = ?""", (self.estado, efectivo_final, efectivo_final - self.saldo_final, self.id_sesion))
             conexion.commit()
             conexion.close()
             

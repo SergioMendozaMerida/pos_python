@@ -4,6 +4,7 @@ import ventas.logica.CarritoVenta as CV
 from tkinter import messagebox, simpledialog, ttk
 import ventas.vistas.FrameTerminarVenta as FTV
 import caja.FrameAbrirCerrarCaja as FAC
+import caja.FrameDetalleCaja as FDC
 
 class VentanaVentas(tk.Frame):
 
@@ -287,19 +288,15 @@ class VentanaVentas(tk.Frame):
         self.frame_concretar_venta = tk.Frame(self.main_container, bg=self.panel_bg, bd=1, relief="solid")
         self.frame_concretar_venta.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
 
-        self.btn_abrir_cerrar_caja = tk.Button(
-            self.frame_concretar_venta,
-            text="Abrir Caja" if not self.caja.estado else "Cerrar Caja",
-            bg=self.success_color,
-            fg="white",
-            font=("Segoe UI", 10, "bold"),
-            bd=0,
-            activebackground="#55efc4",
-            cursor='hand2',
-            command=self.cambiar_estado_caja
-        )
-        self.btn_abrir_cerrar_caja.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
+        # Cabecera distintiva para el control de Caja (Estado de la Jornada)
+        self.caja_header = tk.Frame(self.frame_concretar_venta, bg="#f8f9fb")
+        self.caja_header.pack(fill="x", side="top", pady=(1, 15))
+
+        self.btn_abrir_cerrar_caja = tk.Button(self.caja_header, command=self.cambiar_estado_caja)
+        self.btn_ver_estado_caja = tk.Button(self.caja_header, command=self.mostrar_detalle_caja)
+        self.actualizar_ui_caja()
         
+
         tk.Label(
             self.frame_concretar_venta,
             text="Resumen",
@@ -366,12 +363,59 @@ class VentanaVentas(tk.Frame):
         self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
         self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
 
+    def actualizar_ui_caja(self):
+        """Actualiza el diseño, color e icono del botón según el estado de la caja"""
+        if not self.caja.estado:
+            # Caso: Caja Cerrada -> Sugerir Apertura
+            self.btn_abrir_cerrar_caja.config(
+                text="🔓 ABRIR CAJA",
+                bg=self.success_color,
+                activebackground="#009476",
+                fg="white",
+                font=("Segoe UI", 11, "bold"),
+                bd=0,
+                cursor="hand2"
+            )
+        else:
+            # Caso: Caja Abierta -> Sugerir Cierre
+            self.btn_abrir_cerrar_caja.config(
+                text="🔒 CERRAR JORNADA",
+                bg=self.danger_color,
+                activebackground="#b32626",
+                fg="white",
+                font=("Segoe UI", 11, "bold"),
+                bd=0,
+                cursor="hand2"
+            )
+
+        # Botón principal siempre arriba
+        self.btn_abrir_cerrar_caja.pack(fill="x", padx=15, pady=(15, 5), ipady=10)
+
+        # Diseño distintivo para el botón de ver detalle (estilo secundario elegante)
+        self.btn_ver_estado_caja.config(
+            text="📋 VER RESUMEN DE SESIÓN",
+            bg="#2c3e50", 
+            activebackground="#34495e",
+            fg="white",
+            font=("Segoe UI", 9, "bold"),
+            bd=0,
+            cursor="hand2"
+        )
+
+        # Mostrar detalle solo si la caja está abierta, ubicado debajo
+        if self.caja.estado:
+            self.btn_ver_estado_caja.pack(fill="x", padx=15, pady=(5, 15), ipady=5)
+        else:
+            self.btn_ver_estado_caja.pack_forget()
+
     def cambiar_estado_caja(self):
         if self.caja.estado == True:
-            FAC.FrameCerrarCaja(self, self.caja, self.btn_abrir_cerrar_caja, self.show_productos)
+            FAC.FrameCerrarCaja(self, self.caja, self.actualizar_ui_caja, self.show_productos)
         else:
-            FAC.FrameAbrirCaja(self, self.caja, self.btn_abrir_cerrar_caja, self.show_productos)
-            self.show_productos()
+            FAC.FrameAbrirCaja(self, self.caja, self.actualizar_ui_caja, self.show_productos)
+
+    def mostrar_detalle_caja(self):
+        FDC.FrameDetalleCaja(self, self.caja)
 
     def buscar_por_codigo(self, codigo):
         if not codigo:
