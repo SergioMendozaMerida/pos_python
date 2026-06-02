@@ -10,6 +10,8 @@ import datosDeEmpresa.FrameEmpresa as FE
 import datosDeEmpresa.empresa as E
 import usuarios.FrameUsuarios as FU
 import ingresos.VentanaIngresosStock as VIS
+import egresos.VentanaEgresos as VE
+import caja.VentanaSesionesCaja as VSC
 import caja.caja as Caja
 
 class VentanaPrincipal(tk.Tk):
@@ -37,6 +39,8 @@ class VentanaPrincipal(tk.Tk):
                                        self.ventana_reporte_ventas.actualizar_ventas, self.usuario, self.caja)
         self.datos_empresa = FE.FrameEmpresa(self, self.empresa, self.usuario)
         self.admin_usuarios = FU.FrameUsuarios(self)   
+        self.ventana_egresos = VE.VentanaEgresos(self, self.caja)
+        self.ventana_sesiones_caja = VSC.VentanaSesionesCaja(self)
         
 # 1. Configuración de la barra (Navbar) con un color más sobrio
         # Un azul más profundo o un gris oscuro profesional
@@ -105,6 +109,22 @@ class VentanaPrincipal(tk.Tk):
         )
         self.btn_ingresos_stock.pack(side="left", fill="y", padx=2)
 
+        self.btn_egresos = tk.Button(
+            self.frm_menu_bar,
+            text="💸 Egresos", 
+            command=lambda: self.draw_frames(self.ventana_egresos),
+            **btn_style
+        )
+        self.btn_egresos.pack(side="left", fill="y", padx=2)
+
+        self.btn_sesiones_caja = tk.Button(
+            self.frm_menu_bar,
+            text="🏧 Sesiones Caja", 
+            command=lambda: self.draw_frames(self.ventana_sesiones_caja),
+            **btn_style
+        )
+        self.btn_sesiones_caja.pack(side="left", fill="y", padx=2)
+
         # Botón Datos de Empresa
         self.btn_datos_empresa = tk.Button(
             self.frm_menu_bar, 
@@ -137,7 +157,7 @@ class VentanaPrincipal(tk.Tk):
         self.btn_logout.pack(side="right", fill="y", padx=5)
 
         self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos, self.datos_empresa, 
-                       self.admin_usuarios, self.ingresos_stock]
+                       self.admin_usuarios, self.ingresos_stock, self.ventana_egresos, self.ventana_sesiones_caja]
         self.ventas.pack(fill="both", expand=True)
 
     def cerrar_sesion(self):
