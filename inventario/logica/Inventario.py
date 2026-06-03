@@ -30,9 +30,9 @@ class Inventario:
                 producto[8]
             ))
 
-    def ingresar_producto(self, nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, stock):
-        self.cursor.execute("INSERT INTO productos (nombre,descripcion,presentacion,categoria,precio_venta,precio_compra,stock) VALUES(?,?,?,?,?,?,?)",
-                            (nombre, descripcion,presentacion,categoria,precio_compra,precio_venta,stock))
+    def ingresar_producto(self, nombre, codigo, descripcion, presentacion, categoria, precio_compra, precio_venta, stock):
+        self.cursor.execute("INSERT INTO productos (nombre,codigo_producto,descripcion,presentacion,categoria,precio_venta,precio_compra,stock) VALUES(?,?,?,?,?,?,?,?)",
+                            (nombre, codigo, descripcion,presentacion,categoria,precio_compra,precio_venta,stock))
         self.conexion.commit()
         self.obtener_productos()
 

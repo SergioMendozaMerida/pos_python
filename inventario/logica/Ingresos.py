@@ -8,4 +8,4 @@ class Ingresos():
         self.total = cantidad * precio_unitario
 
     def ingresar_stock(self):
-        
+        pass

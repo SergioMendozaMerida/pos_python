@@ -4,6 +4,8 @@ import inventario.logica.Inventario as inv
 import inventario.vistas.FormProductos as FP
 import inventario.vistas.EditarProducto as EP
 import inventario.vistas.FrameIngresoStock as FIS
+import categoria.FrameCategoria as FCAT
+
 
 
 class VentanaInventario(tk.Frame):
@@ -166,6 +168,19 @@ class VentanaInventario(tk.Frame):
         )
         self.btn_eliminar.pack(side="left", padx=(0, 10), pady=10)
 
+        self.btn_categorias = tk.Button(
+            self.frame_botones,
+            text="🏷️ Categorías",
+            bg="#f39c12",
+            fg="white",
+            font=("Arial", 11, "bold"),
+            padx=20,
+            pady=12,
+            cursor="hand2",
+            command=self.abrir_frame_categorias
+        )
+        self.btn_categorias.pack(side="left", padx=(0, 10), pady=10)
+
         self.btn_ingreso_stock = tk.Button(
             self.frame_botones,
             text="📦 Ingreso de Stock",
@@ -187,6 +202,9 @@ class VentanaInventario(tk.Frame):
         if self.timer_id:
             self.after_cancel(self.timer_id)
         self.timer_id = self.after(700, lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
+
+    def abrir_frame_categorias(self):
+        FCAT.FrameCategoria(self)
 
     def abrir_formulario(self):
         formulario = FP.FormProductos(self, self.inventario, self.actualizar_tabla)

@@ -19,7 +19,7 @@ class FormProductos(tk.Toplevel):
         self.color_borde = "#dfe6e9"
 
         self.title("Registro de Producto")
-        self.geometry("520x620")
+        self.geometry("520x680")
         self.resizable(False, False)
         self.configure(bg=self.color_fondo)
 
@@ -59,6 +59,19 @@ class FormProductos(tk.Toplevel):
             highlightcolor=self.color_primario
         )
         self.entry_nombre.pack(fill="both", expand=True, ipady=4)
+
+        tk.Label(col1_frame, text="Código *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(10, 5))
+        self.entry_codigo = tk.Entry(
+            col1_frame, 
+            font=("Segoe UI", 10), 
+            bg=self.color_entrada, 
+            relief="flat", 
+            bd=0, 
+            highlightthickness=1, 
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_codigo.pack(fill="both", expand=True, ipady=4)
 
         col2_frame = tk.Frame(row1_frame, bg=self.color_fondo)
         col2_frame.pack(side="left", fill="both", expand=True)
@@ -194,6 +207,7 @@ class FormProductos(tk.Toplevel):
 
     def guardar_producto(self):
         nombre = self.entry_nombre.get().strip()
+        codigo = self.entry_codigo.get().strip()
         descripcion = self.entry_descripcion.get().strip()
         presentacion = self.entry_presentacion.get().strip()
         categoria = self.entry_categoria.get().strip()
@@ -201,8 +215,8 @@ class FormProductos(tk.Toplevel):
         precio_venta = self.entry_precio_venta.get().strip()
         stock = self.entry_stock.get().strip()
 
-        if not nombre:
-            messagebox.showwarning("Validación", "Debe ingresar el nombre del producto.")
+        if not nombre or not codigo:
+            messagebox.showwarning("Validación", "Debe ingresar el nombre y el código del producto.")
             return
 
         if not stock:
@@ -219,6 +233,7 @@ class FormProductos(tk.Toplevel):
 
         self.inventario.ingresar_producto(
             nombre,
+            codigo,
             descripcion,
             presentacion,
             categoria,
