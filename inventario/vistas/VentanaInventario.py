@@ -33,7 +33,7 @@ class VentanaInventario(tk.Frame):
         self.frame_buscar = tk.LabelFrame(
             self.main_frame, 
             text="Buscar Productos", 
-            font=("Arial", 10, "bold"),
+            font=("Segoe UI", 10, "bold"),
             bg=self.color_fondo,
             fg=self.color_primario,
             padx=15,
@@ -45,28 +45,54 @@ class VentanaInventario(tk.Frame):
         label_frame = tk.Frame(self.frame_buscar, bg=self.color_fondo)
         label_frame.pack(fill="x")
 
-        tk.Label(label_frame, text="Nombre:", bg=self.color_fondo, fg=self.color_primario, font=("Arial", 9)).pack(side="left", padx=(0, 5))
-        self.entry_nombre = tk.Entry(label_frame, width=20, font=("Arial", 9))
-        self.entry_nombre.pack(side="left", padx=(0, 20))
+        tk.Label(label_frame, text="Nombre:", bg=self.color_fondo, fg=self.color_primario, font=("Segoe UI", 9, "bold")).pack(side="left", padx=(0, 5))
+        self.entry_nombre = tk.Entry(
+            label_frame, 
+            width=25, 
+            font=("Segoe UI", 10),
+            bg="#ffffff",
+            fg="#2d3436",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground="#b2bec3",
+            highlightcolor=self.color_secundario,
+            insertbackground=self.color_secundario
+        )
+        self.entry_nombre.pack(side="left", padx=(0, 20), ipady=3)
         self.entry_nombre.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
         self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
 
-        tk.Label(label_frame, text="Descripción:", bg=self.color_fondo, fg=self.color_primario, font=("Arial", 9)).pack(side="left", padx=(0, 5))
-        self.entry_descripcion = tk.Entry(label_frame, width=20, font=("Arial", 9))
-        self.entry_descripcion.pack(side="left", padx=(0, 20))
+        tk.Label(label_frame, text="Descripción:", bg=self.color_fondo, fg=self.color_primario, font=("Segoe UI", 9, "bold")).pack(side="left", padx=(0, 5))
+        self.entry_descripcion = tk.Entry(
+            label_frame, 
+            width=25, 
+            font=("Segoe UI", 10),
+            bg="#ffffff",
+            fg="#2d3436",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground="#b2bec3",
+            highlightcolor=self.color_secundario,
+            insertbackground=self.color_secundario
+        )
+        self.entry_descripcion.pack(side="left", padx=(0, 20), ipady=3)
         self.entry_descripcion.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
         self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
 
         btn_buscar = tk.Button(
             label_frame, 
-            text="Buscar",
+            text="🔍 Buscar",
             bg=self.color_secundario,
             fg="white",
-            font=("Arial", 9, "bold"),
-            padx=15,
+            font=("Segoe UI", 9, "bold"),
+            relief="flat",
+            bd=0,
+            padx=20,
+            cursor="hand2",
+            activebackground="#5dade2",
             command=lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get())
         )
-        btn_buscar.pack(side="left")
+        btn_buscar.pack(side="left", ipady=3)
 
         # Frame para tabla y scrollbars
         self.frame_tabla = tk.LabelFrame(

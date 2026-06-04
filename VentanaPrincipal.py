@@ -54,7 +54,7 @@ class VentanaPrincipal(tk.Tk):
 
         # Estilo para los botones: flat, sin bordes gruesos y con cursor de mano
         # Cambia "flat": True por "relief": "flat"
-        btn_style = {
+        self.btn_style = {
             "bg": button_color,
             "fg": text_color,
             "activebackground": "#1abc9c",
@@ -70,8 +70,8 @@ class VentanaPrincipal(tk.Tk):
         self.btn_inventario = tk.Button(
             self.frm_menu_bar, 
             text="📦 Inventario", 
-            command=lambda: self.draw_frames(self.inventario),
-            **btn_style
+            command=lambda: self.draw_frames(self.inventario,  self.btn_inventario),
+            **self.btn_style
         )
         self.btn_inventario.pack(side="left", fill="y", padx=2)
 
@@ -79,8 +79,8 @@ class VentanaPrincipal(tk.Tk):
         self.btn_ventas = tk.Button(
             self.frm_menu_bar, 
             text="💰 Ventas", 
-            command=lambda: self.draw_frames(self.ventas),
-            **btn_style
+            command=lambda: self.draw_frames(self.ventas, self.btn_ventas),
+            **self.btn_style
         )
         self.btn_ventas.pack(side="left", fill="y", padx=2)
 
@@ -88,40 +88,40 @@ class VentanaPrincipal(tk.Tk):
         self.btn_reporte_ventas = tk.Button(
             self.frm_menu_bar, 
             text="📊 Reporte de Ventas", 
-            command=lambda: self.draw_frames(self.ventana_reporte_ventas),
-            **btn_style
+            command=lambda: self.draw_frames(self.ventana_reporte_ventas, self.btn_reporte_ventas),
+            **self.btn_style
         )
         self.btn_reporte_ventas.pack(side="left", fill="y", padx=2)
 
         self.btn_recibos = tk.Button(
             self.frm_menu_bar, 
             text="🧾 Recibos", 
-            command=lambda: self.draw_frames(self.recibos),
-            **btn_style
+            command=lambda: self.draw_frames(self.recibos, self.btn_recibos),
+            **self.btn_style
         )
         self.btn_recibos.pack(side="left", fill="y", padx=2)
 
         self.btn_ingresos_stock = tk.Button(
             self.frm_menu_bar,
             text="📥 Ingresos de Stock", 
-            command=lambda: self.draw_frames(self.ingresos_stock),
-            **btn_style
+            command=lambda: self.draw_frames(self.ingresos_stock, self.btn_ingresos_stock),
+            **self.btn_style
         )
         self.btn_ingresos_stock.pack(side="left", fill="y", padx=2)
 
         self.btn_egresos = tk.Button(
             self.frm_menu_bar,
             text="💸 Egresos", 
-            command=lambda: self.draw_frames(self.ventana_egresos),
-            **btn_style
+            command=lambda: self.draw_frames(self.ventana_egresos, self.btn_egresos),
+            **self.btn_style
         )
         self.btn_egresos.pack(side="left", fill="y", padx=2)
 
         self.btn_sesiones_caja = tk.Button(
             self.frm_menu_bar,
             text="🏧 Sesiones Caja", 
-            command=lambda: self.draw_frames(self.ventana_sesiones_caja),
-            **btn_style
+            command=lambda: self.draw_frames(self.ventana_sesiones_caja, self.btn_sesiones_caja),
+            **self.btn_style
         )
         self.btn_sesiones_caja.pack(side="left", fill="y", padx=2)
 
@@ -129,8 +129,8 @@ class VentanaPrincipal(tk.Tk):
         self.btn_datos_empresa = tk.Button(
             self.frm_menu_bar, 
             text="🏢 Datos Empresa", 
-            command=lambda: self.draw_frames(self.datos_empresa),
-            **btn_style
+            command=lambda: self.draw_frames(self.datos_empresa, self.btn_datos_empresa),
+            **self.btn_style
         )
         self.btn_datos_empresa.pack(side="left", fill="y", padx=2)
 
@@ -140,8 +140,8 @@ class VentanaPrincipal(tk.Tk):
             self.btn_usuarios = tk.Button(
                 self.frm_menu_bar, 
                 text="👥 Usuarios", 
-                command=lambda: self.draw_frames(self.admin_usuarios),
-                **btn_style
+                command=lambda: self.draw_frames(self.admin_usuarios, self.btn_usuarios),
+                **self.btn_style
             )
             self.btn_usuarios.pack(side="left", fill="y", padx=2)
 
@@ -150,7 +150,7 @@ class VentanaPrincipal(tk.Tk):
             self.frm_menu_bar, 
             text="🚪 Cerrar Sesión", 
             command=self.cerrar_sesion,
-            **btn_style
+            **self.btn_style
         )
         # Personalización de color para resaltar la acción de salida
         self.btn_logout.configure(bg="#a93226", activebackground="#e74c3c")
@@ -158,7 +158,13 @@ class VentanaPrincipal(tk.Tk):
 
         self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos, self.datos_empresa, 
                        self.admin_usuarios, self.ingresos_stock, self.ventana_egresos, self.ventana_sesiones_caja]
-        self.ventas.pack(fill="both", expand=True)
+        #self.ventas.pack(fill="both", expand=True)
+
+        self.botones = [self.btn_inventario, self.btn_ventas, self.btn_reporte_ventas, self.btn_recibos, self.btn_datos_empresa, 
+                        self.btn_usuarios if self.usuario.rol == "admin" else None, self.btn_ingresos_stock, self.btn_egresos, 
+                        self.btn_sesiones_caja, self.btn_logout]
+
+        self.draw_frames(self.ventas, self.btn_ventas)
 
     def cerrar_sesion(self):
         if messagebox.askyesno("Cerrar Sesión", "¿Está seguro de que desea salir del sistema?"):
@@ -170,10 +176,19 @@ class VentanaPrincipal(tk.Tk):
             self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
             self.login_frame.pack(fill="both", expand=True)
 
-    def draw_frames(self, new_frame):
+    def draw_frames(self, new_frame, boton=None):
         for frame in self.frames:
             frame.pack_forget()
         new_frame.pack(fill="both", expand=True)
+
+        # Resetear el estilo de todos los botones
+        for btn in self.botones:
+            if btn:
+                btn.configure(**self.btn_style)
+
+        # Aplicar estilo al botón activo
+        if boton:
+            boton.configure(bg="#1abc9c", activebackground="#1abc9c")
 
 ventana = VentanaPrincipal()
 ventana.mainloop()

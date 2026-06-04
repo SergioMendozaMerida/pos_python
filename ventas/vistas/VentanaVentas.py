@@ -60,15 +60,45 @@ class VentanaVentas(tk.Frame):
         search_panel.grid_columnconfigure(5, weight=1)
 
         tk.Label(search_panel, text="Código:", font=("Segoe UI", 10), bg=self.panel_bg, fg=self.sub_text).grid(row=0, column=0, padx=(10, 5), pady=8, sticky="w")
-        self.entry_codigo = tk.Entry(search_panel, font=("Segoe UI", 10), bd=0, bg="#f8f9fb", fg=self.text_color, highlightthickness=1, highlightcolor=self.primary_color, highlightbackground=self.border_color)
+        self.entry_codigo = tk.Entry(
+            search_panel, 
+            font=("Segoe UI", 10), 
+            bd=0, 
+            bg="#ffffff", 
+            fg=self.text_color, 
+            highlightthickness=1, 
+            highlightcolor=self.primary_color, 
+            highlightbackground="#b2bec3",
+            insertbackground=self.primary_color
+        )
         self.entry_codigo.grid(row=0, column=1, sticky="ew", padx=5, pady=8)
 
         tk.Label(search_panel, text="Nombre:", font=("Segoe UI", 10), bg=self.panel_bg, fg=self.sub_text).grid(row=0, column=2, padx=(10, 5), pady=8, sticky="w")
-        self.entry_nombre = tk.Entry(search_panel, font=("Segoe UI", 10), bd=0, bg="#f8f9fb", fg=self.text_color, highlightthickness=1, highlightcolor=self.primary_color, highlightbackground=self.border_color)
+        self.entry_nombre = tk.Entry(
+            search_panel, 
+            font=("Segoe UI", 10), 
+            bd=0, 
+            bg="#ffffff", 
+            fg=self.text_color, 
+            highlightthickness=1, 
+            highlightcolor=self.primary_color, 
+            highlightbackground="#b2bec3",
+            insertbackground=self.primary_color
+        )
         self.entry_nombre.grid(row=0, column=3, sticky="ew", padx=5, pady=8)
 
         tk.Label(search_panel, text="Descripción:", font=("Segoe UI", 10), bg=self.panel_bg, fg=self.sub_text).grid(row=0, column=4, padx=(10, 5), pady=8, sticky="w")
-        self.entry_descripcion = tk.Entry(search_panel, font=("Segoe UI", 10), bd=0, bg="#f8f9fb", fg=self.text_color, highlightthickness=1, highlightcolor=self.primary_color, highlightbackground=self.border_color)
+        self.entry_descripcion = tk.Entry(
+            search_panel, 
+            font=("Segoe UI", 10), 
+            bd=0, 
+            bg="#ffffff", 
+            fg=self.text_color, 
+            highlightthickness=1, 
+            highlightcolor=self.primary_color, 
+            highlightbackground="#b2bec3",
+            insertbackground=self.primary_color
+        )
         self.entry_descripcion.grid(row=0, column=5, sticky="ew", padx=(5, 10), pady=8)
 
         btn_buscar = tk.Button(
@@ -150,51 +180,56 @@ class VentanaVentas(tk.Frame):
             self.frame_cliente,
             font=("Segoe UI", 10),
             bd=0,
-            bg="#f8f9fb",
+            bg="#ffffff",
             fg=self.text_color,
             highlightthickness=1,
             highlightcolor=self.primary_color,
-            highlightbackground=self.border_color
+            highlightbackground="#b2bec3",
+            insertbackground=self.primary_color
         )
         self.entry_direccion = tk.Entry(
             self.frame_cliente,
             font=("Segoe UI", 10),
             bd=0,
-            bg="#f8f9fb",
+            bg="#ffffff",
             fg=self.text_color,
             highlightthickness=1,
             highlightcolor=self.primary_color,
-            highlightbackground=self.border_color
+            highlightbackground="#b2bec3",
+            insertbackground=self.primary_color
         )
         self.entry_telefono = tk.Entry(
             self.frame_cliente,
             font=("Segoe UI", 10),
             bd=0,
-            bg="#f8f9fb",
+            bg="#ffffff",
             fg=self.text_color,
             highlightthickness=1,
             highlightcolor=self.primary_color,
-            highlightbackground=self.border_color
+            highlightbackground="#b2bec3",
+            insertbackground=self.primary_color
         )
         self.entry_dpi = tk.Entry(
             self.frame_cliente,
             font=("Segoe UI", 10),
             bd=0,
-            bg="#f8f9fb",
+            bg="#ffffff",
             fg=self.text_color,
             highlightthickness=1,
             highlightcolor=self.primary_color,
-            highlightbackground=self.border_color
+            highlightbackground="#b2bec3",
+            insertbackground=self.primary_color
         )
         self.entry_nit = tk.Entry(
             self.frame_cliente,
             font=("Segoe UI", 10),
             bd=0,
-            bg="#f8f9fb",
+            bg="#ffffff",
             fg=self.text_color,
             highlightthickness=1,
             highlightcolor=self.primary_color,
-            highlightbackground=self.border_color
+            highlightbackground="#b2bec3",
+            insertbackground=self.primary_color
         )
 
         lbl_nombre_cliente = tk.Label(
@@ -450,72 +485,96 @@ class VentanaVentas(tk.Frame):
             item.destroy()
             
         for producto in self.inventario.productos:
-            frame = tk.Frame(
+            # Contenedor principal de la Card
+            card = tk.Frame(
                 self.frame_item_productos,
                 bg="white",
-                height=96,
-                bd=1,
-                relief="solid",
+                height=115,
+                highlightthickness=1,
                 highlightbackground=self.border_color,
-                highlightcolor=self.border_color,
-                highlightthickness=1
+                padx=15,
+                pady=10
             )
-            frame.pack_propagate(False) # Mantiene la altura fija
-            frame.pack(fill="x", padx=10, pady=8) # Se expande horizontalmente
+            card.pack_propagate(False)
+            card.pack(fill="x", padx=15, pady=8)
 
-            # Nombre: Esquina superior izquierda
-            lbl_nombre = tk.Label(
-                frame,
-                text=producto.nombre,
-                bg="white",
-                fg=self.text_color,
-                font=("Segoe UI", 11, "bold")
-            )
-            lbl_nombre.place(x=10, y=10) # 10px de margen desde arriba y la izquierda
+            # Panel Izquierdo: Información textual
+            info_frame = tk.Frame(card, bg="white")
+            info_frame.pack(side="left", fill="both", expand=True)
 
-            stock_menos_carrito = producto.stock
+            tk.Label(
+                info_frame, 
+                text=producto.nombre, 
+                bg="white", 
+                fg=self.text_color, 
+                font=("Segoe UI", 12, "bold"), 
+                anchor="w"
+            ).pack(fill="x")
 
+            # Cálculo de stock disponible en tiempo real
+            stock_actual = producto.stock
             for pc in self.carrito.productos:
                 if pc["id_producto"] == producto.id_producto:
-                    stock_menos_carrito = producto.stock - pc["cantidad"]
+                    stock_actual -= pc["cantidad"]
 
-            # Stock: Debajo del nombre
-            lbl_stock = tk.Label(
-                frame,
-                text=f"Stock: {stock_menos_carrito}", # Añadí la palabra "Stock:" para más claridad
-                bg="white",
-                fg="#7f8c8d", # Un tono gris para que no compita con el precio
-                font=("Segoe UI", 10)
+            # Badge de Stock con color condicional
+            color_stock = self.success_color if stock_actual > 5 else self.danger_color
+            stock_label = tk.Label(
+                info_frame, 
+                text=f"Disponible: {stock_actual} unidades", 
+                bg="white", 
+                fg=color_stock, 
+                font=("Segoe UI", 9, "bold"), 
+                anchor="w"
             )
-            lbl_stock.place(x=10, y=35) # Ubicado más abajo en el eje Y
+            stock_label.pack(fill="x", pady=(2, 0))
 
-            # Precio: Esquina superior derecha (Bastante visible)
-            lbl_precio = tk.Label(
-                frame,
-                text=f"Q{producto.precio_venta:,.2f}",
-                bg="white",
-                fg="#27ae60",
-                font=("Segoe UI", 14, "bold") # Aumenté el tamaño y puse negrita
-            )
-            # relx=0.95 lo manda casi al borde derecho, anchor="ne" ancla la esquina superior derecha
-            lbl_precio.place(relx=0.95, y=10, anchor="ne") 
+            # Pequeña descripción o presentación
+            presentacion = producto.presentacion if producto.presentacion else "Sin presentación"
+            tk.Label(
+                info_frame, 
+                text=f"Presentación: {presentacion}", 
+                bg="white", 
+                fg=self.sub_text, 
+                font=("Segoe UI", 9), 
+                anchor="w"
+            ).pack(fill="x", pady=(2, 0))
 
-            # Botón Agregar: Esquina inferior derecha
+            # Panel Derecho: Precio y Acción
+            action_frame = tk.Frame(card, bg="white")
+            action_frame.pack(side="right", fill="y", padx=(10, 0))
+
+            tk.Label(
+                action_frame, 
+                text=f"Q{producto.precio_venta:,.2f}", 
+                bg="white", 
+                fg=self.primary_color, 
+                font=("Segoe UI", 15, "bold"), 
+                anchor="e"
+            ).pack(fill="x", pady=(0, 5))
+
             btn_agregar = tk.Button(
-                frame,
-                text="Agregar",
-                bg="#0984e3",
+                action_frame,
+                text="+ Agregar",
+                bg=self.primary_color,
                 fg="white",
-                activebackground="#74b9ff",
+                font=("Segoe UI", 9, "bold"),
                 relief="flat",
+                bd=0,
+                padx=15,
+                pady=6,
                 cursor="hand2",
+                activebackground=self.primary_hover,
                 command=lambda p=producto: self.agregar(p),
-                state="normal" if self.caja.estado else "disabled" # Deshabilitado si la caja no está abierta
             )
-            # relx=0.95 y rely=0.90 lo mandan abajo a la derecha, anchor="se" ancla la esquina inferior derecha
-            btn_agregar.place(relx=0.95, rely=0.90, anchor="se")
+            btn_agregar.pack(side="bottom", anchor="e")
 
     def agregar(self, producto):
+
+        if self.caja.estado == False:
+            messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
+            return
+
         cantidad = simpledialog.askinteger("Cantidad", "Ingrese la Cantidad")
         
         if cantidad is None:
