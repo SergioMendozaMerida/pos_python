@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
+import categoria.Categoria as Cat
 
 class FormProductos(tk.Toplevel):
     def __init__(self, parent, inventario, actualizar_callback=None):
@@ -7,6 +9,8 @@ class FormProductos(tk.Toplevel):
         self.parent = parent
         self.inventario = inventario
         self.actualizar_callback = actualizar_callback
+
+        self.categorias = Cat.Categorias().lista_categorias
 
         # Colores coordinados
         self.color_fondo = "#f8f9fa"
@@ -19,7 +23,7 @@ class FormProductos(tk.Toplevel):
         self.color_borde = "#dfe6e9"
 
         self.title("Registro de Producto")
-        self.geometry("520x680")
+        self.geometry("520x720")
         self.resizable(False, False)
         self.configure(bg=self.color_fondo)
 
@@ -40,7 +44,7 @@ class FormProductos(tk.Toplevel):
         self.main_frame = tk.Frame(self, bg=self.color_fondo)
         self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
-        # Fila 1: Nombre y Categoría
+        # Fila 1: Nombre y Código
         row1_frame = tk.Frame(self.main_frame, bg=self.color_fondo)
         row1_frame.pack(fill="x", pady=(0, 15))
 
@@ -60,9 +64,12 @@ class FormProductos(tk.Toplevel):
         )
         self.entry_nombre.pack(fill="both", expand=True, ipady=4)
 
-        tk.Label(col1_frame, text="Código *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(10, 5))
+        col2_frame = tk.Frame(row1_frame, bg=self.color_fondo)
+        col2_frame.pack(side="left", fill="both", expand=True)
+
+        tk.Label(col2_frame, text="Código *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
         self.entry_codigo = tk.Entry(
-            col1_frame, 
+            col2_frame, 
             font=("Segoe UI", 10), 
             bg=self.color_entrada, 
             relief="flat", 
@@ -73,12 +80,28 @@ class FormProductos(tk.Toplevel):
         )
         self.entry_codigo.pack(fill="both", expand=True, ipady=4)
 
-        col2_frame = tk.Frame(row1_frame, bg=self.color_fondo)
-        col2_frame.pack(side="left", fill="both", expand=True)
+        # Fila 2: Categoría y Presentación
+        row2_frame = tk.Frame(self.main_frame, bg=self.color_fondo)
+        row2_frame.pack(fill="x", pady=(0, 15))
 
-        tk.Label(col2_frame, text="Categoría", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_categoria = tk.Entry(
-            col2_frame, 
+        col_cat_frame = tk.Frame(row2_frame, bg=self.color_fondo)
+        col_cat_frame.pack(side="left", fill="both", expand=True, padx=(0, 10))
+
+        tk.Label(col_cat_frame, text="Categoría", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        
+        self.entry_categoria = ttk.Combobox(
+            col_cat_frame,
+            font=("Segoe UI", 10),
+            values=self.categorias
+        )
+        self.entry_categoria.pack(fill="both", expand=True, ipady=4)
+
+        col_pres_frame = tk.Frame(row2_frame, bg=self.color_fondo)
+        col_pres_frame.pack(side="left", fill="both", expand=True)
+
+        tk.Label(col_pres_frame, text="Presentación", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_presentacion = tk.Entry(
+            col_pres_frame, 
             font=("Segoe UI", 10), 
             bg=self.color_entrada, 
             relief="flat", 
@@ -87,9 +110,9 @@ class FormProductos(tk.Toplevel):
             highlightbackground=self.color_borde,
             highlightcolor=self.color_primario
         )
-        self.entry_categoria.pack(fill="both", expand=True, ipady=4)
+        self.entry_presentacion.pack(fill="both", expand=True, ipady=4)
 
-        # Fila 2: Descripción
+        # Fila 3: Descripción
         tk.Label(self.main_frame, text="Descripción", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
         self.entry_descripcion = tk.Entry(
             self.main_frame, 
@@ -102,20 +125,6 @@ class FormProductos(tk.Toplevel):
             highlightcolor=self.color_primario
         )
         self.entry_descripcion.pack(fill="x", pady=(0, 15), ipady=4)
-
-        # Fila 3: Presentación
-        tk.Label(self.main_frame, text="Presentación", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_presentacion = tk.Entry(
-            self.main_frame, 
-            font=("Segoe UI", 10), 
-            bg=self.color_entrada, 
-            relief="flat", 
-            bd=0, 
-            highlightthickness=1, 
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_presentacion.pack(fill="x", pady=(0, 15), ipady=4)
 
         # Fila 4: Precios (Compra y Venta)
         row_precios = tk.Frame(self.main_frame, bg=self.color_fondo)

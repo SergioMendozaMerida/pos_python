@@ -4,6 +4,8 @@ from tkinter import messagebox
 class Categorias:
     def __init__(self):
         self.categorias = []
+        self.lista_categorias = []
+        self.obtener_categorias()
 
     def obtener_categorias(self):
         try:
@@ -14,6 +16,7 @@ class Categorias:
             self.categorias.clear()
             for c in categorias_db:
                 self.categorias.append(Categoria(c[0], c[1]))
+                self.lista_categorias.append(c[1])
             conexion.close()
             return self.categorias
         except Exception as e:
