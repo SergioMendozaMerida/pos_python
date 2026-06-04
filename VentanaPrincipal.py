@@ -19,7 +19,7 @@ class VentanaPrincipal(tk.Tk):
         super().__init__()
         self.geometry("1200x700")
         #self.resizable(False,False)
-        self.title("Inventario")
+        self.title("Anabel POS")
 
         self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
         self.login_frame.pack(fill="both", expand=True)

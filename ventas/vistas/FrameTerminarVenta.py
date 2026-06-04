@@ -84,7 +84,7 @@ class FrameTerminarVenta(tk.Toplevel):
         messagebox.showinfo("Venta exitosa", "Venta registrada exitosamente.")
         self.limpiar_carrito()
         cv = RV.CrearRecibo(self.carrito)
-        cv.generar_recibo_pequenio()
+        cv.crear_recibo()
         self.carrito.vaciar_carrito()
         self.limpiar_carrito()
         self.actualizar_ventas()

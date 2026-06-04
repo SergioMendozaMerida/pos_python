@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
 class FrameEmpresa(tk.Frame):
     def __init__(self, parent, empresa, usuario):
@@ -29,7 +29,8 @@ class FrameEmpresa(tk.Frame):
             ("Teléfono:", "telefono"),
             ("Correo Electrónico:", "correo"),
             ("Dirección Física:", "direccion"),
-            ("Eslogan:", "slogan")
+            ("Eslogan:", "slogan"),
+            ("Impresión (Carta/Ticket):", "impresion")
         ]
 
         # Diccionarios para almacenar variables y widgets
@@ -39,15 +40,22 @@ class FrameEmpresa(tk.Frame):
         # Creación dinámica de Labels y Entries
         for i, (label_text, attr) in enumerate(self.campos_info):
             valor_inicial = getattr(self.empresa, attr)
-            self.vars[attr] = tk.StringVar(value=str(valor_inicial))
+            
+            if attr == "impresion":
+                self.vars[attr] = tk.StringVar(value="Carta" if valor_inicial else "Ticket")
+            else:
+                self.vars[attr] = tk.StringVar(value=str(valor_inicial))
 
             tk.Label(self.container, text=label_text, bg="#ffffff", font=("Arial", 10, "bold")).grid(row=i+1, column=0, sticky="w", pady=8, padx=(0, 15))
             
-            entry = tk.Entry(self.container, textvariable=self.vars[attr], width=45, font=("Arial", 11), 
-                             state="readonly", relief="flat", highlightthickness=1, 
-                             highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-            entry.grid(row=i+1, column=1, pady=8, sticky="ew")
-            self.entries[attr] = entry
+            if attr == "impresion":
+                widget = ttk.Combobox(self.container, textvariable=self.vars[attr], values=["Carta", "Ticket"], state="disabled", width=43, font=("Arial", 11))
+            else:
+                widget = tk.Entry(self.container, textvariable=self.vars[attr], width=45, font=("Arial", 11), 
+                                 state="readonly", relief="flat", highlightthickness=1, 
+                                 highlightbackground="#dfe6e9", highlightcolor="#0984e3")
+            widget.grid(row=i+1, column=1, pady=8, sticky="ew")
+            self.entries[attr] = widget
 
         # Frame para botones
         self.frame_btns = tk.Frame(self.container, bg="#ffffff")
@@ -67,8 +75,11 @@ class FrameEmpresa(tk.Frame):
 
     def habilitar_edicion(self):
         """Habilita los campos para escritura."""
-        for entry in self.entries.values():
-            entry.config(state="normal")
+        for attr, widget in self.entries.items():
+            if attr == "impresion":
+                widget.config(state="readonly") # readonly permite seleccionar de la lista pero no escribir
+            else:
+                widget.config(state="normal")
         
         self.btn_editar.config(state="disabled")
         self.btn_guardar.config(state="normal")
@@ -76,6 +87,7 @@ class FrameEmpresa(tk.Frame):
 
     def guardar_cambios(self):
         """Actualiza el objeto empresa y vuelve a bloquear los campos."""
+
         try:
             self.empresa.set_datos(
                 self.vars["nombre"].get(),
@@ -84,11 +96,15 @@ class FrameEmpresa(tk.Frame):
                 int(self.vars["telefono"].get()) if self.vars["telefono"].get().isdigit() else 0,
                 self.vars["correo"].get(),
                 self.vars["direccion"].get(),
-                self.vars["slogan"].get()
+                self.vars["slogan"].get(),
+                self.vars["impresion"].get() == "Carta"
             )
 
-            for entry in self.entries.values():
-                entry.config(state="readonly")
+            for attr, widget in self.entries.items():
+                if attr == "impresion":
+                    widget.config(state="disabled")
+                else:
+                    widget.config(state="readonly")
 
             self.btn_editar.config(state="normal")
             self.btn_guardar.config(state="disabled")

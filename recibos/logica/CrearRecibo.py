@@ -3,6 +3,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import mm
 import os
 from pathlib import Path
+import datosDeEmpresa.empresa as empresa
+
 
 class CrearRecibo:
     def __init__(self, carrito_compras):
@@ -17,37 +19,57 @@ class CrearRecibo:
         self.nit = carrito_compras.nit
         self.productos = carrito_compras.productos
 
+        self.empresa = empresa.Empresa()
+
         self.ruta_documentos = Path.home() / "Documents/recibos_pos"
 
-    def generar_recibo_carga(self):
+    def crear_recibo(self):
+        if self.empresa.impresion:
+            self.generar_recibo_carta()
+        else:
+            self.generar_recibo_pequenio()
+
+
+    def generar_recibo_carta(self):
         c = canvas.Canvas(str(self.ruta_documentos / f"recibo_{self.numero_recibo}.pdf"), pagesize=letter)
         width, height = letter
 
+        # --- DATOS DE LA EMPRESA ---
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(50, height - 50, self.empresa.nombre.upper())
+        c.setFont("Helvetica", 9)
+        c.drawString(50, height - 62, f"Dirección: {self.empresa.direccion}")
+        c.drawString(50, height - 74, f"NIT: {self.empresa.nit} | Tel: {self.empresa.telefono}")
+        c.drawString(50, height - 86, f"Email: {self.empresa.correo}")
+        if self.empresa.slogan:
+            c.setFont("Helvetica-Oblique", 9)
+            c.drawString(50, height - 98, f'"{self.empresa.slogan}"')
+
         # --- ENCABEZADO ---
         c.setFont("Helvetica-Bold", 22)
-        c.drawCentredString(width/2, height - 60, "RECIBO DE VENTA")
+        c.drawCentredString(width/2, height - 130, "RECIBO DE VENTA")
         
         c.setFont("Helvetica-Bold", 10)
-        c.drawRightString(550, height - 40, f"RECIBO No: {self.numero_recibo}")
-        c.drawRightString(550, height - 55, f"FECHA: {self.fecha}")
+        c.drawRightString(550, height - 50, f"RECIBO No: {self.numero_recibo}")
+        c.drawRightString(550, height - 65, f"FECHA: {self.fecha}")
 
         # --- INFORMACIÓN DEL CLIENTE (Dentro de un marco) ---
         c.setLineWidth(1)
-        c.rect(50, height - 160, 512, 85) # x, y, ancho, alto
+        c.rect(50, height - 230, 512, 85) # x, y, ancho, alto
         
         c.setFont("Helvetica-Bold", 11)
-        c.drawString(60, height - 95, "DATOS DEL CLIENTE")
+        c.drawString(60, height - 165, "DATOS DEL CLIENTE")
         
         c.setFont("Helvetica", 10)
-        c.drawString(65, height - 115, f"Cliente: {self.nombre_cliente}")
-        c.drawString(65, height - 130, f"Dirección: {self.direccion}")
-        c.drawString(65, height - 145, f"NIT: {self.nit}")
+        c.drawString(65, height - 185, f"Cliente: {self.nombre_cliente}")
+        c.drawString(65, height - 200, f"Dirección: {self.direccion}")
+        c.drawString(65, height - 215, f"NIT: {self.nit}")
         
-        c.drawString(350, height - 115, f"Teléfono: {self.telefono}")
-        c.drawString(350, height - 130, f"DPI: {self.dpi}")
+        c.drawString(350, height - 185, f"Teléfono: {self.telefono}")
+        c.drawString(350, height - 200, f"DPI: {self.dpi}")
 
         # --- TABLA DE PRODUCTOS ---
-        y = height - 200
+        y = height - 270
         # Líneas de la tabla
         c.setLineWidth(1.5)
         c.line(50, y + 5, 562, y + 5) # Línea superior encabezado
@@ -91,11 +113,29 @@ class CrearRecibo:
         width = 80 * mm
         # Calculamos el alto dinámicamente según la cantidad de productos para evitar cortes
         items_count = len(self.productos)
-        estimated_height = (70 + (items_count * 12) + 40) * mm
+        estimated_height = (100 + (items_count * 12) + 40) * mm
         height = max(150 * mm, estimated_height)
 
         c = canvas.Canvas(str(self.ruta_documentos / f"recibo_{self.numero_recibo}.pdf"), pagesize=(width, height))
         y = height - 10 * mm
+
+        # --- DATOS DE LA EMPRESA ---
+        c.setFont("Helvetica-Bold", 10)
+        c.drawCentredString(width/2, y, self.empresa.nombre.upper())
+        y -= 5 * mm
+        c.setFont("Helvetica", 7)
+        c.drawCentredString(width/2, y, self.empresa.direccion)
+        y -= 3.5 * mm
+        c.drawCentredString(width/2, y, f"NIT: {self.empresa.nit} | Tel: {self.empresa.telefono}")
+        y -= 3.5 * mm
+        if self.empresa.slogan:
+            c.setFont("Helvetica-Oblique", 7)
+            c.drawCentredString(width/2, y, f'"{self.empresa.slogan}"')
+            y -= 5 * mm
+        
+        c.setLineWidth(0.5)
+        c.line(5 * mm, y, width - 5 * mm, y)
+        y -= 7 * mm
 
         # --- ENCABEZADO ---
         c.setFont("Helvetica-Bold", 12)
@@ -108,7 +148,6 @@ class CrearRecibo:
         c.drawCentredString(width/2, y, f"Fecha: {self.fecha}")
         y -= 6 * mm
         
-        c.setLineWidth(0.5)
         c.line(5 * mm, y, width - 5 * mm, y)
         y -= 5 * mm
         

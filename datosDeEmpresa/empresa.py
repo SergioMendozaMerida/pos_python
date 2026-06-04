@@ -10,14 +10,17 @@ class Empresa:
         self.correo = ""
         self.direccion = ""
         self.slogan = ""
+        self.impresion = False
 
         self.obtener_datos()
+            
 
     def obtener_datos(self):
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("SELECT * FROM empresa")
+            # Seleccionamos las columnas explícitamente para evitar errores de índice con la columna ID
+            cursor.execute("SELECT nombre, representante, nit, telefono, correo, direccion, eslogan, impresion FROM empresa WHERE id = 1")
             empresa = cursor.fetchone()
             if empresa:
                 self.nombre = empresa[0]
@@ -27,12 +30,13 @@ class Empresa:
                 self.correo = empresa[4]
                 self.direccion = empresa[5]
                 self.slogan = empresa[6]
+                self.impresion = empresa[7]
                 conexion.close()
                 return self
             else:
                 #QUITAR ESTA PARTE CUANDO SE IMPLEMENTE EL MODULO DE BASE DE DATOS.
-                cursor.execute("""INSERT INTO empresa (nombre, representante, nit, telefono, correo, direccion, eslogan, id)
-                               values("","","","","","","",1)""")
+                cursor.execute("""INSERT INTO empresa (nombre, representante, nit, telefono, correo, direccion, eslogan, impresion, id)
+                               values("","","","","","","",0,1)""")
                 conexion.commit()
                 conexion.close()
                 return 
@@ -41,7 +45,7 @@ class Empresa:
             print(f"Error al obtener los datos de la empresa: {e}")
             return None
         
-    def set_datos(self, nombre, representante, nit, telefono, correo, direccion, eslogan):
+    def set_datos(self, nombre, representante, nit, telefono, correo, direccion, eslogan, impresion):
         self.nombre = nombre
         self.representante = representante
         self.nit = nit
@@ -49,12 +53,13 @@ class Empresa:
         self.correo = correo
         self.direccion = direccion
         self.slogan = eslogan
+        self.impresion = impresion
 
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("UPDATE empresa SET nombre = ?, representante = ?, nit = ?, telefono = ?, correo = ?, direccion = ?, eslogan = ? WHERE id = 1",
-                           (self.nombre, self.representante, self.nit, self.telefono, self.correo, self.direccion, self.slogan))
+            cursor.execute("UPDATE empresa SET nombre = ?, representante = ?, nit = ?, telefono = ?, correo = ?, direccion = ?, eslogan = ?, impresion = ? WHERE id = 1",
+                           (self.nombre, self.representante, self.nit, self.telefono, self.correo, self.direccion, self.slogan, self.impresion))
             conexion.commit()
             conexion.close()
             messagebox.showinfo("Éxito", "Los datos de la empresa se han actualizado correctamente.")
