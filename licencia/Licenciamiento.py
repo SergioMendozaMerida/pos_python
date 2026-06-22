@@ -4,8 +4,6 @@ import subprocess
 class Licenciamiento:
     def __init__(self):
         self.activacion = False
-
-        self.validar()
         
     def obtener_uuid_sistema(self):
         comando = [
@@ -21,7 +19,7 @@ class Licenciamiento:
     
     def obtener_uuid_database(self):
         try:
-            conexion = sqlite3.connect("../db_inventario.db")
+            conexion = sqlite3.connect("./db_inventario.db")
             cursor = conexion.cursor()
             cursor.execute("SELECT uuid FROM datos_equipo")
             uuid_db = cursor.fetchone()
@@ -41,6 +39,5 @@ class Licenciamiento:
         else:
             self.activacion = False
             return False
-                    
-print(Licenciamiento().validar())
+
 

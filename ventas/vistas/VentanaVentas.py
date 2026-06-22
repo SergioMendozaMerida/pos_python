@@ -651,7 +651,7 @@ class VentanaVentas(tk.Frame):
         self.carrito.set_datos_cliente(nombre, direccion, dpi, nit, telefono)
 
         frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito, self.actualizar_recibos, 
-                                               self.actualizar_ventas, self.usuario)
+                                               self.actualizar_ventas, self.usuario, self.calcular_total)
 
         self.show_carrito()
         

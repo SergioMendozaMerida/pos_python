@@ -1,3 +1,4 @@
+import ctypes
 import tkinter as tk
 from tkinter import messagebox
 import inventario.vistas.VentanaInventario as vi
@@ -13,6 +14,10 @@ import ingresos.VentanaIngresosStock as VIS
 import egresos.VentanaEgresos as VE
 import caja.VentanaSesionesCaja as VSC
 import caja.caja as Caja
+import licencia.Licenciamiento as Licenciamiento
+
+myappid = 'anabel.pos.1.0'
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self):
@@ -20,6 +25,17 @@ class VentanaPrincipal(tk.Tk):
         self.geometry("1200x700")
         #self.resizable(False,False)
         self.title("Anabel POS")
+        #self.iconbitmap("anabel.ico")
+        icono = tk.PhotoImage(file="anabel.png")
+        self.iconphoto(True, icono)
+
+        licencia = Licenciamiento.Licenciamiento()
+        auth = licencia.validar()
+
+        if not auth:
+            messagebox.showerror("Licencia no válida", "El sistema no está activado. Por favor, contacte al soporte.")
+            self.destroy()
+            return
 
         self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
         self.login_frame.pack(fill="both", expand=True)
