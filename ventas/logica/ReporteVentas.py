@@ -21,6 +21,20 @@ class ReporteVentas:
         conexion.close()
         self.obtener_productos_mas_vendidos("","")
         return ventas
+
+    def obtener_ventas_desc(self):
+        conexion = sqlite3.connect("db_inventario.db")
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM ventas ORDER BY fecha DESC")
+        ventas = cursor.fetchall()
+        self.ventas.clear()
+        self.total_ventas = 0.0
+        for v in ventas:
+            self.ventas.append(Venta.Venta(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8],v[9])) # Aquí se almacenarán las ventas, cada venta podría ser un diccionario con detalles como fecha, producto, cantidad, etc.
+            self.total_ventas += int(v[7])
+        conexion.close()
+        self.obtener_productos_mas_vendidos("","")
+        return ventas
     
     def filtrar_ventas(self, fecha_inicio, fecha_fin, nombre_producto):
         conexion = sqlite3.connect("db_inventario.db")

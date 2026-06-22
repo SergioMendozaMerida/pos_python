@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
+import categoria.Categoria as Cat
 
 class EditarProducto(tk.Toplevel):
     def __init__(self, parent, inventario, producto, actualizar_callback=None):
@@ -8,6 +9,8 @@ class EditarProducto(tk.Toplevel):
         self.inventario = inventario
         self.producto = producto
         self.actualizar_callback = actualizar_callback
+
+        self.categorias = Cat.Categorias().lista_categorias
 
         # Colores coordinados
         self.color_fondo = "#f8f9fa"
@@ -65,16 +68,11 @@ class EditarProducto(tk.Toplevel):
         col2_frame.pack(side="left", fill="both", expand=True)
 
         tk.Label(col2_frame, text="Categoría", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_categoria = tk.Entry(
-            col2_frame, 
-            font=("Segoe UI", 10), 
-            bg=self.color_entrada, 
-            relief="flat", 
-            bd=0, 
-            highlightthickness=1, 
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
+        self.entry_categoria = ttk.Combobox(
+            col2_frame,
+            font=("Segoe UI", 10),
+            values=self.categorias
+                )
         self.entry_categoria.pack(fill="both", expand=True, ipady=4)
 
         # Fila 2: Descripción

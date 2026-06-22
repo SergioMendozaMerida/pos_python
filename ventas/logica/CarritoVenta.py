@@ -117,6 +117,12 @@ class CarrtioVenta:
         self.utilidad = 0
         #self.vaciar_carrito()
         conexion.close()
+
+    def quitar_producto(self, id_producto):
+        for producto in self.productos:
+            if producto["id_producto"] == id_producto:
+                self.productos.remove(producto)
+                break
     
     def vaciar_carrito(self):
         self.productos.clear()

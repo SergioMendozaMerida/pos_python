@@ -362,6 +362,19 @@ class VentanaVentas(tk.Frame):
         )
         btn_finalizar.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
 
+        btn_quitar_producto = tk.Button(
+            self.frame_concretar_venta,
+            text="Quitar producto",
+            bg=self.danger_color,
+            fg="white",
+            font=("Segoe UI", 10, "bold"),
+            bd=0,
+            activebackground="#ff7675",
+            cursor='hand2',
+            command=self.quitar_producto
+        )
+        btn_quitar_producto.pack(fill="x", padx=10, pady=(0, 10), ipady=8)
+
         btn_Cantidad = tk.Button(
             self.frame_concretar_venta,
             text="Cantidad",
@@ -610,6 +623,22 @@ class VentanaVentas(tk.Frame):
         self.show_productos()
         messagebox.showinfo("Canelado", "La venta se ha cancelado")
 
+    def quitar_producto(self):
+        selection = self.tabla_carrito.selection()
+        
+        if not selection:
+            messagebox.showerror("Error", "Por Favor seleccione un producto.")
+            return
+
+        item = int(selection[0])
+
+        respuesta = messagebox.askyesno("Quitar Producto", "¿Está seguro que desea quitar este producto de la venta?")
+        if respuesta:
+            self.carrito.quitar_producto(item)
+            messagebox.showinfo("Exito", "El producto ha sido removido.")
+            self.show_carrito()
+            self.show_productos()
+
     def cambiar_cantidad(self):
         selection = self.tabla_carrito.selection()
 
@@ -618,7 +647,6 @@ class VentanaVentas(tk.Frame):
             return
 
         item = int(selection[0])
-        print(item)
         cantidad = simpledialog.askinteger("Remover", "Escriba la cantidad final")
 
         if cantidad is not None:

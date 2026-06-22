@@ -35,6 +35,7 @@ class VentanaReporteVentas(tk.Frame):
         self.entry_fecha_inicio = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
         self.entry_fecha_fin = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
         self.bton_buscar = tk.Button(self.frame_filtros, text="Buscar", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.filtrar_ventas)
+        self.bton_ordenar_desc = tk.Button(self.frame_filtros, text="Desc", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.mostrar_ventas_desc)
 
         self.lbl_nombre_producto.grid(row=0, column=0, sticky="w", padx=(0, 5), pady=(0, 5))
         self.entry_nombre_producto.grid(row=1, column=0, sticky="ew", padx=(0, 5), pady=(0, 10))
@@ -43,6 +44,7 @@ class VentanaReporteVentas(tk.Frame):
         self.lbl_fecha_fin.grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 5))
         self.entry_fecha_fin.grid(row=1, column=2, sticky="ew", padx=(0, 5), pady=(0, 10))
         self.bton_buscar.grid(row=1, column=3, sticky="ew", padx=(5, 0), pady=(0, 10))
+        self.bton_ordenar_desc.grid(row=1, column=4, sticky="ew", padx=(5, 0), pady=(0, 10))
 
         self.frame_filtros_predeterminados = tk.Frame(self.frame_filtros, bg="#f0f0f0")
         self.frame_filtros_predeterminados.grid(row=2, column=0, columnspan=4, sticky="ew")
@@ -140,6 +142,30 @@ class VentanaReporteVentas(tk.Frame):
         self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
 
         total_utilidades = sum(float(v.utilidad) for v in ventas)
+        self.lbl_total_utilidades.config(text=f"Total Utilidades: Q {total_utilidades:,.2f}")
+
+        self.nombre_reporte = f"{self.hoy} - reporte ventas"
+
+    def mostrar_ventas_desc(self):
+        for item in self.tabla_ventas.get_children():
+            self.tabla_ventas.delete(item)
+
+        self.reporte_ventas.obtener_ventas_desc()
+
+        for venta in self.reporte_ventas.ventas:
+            self.tabla_ventas.insert("", "end", values=(
+                venta.id_recibo,
+                venta.fecha,
+                venta.producto,
+                venta.cantidad,
+                f"Q {float(venta.precio):,.2f}",
+                f"Q {float(venta.sub_total):,.2f}",
+                f"Q {float(venta.utilidad):,.2f}"
+            ))
+
+        self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
+
+        total_utilidades = sum(float(v.utilidad) for v in self.reporte_ventas.ventas)
         self.lbl_total_utilidades.config(text=f"Total Utilidades: Q {total_utilidades:,.2f}")
 
         self.nombre_reporte = f"{self.hoy} - reporte ventas"
