@@ -103,7 +103,7 @@ class VentanaPrincipal(tk.Tk):
         # Botón Reporte de Ventas
         self.btn_reporte_ventas = tk.Button(
             self.frm_menu_bar, 
-            text="📊 Reporte de Ventas", 
+            text="📊 R. Ventas", 
             command=lambda: self.draw_frames(self.ventana_reporte_ventas, self.btn_reporte_ventas),
             **self.btn_style
         )
@@ -119,7 +119,7 @@ class VentanaPrincipal(tk.Tk):
 
         self.btn_ingresos_stock = tk.Button(
             self.frm_menu_bar,
-            text="📥 Ingresos de Stock", 
+            text="📥 I. Stock", 
             command=lambda: self.draw_frames(self.ingresos_stock, self.btn_ingresos_stock),
             **self.btn_style
         )
@@ -144,7 +144,7 @@ class VentanaPrincipal(tk.Tk):
         # Botón Datos de Empresa
         self.btn_datos_empresa = tk.Button(
             self.frm_menu_bar, 
-            text="🏢 Datos Empresa", 
+            text="🏢 Empresa", 
             command=lambda: self.draw_frames(self.datos_empresa, self.btn_datos_empresa),
             **self.btn_style
         )

@@ -49,7 +49,6 @@ class FrameAbrirCaja(tk.Toplevel):
             highlightcolor=self.color_primario
         )
         self.entry_saldo_inicial.pack(fill="x", pady=(0, 20), ipady=5)
-        self.entry_saldo_inicial.insert(0, "0.00")
         self.entry_saldo_inicial.focus_set()
         self.entry_saldo_inicial.bind("<Return>", lambda e: self.abrir_caja())
 
