@@ -312,22 +312,8 @@ class VentanaReporteVentas(tk.Frame):
             activebackground=self.color_boton_hover,
             command=self.generar_reporte_excel
         )
-        self.btn_exportar_csv = tk.Button(
-            self.frame_botones_exportar, 
-            text="📄 Exportar a CSV", 
-            bg=self.color_secundario, 
-            fg="white",
-            font=("Arial", 9, "bold"),
-            relief="flat", 
-            bd=0,
-            padx=15,
-            pady=6,
-            cursor="hand2",
-            activebackground="#5dade2"
-        )
 
         self.btn_exportar_excel.grid(row=0, column=0, sticky="ew", padx=(0, 3))
-        self.btn_exportar_csv.grid(row=0, column=1, sticky="ew", padx=(3, 0))
 
         self.mostrar_ventas(self.reporte_ventas.ventas)
 

@@ -150,7 +150,8 @@ class FrameCategoria(tk.Toplevel):
             messagebox.showwarning("Advertencia", "Seleccione una categoría para eliminar.")
             return
 
-        categoria_id = self.tabla_categorias.item(selected_item, "values")[0]
+        categoria_id = int(selected_item[0])  # Obtener el ID de la categoría seleccionada
+        print(categoria_id)
         categoria = Ct.Categoria()
         categoria.eliminar_categoria(categoria_id)
         self.lista_categorias = self.categorias.obtener_categorias()

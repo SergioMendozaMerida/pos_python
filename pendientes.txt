@@ -1,0 +1,12 @@
+Exportar excel la siguientes tablas.
+inventario.
+recibos.
+ingresos stock
+egresos
+sesiones de caja.
+
+Crear copias de seguridad al cerrar la caja.
+Agregar campo para buscar por código en inventario.
+Quitar codigo de barras obligatorio.
+Validar que el código de barras no exista
+Corregir el número de recibo
