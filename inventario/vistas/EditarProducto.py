@@ -139,20 +139,6 @@ class EditarProducto(tk.Toplevel):
         )
         self.entry_precio_venta.pack(fill="both", expand=True, ipady=4)
 
-        # Fila 5: Stock
-        tk.Label(self.main_frame, text="Stock *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_stock = tk.Entry(
-            self.main_frame, 
-            font=("Segoe UI", 10), 
-            bg=self.color_entrada, 
-            relief="flat", 
-            bd=0, 
-            highlightthickness=1, 
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_stock.pack(fill="x", pady=(0, 20), ipady=4)
-
         # Cargar datos del producto
         self.cargar_datos_producto()
 
@@ -202,7 +188,6 @@ class EditarProducto(tk.Toplevel):
         self.entry_categoria.insert(0, self.producto.categoria)
         self.entry_precio_compra.insert(0, str(self.producto.precio_compra))
         self.entry_precio_venta.insert(0, str(self.producto.precio_venta))
-        self.entry_stock.insert(0, str(self.producto.stock))
 
     def actualizar_producto(self):
         nombre = self.entry_nombre.get().strip()
@@ -211,20 +196,14 @@ class EditarProducto(tk.Toplevel):
         categoria = self.entry_categoria.get().strip()
         precio_compra = self.entry_precio_compra.get().strip()
         precio_venta = self.entry_precio_venta.get().strip()
-        stock = self.entry_stock.get().strip()
 
         if not nombre:
             messagebox.showwarning("Validación", "Debe ingresar el nombre del producto.")
             return
 
-        if not stock:
-            messagebox.showwarning("Validación", "Debe ingresar la cantidad en stock.")
-            return
-
         try:
             precio_compra_val = float(precio_compra) if precio_compra else 0.0
             precio_venta_val = float(precio_venta) if precio_venta else 0.0
-            stock_val = int(stock)
         except ValueError:
             messagebox.showwarning("Validación", "Precio y stock deben ser numéricos.")
             return
@@ -236,8 +215,7 @@ class EditarProducto(tk.Toplevel):
             presentacion,
             categoria,
             precio_compra_val,
-            precio_venta_val,
-            stock_val
+            precio_venta_val
         )
 
         if self.actualizar_callback:

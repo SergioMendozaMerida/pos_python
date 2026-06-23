@@ -1,4 +1,5 @@
 import tkinter as tk
+import recibos.logica.CrearReporteRecibos as CRR
 from tkinter import ttk
 import recibos.logica.Recibos as R
 import datetime
@@ -111,15 +112,28 @@ class VentanaRecibos(tk.Frame):
 
         self.frame_botones_opciones = tk.Frame(self, bg="#f0f0f0", padx=10, pady=10)
         self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=10, pady=(5, 10))
-        self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
-        self.frame_botones_opciones.grid_columnconfigure(1, weight=1)
+        self.frame_botones_opciones.grid_rowconfigure(0, weight=1)
+        self.frame_botones_opciones.grid_columnconfigure(0, weight=1, uniform="btns")
+        self.frame_botones_opciones.grid_columnconfigure(1, weight=1, uniform="btns")
+        self.frame_botones_opciones.grid_columnconfigure(2, weight=1, uniform="btns")
 
         self.btn_ver_ventas = tk.Button(self.frame_botones_opciones, text="Ver Ventas del Recibo", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.ver_detalle)
-        self.btn_ver_ventas.pack(side="left", padx=(0, 5), fill="x", expand=True)
+        self.btn_ver_ventas.grid(row=0, column=0, padx=3, sticky="nsew")
         self.btn_ver_recibo_pdf = tk.Button(self.frame_botones_opciones, text="Ver Recibo PDF", bg="#00b894", fg="white", relief="flat", cursor="hand2", command=self.ver_recibo_pdf)
-        self.btn_ver_recibo_pdf.pack(side="left", padx=(5, 0), fill="x", expand=True)
+        self.btn_ver_recibo_pdf.grid(row=0, column=1, padx=3, sticky="nsew")
+        self.btn_exportar_recibos_excel = tk.Button(self.frame_botones_opciones, text="Exportar Recibos a Excel", bg="#6c5ce7", fg="white", relief="flat", cursor="hand2", command=self.exportar_recibos_excel)
+        self.btn_exportar_recibos_excel.grid(row=0, column=2, padx=3, sticky="nsew")
 
         self.mostrar_recibos()
+
+    def exportar_recibos_excel(self):
+        if not self.recibos.recibos:
+            tk.messagebox.showwarning("Advertencia", "No hay recibos para exportar.")
+            return
+
+        reporte = CRR.CrearReporteRecibos(self.recibos)
+        reporte.crear_reporte_excel()
+        tk.messagebox.showinfo("Éxito", f"Reporte de recibos exportado exitosamente a {reporte.ruta_documentos}/{reporte.nombre}.xlsx")
 
     def mostrar_recibos(self):
         for item in self.tabla_recibos.get_children():

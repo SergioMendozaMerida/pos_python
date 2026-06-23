@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import ingresos.ingresos as I
 import datetime
+import ingresos.CrearReporteIngresos as CRI
 
 class VentanaIngresosStock(tk.Frame):
     def __init__(self, parent):
@@ -97,6 +98,26 @@ class VentanaIngresosStock(tk.Frame):
         self.tabla_ingresos.grid(row=0, column=0, sticky="nsew")
         self.scroll_y.grid(row=0, column=1, sticky="ns")
 
+        self.frame_botones_opciones = tk.Frame(self, bg="#f0f0f0", padx=10, pady=8)
+        self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=10, pady=(0, 10))
+        self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
+
+        self.btn_exportar_ingresos_excel = tk.Button(
+            self.frame_botones_opciones,
+            text="📤 Exportar a Excel",
+            bg="#27ae60",
+            fg="white",
+            font=("Segoe UI", 10, "bold"),
+            relief="flat",
+            bd=0,
+            padx=15,
+            pady=8,
+            cursor="hand2",
+            activebackground="#5e49b5",
+            command=self.exportar_ingresos_excel
+        )
+        self.btn_exportar_ingresos_excel.grid(row=0, column=0, sticky="ew")
+
         self.actualizar_tabla()
 
     def actualizar_tabla(self):
@@ -180,3 +201,12 @@ class VentanaIngresosStock(tk.Frame):
     def limpiar_botones_estilo(self):
         for btn in self.btns_filtros:
             btn.config(bg=self.color_btn_filtro)
+
+    def exportar_ingresos_excel(self):
+        if not self.registros.ingresos:
+            messagebox.showwarning("Advertencia", "No hay ingresos para exportar.")
+            return
+
+        reporte = CRI.ReporteIngresos(self.registros)
+        reporte.crear_reporte_excel()
+        messagebox.showinfo("Éxito", f"Reporte de ingresos exportado exitosamente a {reporte.ruta_documentos}/{reporte.nombre}.xlsx")

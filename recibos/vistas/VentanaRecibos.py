@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from pathlib import Path
 import recibos.logica.Recibos as R
+import recibos.logica.CrearReporteRecibos as CRR
 import datetime
 import recibos.vistas.FrameDetalleRecibo as FDR
 import os
@@ -318,8 +319,10 @@ class VentanaRecibos(tk.Frame):
 
         self.frame_botones_opciones = tk.Frame(self, bg=self.color_fondo, padx=8, pady=6)
         self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=8, pady=(2, 6))
-        self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
-        self.frame_botones_opciones.grid_columnconfigure(1, weight=1)
+        self.frame_botones_opciones.grid_rowconfigure(0, weight=1)
+        self.frame_botones_opciones.grid_columnconfigure(0, weight=1, uniform="btns")
+        self.frame_botones_opciones.grid_columnconfigure(1, weight=1, uniform="btns")
+        self.frame_botones_opciones.grid_columnconfigure(2, weight=1, uniform="btns")
 
         self.btn_ver_ventas = tk.Button(
             self.frame_botones_opciones, 
@@ -335,7 +338,7 @@ class VentanaRecibos(tk.Frame):
             activebackground="#5dade2",
             command=self.ver_detalle
         )
-        self.btn_ver_ventas.pack(side="left", padx=(0, 3), fill="x", expand=True)
+        self.btn_ver_ventas.grid(row=0, column=0, padx=(0, 3), sticky="nsew")
         
         self.btn_ver_recibo_pdf = tk.Button(
             self.frame_botones_opciones, 
@@ -351,7 +354,23 @@ class VentanaRecibos(tk.Frame):
             activebackground=self.color_boton_hover,
             command=self.ver_recibo_pdf
         )
-        self.btn_ver_recibo_pdf.pack(side="left", padx=(3, 0), fill="x", expand=True)
+        self.btn_ver_recibo_pdf.grid(row=0, column=1, padx=3, sticky="nsew")
+
+        self.btn_exportar_recibos_excel = tk.Button(
+            self.frame_botones_opciones,
+            text="📤 Exportar Recibos a Excel",
+            bg=self.color_boton,
+            fg="white",
+            font=("Arial", 9, "bold"),
+            relief="flat",
+            bd=0,
+            padx=15,
+            pady=6,
+            cursor="hand2",
+            activebackground=self.color_boton_hover,
+            command=self.exportar_recibos_excel
+        )
+        self.btn_exportar_recibos_excel.grid(row=0, column=2, padx=(3, 0), sticky="nsew")
 
         self.mostrar_recibos()
 
@@ -490,3 +509,15 @@ class VentanaRecibos(tk.Frame):
         item = selection[0]
         self.ruta_documentos = Path.home() / "Documents/recibos_pos"
         os.startfile(f"{self.ruta_documentos}/recibo_{item}.pdf")
+
+    def exportar_recibos_excel(self):
+        if not getattr(self.recibos, 'recibos', None):
+            messagebox.showwarning("Advertencia", "No hay recibos para exportar.")
+            return
+
+        reporte = CRR.CrearReporteRecibos(self.recibos)
+        reporte.crear_reporte_excel()
+        messagebox.showinfo(
+            "Éxito",
+            f"Reporte de recibos exportado exitosamente a {reporte.ruta_documentos}/{reporte.nombre}.xlsx"
+        )

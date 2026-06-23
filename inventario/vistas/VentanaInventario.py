@@ -5,6 +5,7 @@ import inventario.vistas.FormProductos as FP
 import inventario.vistas.EditarProducto as EP
 import inventario.vistas.FrameIngresoStock as FIS
 import categoria.FrameCategoria as FCAT
+import inventario.logica.crearReporteInventario as CRI
 
 
 
@@ -59,7 +60,7 @@ class VentanaInventario(tk.Frame):
             insertbackground=self.color_secundario
         )
         self.entry_nombre.pack(side="left", padx=(0, 20), ipady=3)
-        self.entry_nombre.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
+        self.entry_nombre.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get()))
         self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
 
         tk.Label(label_frame, text="Descripción:", bg=self.color_fondo, fg=self.color_primario, font=("Segoe UI", 9, "bold")).pack(side="left", padx=(0, 5))
@@ -76,8 +77,26 @@ class VentanaInventario(tk.Frame):
             insertbackground=self.color_secundario
         )
         self.entry_descripcion.pack(side="left", padx=(0, 20), ipady=3)
-        self.entry_descripcion.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
+        self.entry_descripcion.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get()))
         self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
+
+        tk.Label(label_frame, text="Código:", bg=self.color_fondo, fg="red", font=("Segoe UI", 9, "bold")).pack(side="left", padx=(0, 5))
+        self.entry_codigo = tk.Entry(
+            label_frame, 
+            width=25, 
+            font=("Segoe UI", 10),
+            bg="#ffffff",
+            fg="#2d3436",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground="#b2bec3",
+            highlightcolor=self.color_secundario,
+            insertbackground=self.color_secundario
+        )
+        self.entry_codigo.pack(side="left", padx=(0, 20), ipady=3)
+        self.entry_codigo.bind("<Return>", lambda e:self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get()))
+        self.entry_codigo.bind("<KeyRelease>", self.iniciar_espera)
+        self.entry_codigo.focus()
 
         btn_buscar = tk.Button(
             label_frame, 
@@ -90,7 +109,7 @@ class VentanaInventario(tk.Frame):
             padx=20,
             cursor="hand2",
             activebackground="#5dade2",
-            command=lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get())
+            command=lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get())
         )
         btn_buscar.pack(side="left", ipady=3)
 
@@ -220,14 +239,36 @@ class VentanaInventario(tk.Frame):
         )
         self.btn_ingreso_stock.pack(side="left", padx=(0, 10), pady=10)
 
+        self.btn_exportar_excel = tk.Button(
+            self.frame_botones,
+            text="📊 Exportar a Excel",
+            bg="#27ae60",
+            fg="white",
+            font=("Arial", 11, "bold"),
+            padx=20,
+            pady=12,
+            cursor="hand2",
+            command=self.exportar_a_excel
+        )
+        self.btn_exportar_excel.pack(side="left", padx=(0, 10), pady=10)
+
         self.cargar_productos()
 
         self.timer_id = None
 
+    def exportar_a_excel(self):
+        if not self.inventario.productos:
+            messagebox.showwarning("Advertencia", "No hay productos para exportar.")
+            return
+
+        reporte = CRI.ReporteInventario(self.inventario)
+        reporte.crear_reporte_excel()
+        messagebox.showinfo("Éxito", f"Reporte de inventario exportado exitosamente a {reporte.ruta_documentos}/{reporte.nombre}.xlsx")
+        
     def iniciar_espera(self, event):
         if self.timer_id:
             self.after_cancel(self.timer_id)
-        self.timer_id = self.after(700, lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get()))
+        self.timer_id = self.after(700, lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get()))
 
     def abrir_frame_categorias(self):
         FCAT.FrameCategoria(self)
@@ -263,12 +304,12 @@ class VentanaInventario(tk.Frame):
                 f"Q{producto.utilidad:.2f}"
             ))
 
-    def buscar_producto(self, nombre="", descripcion=""):
+    def buscar_producto(self, nombre="", descripcion="", codigo=""):
         if self.timer_id:
             self.after_cancel(self.timer_id)
             self.timer_id = None
 
-        self.inventario.buscar_producto(nombre, descripcion)
+        self.inventario.buscar_producto(nombre, descripcion, codigo)
         for item in self.tabla_productos.get_children():
             self.tabla_productos.delete(item)
 

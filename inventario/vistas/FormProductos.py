@@ -67,7 +67,7 @@ class FormProductos(tk.Toplevel):
         col2_frame = tk.Frame(row1_frame, bg=self.color_fondo)
         col2_frame.pack(side="left", fill="both", expand=True)
 
-        tk.Label(col2_frame, text="Código *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        tk.Label(col2_frame, text="Código", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
         self.entry_codigo = tk.Entry(
             col2_frame, 
             font=("Segoe UI", 10), 
@@ -224,12 +224,13 @@ class FormProductos(tk.Toplevel):
         precio_venta = self.entry_precio_venta.get().strip()
         stock = self.entry_stock.get().strip()
 
-        if not nombre or not codigo:
-            messagebox.showwarning("Validación", "Debe ingresar el nombre y el código del producto.")
+        if not nombre:
+            messagebox.showwarning("Validación", "Debe ingresar el nombre del producto.")
             return
 
-        if not stock:
-            messagebox.showwarning("Validación", "Debe ingresar la cantidad en stock.")
+        if self.inventario.buscar_producto_por_codigo(codigo):
+            messagebox.showwarning("Validación", "El código del producto ya existe, no pueden existir dos productos con el mismo código.")
+            self.entry_codigo.focus()
             return
 
         try:

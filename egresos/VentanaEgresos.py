@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import egresos.Egresos as E
 import egresos.FormRegistrarEgreso as FRE
 import datetime
+import egresos.CrearReporteEgresos as CRE
 
 class VentanaEgresos(tk.Frame):
     def __init__(self, parent, caja):
@@ -113,7 +114,31 @@ class VentanaEgresos(tk.Frame):
         )
         self.btn_registrar.pack(side="left")
 
+        self.btn_exportar_excel = tk.Button(
+            self.frame_botones,
+            text="📤 Exportar a Excel",
+            bg="#27ae60",
+            fg="white",
+            font=("Segoe UI", 10, "bold"),
+            relief="flat",
+            bd=0,
+            padx=15,
+            pady=8,
+            cursor="hand2",
+            activebackground="#5e49b5",
+            command=self.exportar_egresos_excel
+        )
+        self.btn_exportar_excel.pack(side="left", padx=(10, 0))
+
         self.actualizar_tabla()
+
+    def exportar_egresos_excel(self):
+        if not self.registros.egresos:
+            messagebox.showwarning("Advertencia", "No hay egresos para exportar.")
+            return
+        reporte = CRE.CrearReporteEgresos(self.registros)
+        reporte.crear_reporte_excel()
+        messagebox.showinfo("Éxito", f"Reporte de egresos exportado exitosamente a {reporte.ruta_documentos}/{reporte.nombre}.xlsx")
 
     def actualizar_tabla(self):
         self.registros.obtener_egresos()

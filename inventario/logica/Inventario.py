@@ -40,8 +40,8 @@ class Inventario:
         for producto in self.productos:
             print(f"{producto.nombre} {producto.descripcion}")
 
-    def buscar_producto(self, nombre, descripcion):
-        self.cursor.execute("SELECT * FROM productos WHERE nombre LIKE ? AND descripcion LIKE ?",(f"%{nombre}%", f"%{descripcion}%"))
+    def buscar_producto(self, nombre, descripcion, codigo):
+        self.cursor.execute("SELECT * FROM productos WHERE nombre LIKE ? AND descripcion LIKE ? AND codigo_producto LIKE ?",(f"%{nombre}%", f"%{descripcion}%", f"%{codigo}%"))
         productos = self.cursor.fetchall()
         self.productos.clear()
         for producto in productos:
@@ -141,9 +141,9 @@ class Inventario:
         self.conexion.commit()
         self.obtener_productos()"""
 
-    def editar_producto(self, id_producto, nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, stock):
-        self.cursor.execute("UPDATE productos SET nombre=?, descripcion=?, presentacion=?, categoria=?, precio_compra=?, precio_venta=?, stock=? WHERE id_producto=?",
-                            (nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, stock, id_producto))
+    def editar_producto(self, id_producto, nombre, descripcion, presentacion, categoria, precio_compra, precio_venta):
+        self.cursor.execute("UPDATE productos SET nombre=?, descripcion=?, presentacion=?, categoria=?, precio_compra=?, precio_venta=? WHERE id_producto=?",
+                            (nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, id_producto))
         self.conexion.commit()
         self.obtener_productos()
 
