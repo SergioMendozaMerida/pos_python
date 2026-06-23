@@ -247,7 +247,6 @@ class VentanaRecibos(tk.Frame):
         item = self.tabla_recibos.selection()[0]
         for v in self.recibos.recibos:
             if int(item) == int(v.no_recibo):
-                print(v.no_recibo)
                 detalle = FDR.FrameDetalleRecibo(self, v)
                 break
                 

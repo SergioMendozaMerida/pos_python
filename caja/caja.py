@@ -1,5 +1,6 @@
 import datetime
 import sqlite3
+import caja.CrearCopiaBd as CBC
 from tkinter import messagebox
 
 
@@ -54,6 +55,10 @@ class Caja:
                            WHERE id_sesion = ?""", (self.estado, efectivo_final, efectivo_final - self.saldo_final, self.id_sesion))
             conexion.commit()
             conexion.close()
+
+            # Crear copia de seguridad de la base de datos al cerrar la caja
+            copia = CBC.BackUpBd()
+            copia.hacer_backup()
             
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al cerrar la caja {e}.")
