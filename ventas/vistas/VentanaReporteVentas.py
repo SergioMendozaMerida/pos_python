@@ -32,13 +32,13 @@ class VentanaReporteVentas(tk.Frame):
         self.frame_filtros = tk.LabelFrame(
             self, 
             text="Filtros de Ventas",
-            font=("Segoe UI", 10, "bold"),
+            font=("Segoe UI", 9, "bold"),
             bg=self.color_fondo,
             fg=self.color_primario,
-            padx=15,
-            pady=15
+            padx=10,
+            pady=8
         )
-        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
+        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=8, pady=(5, 2))
         self.frame_filtros.grid_columnconfigure(0, weight=1)
         self.frame_filtros.grid_columnconfigure(1, weight=1)
         self.frame_filtros.grid_columnconfigure(2, weight=1)
@@ -105,10 +105,10 @@ class VentanaReporteVentas(tk.Frame):
             text="🔍 Buscar", 
             bg=self.color_secundario, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=15,
+            padx=10,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_ventas
@@ -118,26 +118,26 @@ class VentanaReporteVentas(tk.Frame):
             text="⬇️ Desc", 
             bg=self.color_secundario, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=15,
+            padx=10,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.mostrar_ventas_desc
         )
 
-        self.lbl_nombre_producto.grid(row=0, column=0, sticky="w", padx=(0, 5), pady=(0, 5))
-        self.entry_nombre_producto.grid(row=1, column=0, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
-        self.lbl_fecha_inicio.grid(row=0, column=1, sticky="w", padx=(0, 5), pady=(0, 5))
-        self.entry_fecha_inicio.grid(row=1, column=1, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
-        self.lbl_fecha_fin.grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 5))
-        self.entry_fecha_fin.grid(row=1, column=2, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
-        self.bton_buscar.grid(row=1, column=3, sticky="ew", padx=(5, 0), pady=(0, 10), ipady=3)
-        self.bton_ordenar_desc.grid(row=1, column=4, sticky="ew", padx=(5, 0), pady=(0, 10), ipady=3)
+        self.lbl_nombre_producto.grid(row=0, column=0, sticky="w", padx=(0, 5), pady=(0, 2))
+        self.entry_nombre_producto.grid(row=1, column=0, sticky="ew", padx=(0, 5), pady=(0, 5), ipady=2)
+        self.lbl_fecha_inicio.grid(row=0, column=1, sticky="w", padx=(0, 5), pady=(0, 2))
+        self.entry_fecha_inicio.grid(row=1, column=1, sticky="ew", padx=(0, 5), pady=(0, 5), ipady=2)
+        self.lbl_fecha_fin.grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 2))
+        self.entry_fecha_fin.grid(row=1, column=2, sticky="ew", padx=(0, 5), pady=(0, 5), ipady=2)
+        self.bton_buscar.grid(row=1, column=3, sticky="ew", padx=(5, 0), pady=(0, 5), ipady=2)
+        self.bton_ordenar_desc.grid(row=1, column=4, sticky="ew", padx=(5, 0), pady=(0, 5), ipady=2)
 
         self.frame_filtros_predeterminados = tk.Frame(self.frame_filtros, bg=self.color_fondo)
-        self.frame_filtros_predeterminados.grid(row=2, column=0, columnspan=4, sticky="ew", pady=(10, 0))
+        self.frame_filtros_predeterminados.grid(row=2, column=0, columnspan=4, sticky="ew", pady=(5, 0))
         self.frame_filtros_predeterminados.grid_columnconfigure(0, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(1, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(2, weight=1)
@@ -149,11 +149,11 @@ class VentanaReporteVentas(tk.Frame):
             text="📅 Hoy", 
             bg=self.color_btn_filtro, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_ventas_hoy
@@ -163,11 +163,11 @@ class VentanaReporteVentas(tk.Frame):
             text="📊 Semana", 
             bg=self.color_btn_filtro, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_ventas_semana
@@ -177,11 +177,11 @@ class VentanaReporteVentas(tk.Frame):
             text="📈 Mes", 
             bg=self.color_btn_filtro, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_ventas_mes
@@ -191,11 +191,11 @@ class VentanaReporteVentas(tk.Frame):
             text="📑 Año", 
             bg=self.color_btn_filtro, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_ventas_año
@@ -205,21 +205,21 @@ class VentanaReporteVentas(tk.Frame):
             text="🗑️ Limpiar", 
             bg="#e74c3c", 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#c0392b",
             command=self.limpiar_filtros
         )
 
-        self.btn_ventas_hoy.grid(row=0, column=0, sticky="ew", padx=3, pady=5)
-        self.btn_ventas_semana.grid(row=0, column=1, sticky="ew", padx=3, pady=5)
-        self.btn_ventas_mes.grid(row=0, column=2, sticky="ew", padx=3, pady=5)
-        self.btn_ventas_año.grid(row=0, column=3, sticky="ew", padx=3, pady=5)
-        self.btn_limpiar_filtros.grid(row=0, column=4, sticky="ew", padx=3, pady=5)
+        self.btn_ventas_hoy.grid(row=0, column=0, sticky="ew", padx=2, pady=2)
+        self.btn_ventas_semana.grid(row=0, column=1, sticky="ew", padx=2, pady=2)
+        self.btn_ventas_mes.grid(row=0, column=2, sticky="ew", padx=2, pady=2)
+        self.btn_ventas_año.grid(row=0, column=3, sticky="ew", padx=2, pady=2)
+        self.btn_limpiar_filtros.grid(row=0, column=4, sticky="ew", padx=2, pady=2)
 
         self.btns_filtros = [self.btn_ventas_hoy, self.btn_ventas_semana, self.btn_ventas_mes, self.btn_ventas_año]
 
@@ -227,13 +227,13 @@ class VentanaReporteVentas(tk.Frame):
         self.frame_tabla = tk.LabelFrame(
             self,
             text="Reporte de Ventas",
-            font=("Segoe UI", 10, "bold"),
+            font=("Segoe UI", 9, "bold"),
             bg="#ffffff",
             fg=self.color_primario,
-            padx=5, 
-            pady=5
+            padx=3, 
+            pady=3
         )
-        self.frame_tabla.grid(row=1, column=0, sticky="nsew", padx=10, pady=5)
+        self.frame_tabla.grid(row=1, column=0, sticky="nsew", padx=8, pady=2)
         self.frame_tabla.grid_rowconfigure(0, weight=1)
         self.frame_tabla.grid_columnconfigure(0, weight=1)
 
@@ -266,35 +266,35 @@ class VentanaReporteVentas(tk.Frame):
         self.frame_resumen_tabla = tk.LabelFrame(
             self, 
             text="Resumen",
-            font=("Segoe UI", 10, "bold"),
+            font=("Segoe UI", 9, "bold"),
             bg="#ffffff",
             fg=self.color_primario,
-            padx=10, 
-            pady=10
+            padx=8, 
+            pady=4
         )
-        self.frame_resumen_tabla.grid(row=2, column=0, sticky="ew", padx=10, pady=5)
+        self.frame_resumen_tabla.grid(row=2, column=0, sticky="ew", padx=8, pady=2)
         self.frame_resumen_tabla.grid_columnconfigure(0, weight=1)
 
         self.lbl_total_ventas = tk.Label(
             self.frame_resumen_tabla, 
             text="Total Ventas: Q 0.00", 
-            font=("Arial", 11, "bold"), 
+            font=("Arial", 10, "bold"), 
             bg="#ffffff", 
             fg=self.color_primario
         )
         self.lbl_total_utilidades = tk.Label(
             self.frame_resumen_tabla, 
             text="Total Utilidades: Q 0.00", 
-            font=("Arial", 11, "bold"), 
+            font=("Arial", 10, "bold"), 
             bg="#ffffff", 
             fg=self.color_primario
         )
 
-        self.lbl_total_ventas.grid(row=0, column=0, sticky="w", pady=(0, 5))
-        self.lbl_total_utilidades.grid(row=1, column=0, sticky="w", pady=(0, 5))
+        self.lbl_total_ventas.grid(row=0, column=0, sticky="w", pady=(0, 2))
+        self.lbl_total_utilidades.grid(row=1, column=0, sticky="w", pady=(0, 2))
 
-        self.frame_botones_exportar = tk.Frame(self, bg=self.color_fondo, padx=10, pady=10)
-        self.frame_botones_exportar.grid(row=3, column=0, sticky="ew", padx=10, pady=(5, 10))
+        self.frame_botones_exportar = tk.Frame(self, bg=self.color_fondo, padx=8, pady=6)
+        self.frame_botones_exportar.grid(row=3, column=0, sticky="ew", padx=8, pady=(2, 6))
         self.frame_botones_exportar.grid_columnconfigure(0, weight=1)
         self.frame_botones_exportar.grid_columnconfigure(1, weight=1)
 
@@ -303,11 +303,11 @@ class VentanaReporteVentas(tk.Frame):
             text="📊 Exportar a Excel", 
             bg=self.color_boton, 
             fg="white",
-            font=("Arial", 10, "bold"),
+            font=("Arial", 9, "bold"),
             relief="flat", 
             bd=0,
-            padx=20,
-            pady=10,
+            padx=15,
+            pady=6,
             cursor="hand2",
             activebackground=self.color_boton_hover,
             command=self.generar_reporte_excel
@@ -317,17 +317,17 @@ class VentanaReporteVentas(tk.Frame):
             text="📄 Exportar a CSV", 
             bg=self.color_secundario, 
             fg="white",
-            font=("Arial", 10, "bold"),
+            font=("Arial", 9, "bold"),
             relief="flat", 
             bd=0,
-            padx=20,
-            pady=10,
+            padx=15,
+            pady=6,
             cursor="hand2",
             activebackground="#5dade2"
         )
 
-        self.btn_exportar_excel.grid(row=0, column=0, sticky="ew", padx=(0, 5))
-        self.btn_exportar_csv.grid(row=0, column=1, sticky="ew", padx=(5, 0))
+        self.btn_exportar_excel.grid(row=0, column=0, sticky="ew", padx=(0, 3))
+        self.btn_exportar_csv.grid(row=0, column=1, sticky="ew", padx=(3, 0))
 
         self.mostrar_ventas(self.reporte_ventas.ventas)
 

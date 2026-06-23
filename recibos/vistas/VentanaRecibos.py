@@ -33,13 +33,13 @@ class VentanaRecibos(tk.Frame):
         self.frame_filtros = tk.LabelFrame(
             self, 
             text="Filtros de Recibos",
-            font=("Segoe UI", 10, "bold"),
+            font=("Segoe UI", 9, "bold"),
             bg=self.color_fondo,
             fg=self.color_primario,
-            padx=15,
-            pady=15
+            padx=10,
+            pady=8
         )
-        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
+        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=8, pady=(5, 2))
         self.frame_filtros.grid_columnconfigure(0, weight=1)
         self.frame_filtros.grid_columnconfigure(1, weight=1)
         self.frame_filtros.grid_columnconfigure(2, weight=1)
@@ -84,7 +84,7 @@ class VentanaRecibos(tk.Frame):
             highlightbackground="#b2bec3", 
             highlightcolor=self.color_secundario
         )
-        self.entry_nombre_cliente.grid(row=1, column=1, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
+        self.entry_nombre_cliente.grid(row=1, column=1, sticky="ew", padx=(0, 5), pady=(0, 5), ipady=2)
 
         tk.Label(
             self.frame_filtros, 
@@ -92,7 +92,7 @@ class VentanaRecibos(tk.Frame):
             bg=self.color_fondo,
             fg=self.color_primario,
             font=("Segoe UI", 9, "bold")
-        ).grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 5))
+        ).grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 2))
         self.entry_dpi = tk.Entry(
             self.frame_filtros, 
             bg="#ffffff", 
@@ -104,7 +104,7 @@ class VentanaRecibos(tk.Frame):
             highlightbackground="#b2bec3", 
             highlightcolor=self.color_secundario
         )
-        self.entry_dpi.grid(row=1, column=2, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
+        self.entry_dpi.grid(row=1, column=2, sticky="ew", padx=(0, 5), pady=(0, 5), ipady=2)
 
         tk.Label(
             self.frame_filtros, 
@@ -112,7 +112,7 @@ class VentanaRecibos(tk.Frame):
             bg=self.color_fondo,
             fg=self.color_primario,
             font=("Segoe UI", 9, "bold")
-        ).grid(row=2, column=0, sticky="w", padx=(0, 5), pady=(0, 5))
+        ).grid(row=2, column=0, sticky="w", padx=(0, 5), pady=(0, 2))
         self.entry_nit = tk.Entry(
             self.frame_filtros, 
             bg="#ffffff", 
@@ -124,7 +124,7 @@ class VentanaRecibos(tk.Frame):
             highlightbackground="#b2bec3", 
             highlightcolor=self.color_secundario
         )
-        self.entry_nit.grid(row=3, column=0, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
+        self.entry_nit.grid(row=3, column=0, sticky="ew", padx=(0, 5), pady=(0, 5), ipady=2)
 
         tk.Label(
             self.frame_filtros, 
@@ -132,7 +132,7 @@ class VentanaRecibos(tk.Frame):
             bg=self.color_fondo,
             fg=self.color_primario,
             font=("Segoe UI", 9, "bold")
-        ).grid(row=2, column=1, sticky="w", padx=(0, 5), pady=(0, 5))
+        ).grid(row=2, column=1, sticky="w", padx=(0, 5), pady=(0, 2))
         self.entry_fecha_inicio = tk.Entry(
             self.frame_filtros, 
             bg="#ffffff", 
@@ -144,7 +144,7 @@ class VentanaRecibos(tk.Frame):
             highlightbackground="#b2bec3", 
             highlightcolor=self.color_secundario
         )
-        self.entry_fecha_inicio.grid(row=3, column=1, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
+        self.entry_fecha_inicio.grid(row=3, column=1, sticky="ew", padx=(0, 5), pady=(0, 5), ipady=2)
 
         tk.Label(
             self.frame_filtros, 
@@ -152,7 +152,7 @@ class VentanaRecibos(tk.Frame):
             bg=self.color_fondo,
             fg=self.color_primario,
             font=("Segoe UI", 9, "bold")
-        ).grid(row=2, column=2, sticky="w", padx=(0, 5), pady=(0, 5))
+        ).grid(row=2, column=2, sticky="w", padx=(0, 5), pady=(0, 2))
         self.entry_fecha_fin = tk.Entry(
             self.frame_filtros, 
             bg="#ffffff", 
@@ -164,22 +164,22 @@ class VentanaRecibos(tk.Frame):
             highlightbackground="#b2bec3", 
             highlightcolor=self.color_secundario
         )
-        self.entry_fecha_fin.grid(row=3, column=2, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
+        self.entry_fecha_fin.grid(row=3, column=2, sticky="ew", padx=(0, 5), pady=(0, 5), ipady=2)
 
         self.btn_buscar = tk.Button(
             self.frame_filtros, 
             text="🔍 Buscar", 
             bg=self.color_secundario, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=15,
+            padx=10,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_recibos
         )
-        self.btn_buscar.grid(row=3, column=3, sticky="ew", padx=(5, 0), pady=(0, 10), ipady=3)
+        self.btn_buscar.grid(row=3, column=3, sticky="ew", padx=(5, 0), pady=(0, 5), ipady=2)
 
         self.entry_no_recibo.bind("<Return>", lambda event: self.filtrar_recibos())
         self.entry_nombre_cliente.bind("<Return>", lambda event: self.filtrar_recibos())
@@ -189,7 +189,7 @@ class VentanaRecibos(tk.Frame):
         self.entry_fecha_fin.bind("<Return>", lambda event: self.filtrar_recibos())
         
         self.frame_filtros_predeterminados = tk.Frame(self.frame_filtros, bg=self.color_fondo)
-        self.frame_filtros_predeterminados.grid(row=4, column=0, columnspan=4, sticky="ew", pady=(10, 0))
+        self.frame_filtros_predeterminados.grid(row=4, column=0, columnspan=4, sticky="ew", pady=(5, 0))
         self.frame_filtros_predeterminados.grid_columnconfigure(0, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(1, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(2, weight=1)
@@ -201,93 +201,93 @@ class VentanaRecibos(tk.Frame):
             text="📅 Hoy", 
             bg=self.color_btn_filtro, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_recibos_hoy
         )
-        self.btn_recibos_hoy.grid(row=0, column=0, sticky="ew", padx=3, pady=5)
+        self.btn_recibos_hoy.grid(row=0, column=0, sticky="ew", padx=2, pady=2)
         
         self.btn_recibos_semana = tk.Button(
             self.frame_filtros_predeterminados, 
             text="📊 Semana", 
             bg=self.color_btn_filtro, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_recibos_semana
         )
-        self.btn_recibos_semana.grid(row=0, column=1, sticky="ew", padx=3, pady=5)
+        self.btn_recibos_semana.grid(row=0, column=1, sticky="ew", padx=2, pady=2)
         
         self.btn_recibios_mes = tk.Button(
             self.frame_filtros_predeterminados, 
             text="📈 Mes", 
             bg=self.color_btn_filtro, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_recibos_mes
         )
-        self.btn_recibios_mes.grid(row=0, column=2, sticky="ew", padx=3, pady=5)
+        self.btn_recibios_mes.grid(row=0, column=2, sticky="ew", padx=2, pady=2)
         
         self.btn_recibos_anio = tk.Button(
             self.frame_filtros_predeterminados, 
             text="📑 Año", 
             bg=self.color_btn_filtro, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.filtrar_recibos_anio
         )
-        self.btn_recibos_anio.grid(row=0, column=3, sticky="ew", padx=3, pady=5)
+        self.btn_recibos_anio.grid(row=0, column=3, sticky="ew", padx=2, pady=2)
         
         self.btn_limpiar_filtros = tk.Button(
             self.frame_filtros_predeterminados, 
             text="🗑️ Limpiar", 
             bg=self.color_cancelar, 
             fg="white",
-            font=("Arial", 9, "bold"),
+            font=("Arial", 8, "bold"),
             relief="flat", 
             bd=0,
-            padx=10,
-            pady=8,
+            padx=8,
+            pady=4,
             cursor="hand2",
             activebackground="#c0392b",
             command=self.limpiar_filtros
         )
-        self.btn_limpiar_filtros.grid(row=0, column=4, sticky="ew", padx=3, pady=5)
+        self.btn_limpiar_filtros.grid(row=0, column=4, sticky="ew", padx=2, pady=2)
 
         self.btns_filtros = [self.btn_recibos_hoy, self.btn_recibos_semana, self.btn_recibios_mes, self.btn_recibos_anio]
 
         self.frame_tabla_recibos = tk.LabelFrame(
             self,
             text="Recibos",
-            font=("Segoe UI", 10, "bold"),
+            font=("Segoe UI", 9, "bold"),
             bg="#ffffff",
             fg=self.color_primario,
-            padx=5, 
-            pady=5
+            padx=3, 
+            pady=3
         )
-        self.frame_tabla_recibos.grid(row=1, column=0, sticky="nsew", padx=10, pady=5)
+        self.frame_tabla_recibos.grid(row=1, column=0, sticky="nsew", padx=8, pady=2)
         self.frame_tabla_recibos.grid_rowconfigure(0, weight=1)
         self.frame_tabla_recibos.grid_columnconfigure(0, weight=1)
 
@@ -316,8 +316,8 @@ class VentanaRecibos(tk.Frame):
         self.scroll_y.grid(row=0, column=1, sticky="ns")
         self.scroll_x.grid(row=1, column=0, sticky="ew")
 
-        self.frame_botones_opciones = tk.Frame(self, bg=self.color_fondo, padx=10, pady=10)
-        self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=10, pady=(5, 10))
+        self.frame_botones_opciones = tk.Frame(self, bg=self.color_fondo, padx=8, pady=6)
+        self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=8, pady=(2, 6))
         self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
         self.frame_botones_opciones.grid_columnconfigure(1, weight=1)
 
@@ -326,32 +326,32 @@ class VentanaRecibos(tk.Frame):
             text="👁️ Ver Ventas del Recibo", 
             bg=self.color_secundario, 
             fg="white",
-            font=("Arial", 10, "bold"),
+            font=("Arial", 9, "bold"),
             relief="flat", 
             bd=0,
-            padx=20,
-            pady=10,
+            padx=15,
+            pady=6,
             cursor="hand2",
             activebackground="#5dade2",
             command=self.ver_detalle
         )
-        self.btn_ver_ventas.pack(side="left", padx=(0, 5), fill="x", expand=True)
+        self.btn_ver_ventas.pack(side="left", padx=(0, 3), fill="x", expand=True)
         
         self.btn_ver_recibo_pdf = tk.Button(
             self.frame_botones_opciones, 
             text="📄 Ver Recibo PDF", 
             bg=self.color_boton, 
             fg="white",
-            font=("Arial", 10, "bold"),
+            font=("Arial", 9, "bold"),
             relief="flat", 
             bd=0,
-            padx=20,
-            pady=10,
+            padx=15,
+            pady=6,
             cursor="hand2",
             activebackground=self.color_boton_hover,
             command=self.ver_recibo_pdf
         )
-        self.btn_ver_recibo_pdf.pack(side="left", padx=(5, 0), fill="x", expand=True)
+        self.btn_ver_recibo_pdf.pack(side="left", padx=(3, 0), fill="x", expand=True)
 
         self.mostrar_recibos()
 
