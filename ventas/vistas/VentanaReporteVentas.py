@@ -13,63 +13,226 @@ class VentanaReporteVentas(tk.Frame):
         self.hoy = datetime.date.today()
         self.nombre_reporte = f"{self.hoy} - reporte ventas"
         
-        self.configure(bg="#f0f0f0")
+        # Configuración de colores (consistente con VentanaInventario)
+        self.color_fondo = "#f0f0f0"
+        self.color_primario = "#2c3e50"
+        self.color_secundario = "#3498db"
+        self.color_boton = "#27ae60"
+        self.color_cancelar = "#e74c3c"
+        self.color_boton_hover = "#229954"
+        
+        self.configure(bg=self.color_fondo)
 
         self.color_btn_filtro = "#0984e3"
-        self.color_btn_filtro_seleccionado = "#b6d1e6"
+        self.color_btn_filtro_seleccionado = "#5dade2"
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.frame_filtros = tk.Frame(self, bg="#f0f0f0", padx=10, pady=10)
+        self.frame_filtros = tk.LabelFrame(
+            self, 
+            text="Filtros de Ventas",
+            font=("Segoe UI", 10, "bold"),
+            bg=self.color_fondo,
+            fg=self.color_primario,
+            padx=15,
+            pady=15
+        )
         self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
         self.frame_filtros.grid_columnconfigure(0, weight=1)
         self.frame_filtros.grid_columnconfigure(1, weight=1)
         self.frame_filtros.grid_columnconfigure(2, weight=1)
         self.frame_filtros.grid_columnconfigure(3, weight=0)
 
-        self.lbl_nombre_producto = tk.Label(self.frame_filtros, text="Producto:", bg="#f0f0f0")
-        self.lbl_fecha_inicio = tk.Label(self.frame_filtros, text="Fecha inicio:", bg="#f0f0f0")
-        self.lbl_fecha_fin = tk.Label(self.frame_filtros, text="Fecha fin:", bg="#f0f0f0")
-        self.entry_nombre_producto = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        self.entry_fecha_inicio = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        self.entry_fecha_fin = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        self.bton_buscar = tk.Button(self.frame_filtros, text="Buscar", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.filtrar_ventas)
-        self.bton_ordenar_desc = tk.Button(self.frame_filtros, text="Desc", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.mostrar_ventas_desc)
+        self.lbl_nombre_producto = tk.Label(
+            self.frame_filtros, 
+            text="Producto:", 
+            bg=self.color_fondo,
+            fg=self.color_primario,
+            font=("Segoe UI", 9, "bold")
+        )
+        self.lbl_fecha_inicio = tk.Label(
+            self.frame_filtros, 
+            text="Fecha inicio:", 
+            bg=self.color_fondo,
+            fg=self.color_primario,
+            font=("Segoe UI", 9, "bold")
+        )
+        self.lbl_fecha_fin = tk.Label(
+            self.frame_filtros, 
+            text="Fecha fin:", 
+            bg=self.color_fondo,
+            fg=self.color_primario,
+            font=("Segoe UI", 9, "bold")
+        )
+        
+        self.entry_nombre_producto = tk.Entry(
+            self.frame_filtros, 
+            bg="#ffffff", 
+            fg="#2d3436",
+            relief="flat", 
+            font=("Segoe UI", 10),
+            bd=0,
+            highlightthickness=1, 
+            highlightbackground="#b2bec3", 
+            highlightcolor=self.color_secundario
+        )
+        self.entry_fecha_inicio = tk.Entry(
+            self.frame_filtros, 
+            bg="#ffffff", 
+            fg="#2d3436",
+            relief="flat",
+            font=("Segoe UI", 10),
+            bd=0,
+            highlightthickness=1, 
+            highlightbackground="#b2bec3", 
+            highlightcolor=self.color_secundario
+        )
+        self.entry_fecha_fin = tk.Entry(
+            self.frame_filtros, 
+            bg="#ffffff", 
+            fg="#2d3436",
+            relief="flat",
+            font=("Segoe UI", 10),
+            bd=0,
+            highlightthickness=1, 
+            highlightbackground="#b2bec3", 
+            highlightcolor=self.color_secundario
+        )
+        
+        self.bton_buscar = tk.Button(
+            self.frame_filtros, 
+            text="🔍 Buscar", 
+            bg=self.color_secundario, 
+            fg="white",
+            font=("Arial", 9, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=15,
+            cursor="hand2",
+            activebackground="#5dade2",
+            command=self.filtrar_ventas
+        )
+        self.bton_ordenar_desc = tk.Button(
+            self.frame_filtros, 
+            text="⬇️ Desc", 
+            bg=self.color_secundario, 
+            fg="white",
+            font=("Arial", 9, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=15,
+            cursor="hand2",
+            activebackground="#5dade2",
+            command=self.mostrar_ventas_desc
+        )
 
         self.lbl_nombre_producto.grid(row=0, column=0, sticky="w", padx=(0, 5), pady=(0, 5))
-        self.entry_nombre_producto.grid(row=1, column=0, sticky="ew", padx=(0, 5), pady=(0, 10))
+        self.entry_nombre_producto.grid(row=1, column=0, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
         self.lbl_fecha_inicio.grid(row=0, column=1, sticky="w", padx=(0, 5), pady=(0, 5))
-        self.entry_fecha_inicio.grid(row=1, column=1, sticky="ew", padx=(0, 5), pady=(0, 10))
+        self.entry_fecha_inicio.grid(row=1, column=1, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
         self.lbl_fecha_fin.grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 5))
-        self.entry_fecha_fin.grid(row=1, column=2, sticky="ew", padx=(0, 5), pady=(0, 10))
-        self.bton_buscar.grid(row=1, column=3, sticky="ew", padx=(5, 0), pady=(0, 10))
-        self.bton_ordenar_desc.grid(row=1, column=4, sticky="ew", padx=(5, 0), pady=(0, 10))
+        self.entry_fecha_fin.grid(row=1, column=2, sticky="ew", padx=(0, 5), pady=(0, 10), ipady=3)
+        self.bton_buscar.grid(row=1, column=3, sticky="ew", padx=(5, 0), pady=(0, 10), ipady=3)
+        self.bton_ordenar_desc.grid(row=1, column=4, sticky="ew", padx=(5, 0), pady=(0, 10), ipady=3)
 
-        self.frame_filtros_predeterminados = tk.Frame(self.frame_filtros, bg="#f0f0f0")
-        self.frame_filtros_predeterminados.grid(row=2, column=0, columnspan=4, sticky="ew")
+        self.frame_filtros_predeterminados = tk.Frame(self.frame_filtros, bg=self.color_fondo)
+        self.frame_filtros_predeterminados.grid(row=2, column=0, columnspan=4, sticky="ew", pady=(10, 0))
         self.frame_filtros_predeterminados.grid_columnconfigure(0, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(1, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(2, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(3, weight=1)
         self.frame_filtros_predeterminados.grid_columnconfigure(4, weight=1)
 
-        self.btn_ventas_hoy = tk.Button(self.frame_filtros_predeterminados, text="Ventas de Hoy", bg=self.color_btn_filtro, fg="white", relief="flat", cursor="hand2", command=self.filtrar_ventas_hoy)
-        self.btn_ventas_semana = tk.Button(self.frame_filtros_predeterminados, text="Ventas de la Semana", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.filtrar_ventas_semana)
-        self.btn_ventas_mes = tk.Button(self.frame_filtros_predeterminados, text="Ventas del Mes", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.filtrar_ventas_mes)
-        self.btn_ventas_año = tk.Button(self.frame_filtros_predeterminados, text="Ventas del Año", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.filtrar_ventas_año)
-        self.btn_limpiar_filtros = tk.Button(self.frame_filtros_predeterminados, text="Limpiar Filtros", bg="#636e72", fg="white", relief="flat", cursor="hand2", command=self.limpiar_filtros)
+        self.btn_ventas_hoy = tk.Button(
+            self.frame_filtros_predeterminados, 
+            text="📅 Hoy", 
+            bg=self.color_btn_filtro, 
+            fg="white",
+            font=("Arial", 9, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=10,
+            pady=8,
+            cursor="hand2",
+            activebackground="#5dade2",
+            command=self.filtrar_ventas_hoy
+        )
+        self.btn_ventas_semana = tk.Button(
+            self.frame_filtros_predeterminados, 
+            text="📊 Semana", 
+            bg=self.color_btn_filtro, 
+            fg="white",
+            font=("Arial", 9, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=10,
+            pady=8,
+            cursor="hand2",
+            activebackground="#5dade2",
+            command=self.filtrar_ventas_semana
+        )
+        self.btn_ventas_mes = tk.Button(
+            self.frame_filtros_predeterminados, 
+            text="📈 Mes", 
+            bg=self.color_btn_filtro, 
+            fg="white",
+            font=("Arial", 9, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=10,
+            pady=8,
+            cursor="hand2",
+            activebackground="#5dade2",
+            command=self.filtrar_ventas_mes
+        )
+        self.btn_ventas_año = tk.Button(
+            self.frame_filtros_predeterminados, 
+            text="📑 Año", 
+            bg=self.color_btn_filtro, 
+            fg="white",
+            font=("Arial", 9, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=10,
+            pady=8,
+            cursor="hand2",
+            activebackground="#5dade2",
+            command=self.filtrar_ventas_año
+        )
+        self.btn_limpiar_filtros = tk.Button(
+            self.frame_filtros_predeterminados, 
+            text="🗑️ Limpiar", 
+            bg="#e74c3c", 
+            fg="white",
+            font=("Arial", 9, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=10,
+            pady=8,
+            cursor="hand2",
+            activebackground="#c0392b",
+            command=self.limpiar_filtros
+        )
 
-        self.btn_ventas_hoy.grid(row=0, column=0, sticky="ew", padx=3, pady=3)
-        self.btn_ventas_semana.grid(row=0, column=1, sticky="ew", padx=3, pady=3)
-        self.btn_ventas_mes.grid(row=0, column=2, sticky="ew", padx=3, pady=3)
-        self.btn_ventas_año.grid(row=0, column=3, sticky="ew", padx=3, pady=3)
-        self.btn_limpiar_filtros.grid(row=0, column=5, sticky="ew", padx=3, pady=3)
+        self.btn_ventas_hoy.grid(row=0, column=0, sticky="ew", padx=3, pady=5)
+        self.btn_ventas_semana.grid(row=0, column=1, sticky="ew", padx=3, pady=5)
+        self.btn_ventas_mes.grid(row=0, column=2, sticky="ew", padx=3, pady=5)
+        self.btn_ventas_año.grid(row=0, column=3, sticky="ew", padx=3, pady=5)
+        self.btn_limpiar_filtros.grid(row=0, column=4, sticky="ew", padx=3, pady=5)
 
         self.btns_filtros = [self.btn_ventas_hoy, self.btn_ventas_semana, self.btn_ventas_mes, self.btn_ventas_año]
 
 
-        self.frame_tabla = tk.Frame(self, bg="#ffffff", padx=10, pady=10)
+        self.frame_tabla = tk.LabelFrame(
+            self,
+            text="Reporte de Ventas",
+            font=("Segoe UI", 10, "bold"),
+            bg="#ffffff",
+            fg=self.color_primario,
+            padx=5, 
+            pady=5
+        )
         self.frame_tabla.grid(row=1, column=0, sticky="nsew", padx=10, pady=5)
         self.frame_tabla.grid_rowconfigure(0, weight=1)
         self.frame_tabla.grid_columnconfigure(0, weight=1)
@@ -100,23 +263,68 @@ class VentanaReporteVentas(tk.Frame):
         self.scroll_y.grid(row=0, column=1, sticky="ns")
         self.scroll_x.grid(row=1, column=0, sticky="ew")
 
-        self.frame_resumen_tabla = tk.Frame(self, bg="#ffffff", padx=10, pady=10)
+        self.frame_resumen_tabla = tk.LabelFrame(
+            self, 
+            text="Resumen",
+            font=("Segoe UI", 10, "bold"),
+            bg="#ffffff",
+            fg=self.color_primario,
+            padx=10, 
+            pady=10
+        )
         self.frame_resumen_tabla.grid(row=2, column=0, sticky="ew", padx=10, pady=5)
         self.frame_resumen_tabla.grid_columnconfigure(0, weight=1)
 
-        self.lbl_total_ventas = tk.Label(self.frame_resumen_tabla, text="Total Ventas: Q 0.00", font=("Arial", 12, "bold"), bg="#ffffff", fg="#333")
-        self.lbl_total_utilidades = tk.Label(self.frame_resumen_tabla, text="Total Utilidades: Q 0.00", font=("Arial", 12, "bold"), bg="#ffffff", fg="#333")
+        self.lbl_total_ventas = tk.Label(
+            self.frame_resumen_tabla, 
+            text="Total Ventas: Q 0.00", 
+            font=("Arial", 11, "bold"), 
+            bg="#ffffff", 
+            fg=self.color_primario
+        )
+        self.lbl_total_utilidades = tk.Label(
+            self.frame_resumen_tabla, 
+            text="Total Utilidades: Q 0.00", 
+            font=("Arial", 11, "bold"), 
+            bg="#ffffff", 
+            fg=self.color_primario
+        )
 
         self.lbl_total_ventas.grid(row=0, column=0, sticky="w", pady=(0, 5))
         self.lbl_total_utilidades.grid(row=1, column=0, sticky="w", pady=(0, 5))
 
-        self.frame_botones_exportar = tk.Frame(self, bg="#f0f0f0", padx=10, pady=10)
+        self.frame_botones_exportar = tk.Frame(self, bg=self.color_fondo, padx=10, pady=10)
         self.frame_botones_exportar.grid(row=3, column=0, sticky="ew", padx=10, pady=(5, 10))
         self.frame_botones_exportar.grid_columnconfigure(0, weight=1)
         self.frame_botones_exportar.grid_columnconfigure(1, weight=1)
 
-        self.btn_exportar_excel = tk.Button(self.frame_botones_exportar, text="Exportar a Excel", bg="#0984e3", fg="white", relief="flat", cursor="hand2", command=self.generar_reporte_excel)
-        self.btn_exportar_csv = tk.Button(self.frame_botones_exportar, text="Exportar a CSV", bg="#0984e3", fg="white", relief="flat", cursor="hand2")
+        self.btn_exportar_excel = tk.Button(
+            self.frame_botones_exportar, 
+            text="📊 Exportar a Excel", 
+            bg=self.color_boton, 
+            fg="white",
+            font=("Arial", 10, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=20,
+            pady=10,
+            cursor="hand2",
+            activebackground=self.color_boton_hover,
+            command=self.generar_reporte_excel
+        )
+        self.btn_exportar_csv = tk.Button(
+            self.frame_botones_exportar, 
+            text="📄 Exportar a CSV", 
+            bg=self.color_secundario, 
+            fg="white",
+            font=("Arial", 10, "bold"),
+            relief="flat", 
+            bd=0,
+            padx=20,
+            pady=10,
+            cursor="hand2",
+            activebackground="#5dade2"
+        )
 
         self.btn_exportar_excel.grid(row=0, column=0, sticky="ew", padx=(0, 5))
         self.btn_exportar_csv.grid(row=0, column=1, sticky="ew", padx=(5, 0))
@@ -261,7 +469,7 @@ class VentanaReporteVentas(tk.Frame):
 
     def limpiar_botones_filtros(self):
         for btn in self.btns_filtros:
-            btn.config(bg="#0984e3", fg="white")
+            btn.config(bg=self.color_btn_filtro, fg="white")
 
     def limpiar_filtros(self):
         self.entry_nombre_producto.delete(0, tk.END)
