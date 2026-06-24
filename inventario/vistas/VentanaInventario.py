@@ -176,7 +176,7 @@ class VentanaInventario(tk.Frame):
 
         self.btn_ingresar = tk.Button(
             self.frame_botones,
-            text="➕ Ingresar Nuevo Producto",
+            text="➕ Nuevo",
             bg=self.color_boton,
             fg="white",
             font=("Arial", 11, "bold"),
@@ -189,7 +189,7 @@ class VentanaInventario(tk.Frame):
 
         self.btn_editar = tk.Button(
             self.frame_botones,
-            text="✏️ Editar Producto",
+            text="✏️ Editar",
             bg=self.color_secundario,
             fg="white",
             font=("Arial", 11, "bold"),
@@ -202,7 +202,7 @@ class VentanaInventario(tk.Frame):
 
         self.btn_eliminar = tk.Button(
             self.frame_botones,
-            text="🗑️ Eliminar Producto",
+            text="🗑️ Eliminar",
             bg=self.color_cancelar,
             fg="white",
             font=("Arial", 11, "bold"),
@@ -228,7 +228,7 @@ class VentanaInventario(tk.Frame):
 
         self.btn_ingreso_stock = tk.Button(
             self.frame_botones,
-            text="📦 Ingreso de Stock",
+            text="📦 Ingreso Stock",
             bg="#8e44ad",
             fg="white",
             font=("Arial", 11, "bold"),
@@ -241,7 +241,7 @@ class VentanaInventario(tk.Frame):
 
         self.btn_exportar_excel = tk.Button(
             self.frame_botones,
-            text="📊 Exportar a Excel",
+            text="📊 Exportar",
             bg="#27ae60",
             fg="white",
             font=("Arial", 11, "bold"),
