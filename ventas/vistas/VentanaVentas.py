@@ -471,10 +471,12 @@ class VentanaVentas(tk.Frame):
 
         producto = self.inventario.buscar_producto_por_codigo(codigo)
         if producto is None:
+            self.entry_codigo.delete(0, tk.END)
             messagebox.showerror("Error", "Código no encontrado.")
             return
         
         if self.caja.estado == False:
+            self.entry_codigo.delete(0, tk.END)
             messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
             return
 

@@ -23,7 +23,7 @@ class VentanaPrincipal(tk.Tk):
     def __init__(self):
         super().__init__()
         self.geometry("1200x700")
-        #self.resizable(False,False)
+        self.resizable(False,False)
         self.title("Anabel POS")
         #self.iconbitmap("anabel.ico")
         icono = tk.PhotoImage(file="anabel.png")
@@ -41,6 +41,8 @@ class VentanaPrincipal(tk.Tk):
         self.login_frame.pack(fill="both", expand=True)
         
     def dibujar_frames(self):
+
+        self.resizable(True, True)
 
         self.usuario = self.login_frame.login.usuario
         self.empresa = E.Empresa()

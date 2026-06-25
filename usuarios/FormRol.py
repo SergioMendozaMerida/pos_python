@@ -62,7 +62,6 @@ class FormRol(tk.Toplevel):
         nuevo_rol = self.combo_rol.get()
         
         # Ejecuta la lógica de base de datos definida en Usuarios.py
-        self.cambiar_rol_callback(self.usuario.id_usuario, nuevo_rol)
-        self.actualizar_tabla()
+        self.cambiar_rol_callback(self.usuario.id_usuario, nuevo_rol, self.actualizar_tabla)
 
         self.destroy()

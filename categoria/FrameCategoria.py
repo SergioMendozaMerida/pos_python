@@ -156,3 +156,4 @@ class FrameCategoria(tk.Toplevel):
         categoria.eliminar_categoria(categoria_id)
         self.lista_categorias = self.categorias.obtener_categorias()
         self.dibuajar_categorias()
+

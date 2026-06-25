@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 import categoria.Categoria as Cat
+import categoria.FormAddCategoria as FAC
 
 class FormProductos(tk.Toplevel):
     def __init__(self, parent, inventario, actualizar_callback=None):
@@ -95,6 +96,19 @@ class FormProductos(tk.Toplevel):
             values=self.categorias
         )
         self.entry_categoria.pack(fill="both", expand=True, ipady=4)
+
+        tk.Button(
+            col_cat_frame,
+            text="Categoría",
+            font=("Segoe UI", 9, "bold"),
+            bg=self.color_primario,
+            fg="white",
+            relief="flat",
+            bd=0,
+            cursor="hand2",
+            pady=8,
+            command=self.abrir_frame_categoria
+        ).pack(fill="x", pady=(10, 0))
 
         col_pres_frame = tk.Frame(row2_frame, bg=self.color_fondo)
         col_pres_frame.pack(side="left", fill="both", expand=True)
@@ -213,6 +227,15 @@ class FormProductos(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.cerrar)
         self.entry_nombre.focus()
         self.grab_set()
+
+    def abrir_frame_categoria(self):
+        categoria_ventana = FAC.FormAddCategoria(self)
+        self.wait_window(categoria_ventana)
+        self.actualizar_categorias()
+
+    def actualizar_categorias(self):
+        self.categorias = Cat.Categorias().lista_categorias
+        self.entry_categoria["values"] = self.categorias
 
     def guardar_producto(self):
         nombre = self.entry_nombre.get().strip()

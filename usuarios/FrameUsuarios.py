@@ -129,7 +129,8 @@ class FrameUsuarios(tk.Frame):
                 seleccion = u
                 break
 
-        formulario = FEU.FormEditarUsuario(self, seleccion, self.usuarios.editar_usuario)
+        formulario = FEU.FormEditarUsuario(self, seleccion, self.usuarios.editar_usuario, self.actualizar_tabla)
+        self.actualizar_tabla()
 
 
     def cambiar_password(self):
@@ -144,6 +145,7 @@ class FrameUsuarios(tk.Frame):
                 break
 
         formulario = FC.FrameContrasenia(self, seleccion, self.usuarios.reestablcer_contrasenia)
+        self.actualizar_tabla()
 
     def cambiar_rol(self): 
         seleccion = self.tabla.selection()
@@ -157,6 +159,7 @@ class FrameUsuarios(tk.Frame):
                 break
 
         formulario = FR.FormRol(self, seleccion, self.usuarios.cambiar_rol, self.actualizar_tabla)
+        
 
     def abrir_formulario_crear(self): 
         formulario = FUN.FormUsuarioNuevo(self, self.usuarios.crear_usuario, self.actualizar_tabla)

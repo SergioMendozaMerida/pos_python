@@ -14,6 +14,7 @@ class Categorias:
             cursor.execute("SELECT * FROM categorias")
             categorias_db = cursor.fetchall()
             self.categorias.clear()
+            self.lista_categorias.clear()
             for c in categorias_db:
                 self.categorias.append(Categoria(c[0], c[1]))
                 self.lista_categorias.append(c[1])
@@ -22,7 +23,6 @@ class Categorias:
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al obtener las categorías {e}.")
             return None
-
 
 class Categoria:
     def __init__(self, id_categoria=None, nombre_categoria=None):

@@ -94,5 +94,4 @@ class FormUsuarioNuevo(tk.Toplevel):
 
         self.crear_usuario(nombre, usuario, contrasenia, rol)
         self.actualizar_tabla()
-        messagebox.showinfo("Éxito", "Usuario creado correctamente.")
         self.destroy()

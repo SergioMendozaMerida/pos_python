@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import login.login as lg
+from PIL import Image, ImageTk
 
 class LoginFrame(tk.Frame):
     def __init__(self, parent, dibujar_frames):
@@ -16,6 +17,29 @@ class LoginFrame(tk.Frame):
         self.color_texto = "#2d3436"
 
         self.configure(bg=self.color_fondo) 
+
+        # --- IMAGEN DE FONDO ---
+        ruta_imagen = "./img/fondo.jpg"
+
+        imagen = Image.open(ruta_imagen)
+
+        # Ajustar tamaño al frame cuando ya tenga dimensiones
+        imagen = imagen.resize((1200, 700))
+
+        self.fondo_img = ImageTk.PhotoImage(imagen)
+
+        self.fondo = tk.Label(
+            self,
+            image=self.fondo_img
+        )
+
+        self.fondo.place(
+            x=0,
+            y=0,
+            relwidth=1,
+            relheight=1
+        )
+
         self.login = lg.Login()
 
         # Configura el grid principal para centrar la tarjeta de login

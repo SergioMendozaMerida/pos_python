@@ -47,7 +47,7 @@ class Inventario:
         for producto in self.productos:
             print(f"{producto.nombre} {producto.descripcion}")
 
-    def buscar_producto(self, nombre, descripcion, codigo):
+    def buscar_producto(self, nombre, descripcion, codigo=""):
         try:
             self.cursor.execute("SELECT * FROM productos WHERE nombre LIKE ? AND descripcion LIKE ? AND codigo_producto LIKE ?",(f"%{nombre}%", f"%{descripcion}%", f"%{codigo}%"))
             productos = self.cursor.fetchall()

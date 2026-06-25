@@ -23,6 +23,12 @@ class Usuarios:
             messagebox.showerror("Error", "Se produjo un error al obtener los usuarios.")
 
     def crear_usuario(self, nombre, usuario, contrasenia, rol):
+
+        for u in self.usuarios:
+            if usuario == u.usuario:
+                messagebox.showerror("No se puede crear el usuario.", f"El usuario {usuario} ya existe, no pueden haber usuarios duplicados.")
+                return
+
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
@@ -30,6 +36,7 @@ class Usuarios:
             conexion.commit()
             conexion.close()
             self.obtener_usuarios()
+            messagebox.showinfo("Éxito", "Usuario creado correctamente.")
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al crear el usuario. {e}")
 
@@ -43,18 +50,20 @@ class Usuarios:
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al reestablecer la contraseña. {e}")
 
-    def editar_usuario(self, id_usuario, nombre, usuario):
+    def editar_usuario(self, id_usuario, nombre, actualizar_tabla):
+
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("UPDATE usuarios SET nombre = ?, usuario = ? WHERE id = ?", (nombre, usuario, id_usuario))
+            cursor.execute("UPDATE usuarios SET nombre = ? WHERE id = ?", (nombre, id_usuario))
             conexion.commit()
             conexion.close()
             self.obtener_usuarios()
+            actualizar_tabla()
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al editar el usuario. {e}")
 
-    def cambiar_rol(self, id_usuario, nuevo_rol):
+    def cambiar_rol(self, id_usuario, nuevo_rol, actualizar_tabla):
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
@@ -62,6 +71,7 @@ class Usuarios:
             conexion.commit()
             conexion.close()
             self.obtener_usuarios()
+            actualizar_tabla()
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al cambiar el rol del usuario. {e}")
 
@@ -72,6 +82,7 @@ class Usuarios:
             cursor.execute("UPDATE usuarios SET activo = 0 WHERE id = ?", (id_usuario,))
             conexion.commit()
             conexion.close()
+            
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al inactivar el usuario. {e}")
 
