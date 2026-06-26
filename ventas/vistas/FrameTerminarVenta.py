@@ -73,11 +73,20 @@ class FrameTerminarVenta(tk.Toplevel):
         self.timer_id = self.after(500, self.calcular_cambio)
 
     def calcular_cambio(self, event=None):
+
+        try:
+            cambio = float(self.entry_pago.get()) - self.carrito.total
+            self.lbl_cambio.configure(text=f"Q  {cambio:.2f}")
+            return True
+        except ValueError:
+            self.lbl_cambio.configure(text=f"{self.entry_pago.get()} no es un número valido.")
+            return False
+
         if self.timer_id:
             self.after_cancel(self.timer_id)
             self.timer_id = None
 
-        cambio = int(self.entry_pago.get()) - self.carrito.total
+        cambio = float(self.entry_pago.get()) - self.carrito.total
         self.lbl_cambio.configure(text=f"Q  {cambio:.2f}")
 
     def concretar_venta(self, event=None):

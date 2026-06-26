@@ -9,6 +9,7 @@ import recibos.vistas.VentanaRecibos as VR
 import login.LoginFrame as lf
 import datosDeEmpresa.FrameEmpresa as FE
 import datosDeEmpresa.empresa as E
+import datosDeEmpresa.TerminosCondiciones as TC
 import usuarios.FrameUsuarios as FU
 import ingresos.VentanaIngresosStock as VIS
 import egresos.VentanaEgresos as VE
@@ -59,6 +60,7 @@ class VentanaPrincipal(tk.Tk):
         self.admin_usuarios = FU.FrameUsuarios(self)   
         self.ventana_egresos = VE.VentanaEgresos(self, self.caja)
         self.ventana_sesiones_caja = VSC.VentanaSesionesCaja(self)
+        self.terminos_condiciones = TC.TerminosYCondiciones(self)
         
 # 1. Configuración de la barra (Navbar) con un color más sobrio
         # Un azul más profundo o un gris oscuro profesional
@@ -151,7 +153,7 @@ class VentanaPrincipal(tk.Tk):
             **self.btn_style
         )
         self.btn_datos_empresa.pack(side="left", fill="y", padx=2)
-
+        
         if self.usuario.rol == "admin":
 
             # Botón Usuarios
@@ -163,10 +165,19 @@ class VentanaPrincipal(tk.Tk):
             )
             self.btn_usuarios.pack(side="left", fill="y", padx=2)
 
+        # Botón Términos y Condiciones
+        self.btn_terminos = tk.Button(
+            self.frm_menu_bar, 
+            text="ℹ️", 
+            command=lambda: self.draw_frames(self.terminos_condiciones, self.btn_terminos),
+            **self.btn_style
+        )
+        self.btn_terminos.pack(side="left", fill="y", padx=2)
+
         # Botón Cerrar Sesión (Alineado a la derecha)
         self.btn_logout = tk.Button(
             self.frm_menu_bar, 
-            text="🚪 Cerrar Sesión", 
+            text="🚪 Cerrar", 
             command=self.cerrar_sesion,
             **self.btn_style
         )
@@ -175,12 +186,12 @@ class VentanaPrincipal(tk.Tk):
         self.btn_logout.pack(side="right", fill="y", padx=5)
 
         self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos, self.datos_empresa, 
-                       self.admin_usuarios, self.ingresos_stock, self.ventana_egresos, self.ventana_sesiones_caja]
+                       self.admin_usuarios, self.ingresos_stock, self.ventana_egresos, self.ventana_sesiones_caja, self.terminos_condiciones]
         #self.ventas.pack(fill="both", expand=True)
 
         self.botones = [self.btn_inventario, self.btn_ventas, self.btn_reporte_ventas, self.btn_recibos, self.btn_datos_empresa, 
                         self.btn_usuarios if self.usuario.rol == "admin" else None, self.btn_ingresos_stock, self.btn_egresos, 
-                        self.btn_sesiones_caja, self.btn_logout]
+                        self.btn_sesiones_caja, self.btn_terminos, self.btn_logout]
 
         self.draw_frames(self.ventas, self.btn_ventas)
 
@@ -189,10 +200,15 @@ class VentanaPrincipal(tk.Tk):
             # Limpiar todos los elementos de la ventana actual
             for widget in self.winfo_children():
                 widget.destroy()
+
+            self.state("normal")
             
             # Reiniciar al estado de Login
             self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
             self.login_frame.pack(fill="both", expand=True)
+
+            self.geometry("1200x700")
+            self.resizable(False, False)
 
     def draw_frames(self, new_frame, boton=None):
         for frame in self.frames:
