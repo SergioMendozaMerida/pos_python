@@ -145,13 +145,18 @@ class FrameCategoria(tk.Toplevel):
             self.entry_nombre_categoria.delete(0, tk.END)
 
     def eliminar_categoria(self):
+
         selected_item = self.tabla_categorias.selection()
         if not selected_item:
             messagebox.showwarning("Advertencia", "Seleccione una categoría para eliminar.")
             return
+        
+        confirmacion = messagebox.askyesno("Eliminar", "¿Está seguro de eliminar la categoría?")
+
+        if confirmacion is False:
+            return
 
         categoria_id = int(selected_item[0])  # Obtener el ID de la categoría seleccionada
-        print(categoria_id)
         categoria = Ct.Categoria()
         categoria.eliminar_categoria(categoria_id)
         self.lista_categorias = self.categorias.obtener_categorias()
