@@ -5,6 +5,7 @@ from tkinter import messagebox, simpledialog, ttk
 import ventas.vistas.FrameTerminarVenta as FTV
 import caja.FrameAbrirCerrarCaja as FAC
 import caja.FrameDetalleCaja as FDC
+import ventas.vistas.FrameModificar as FM
 
 class VentanaVentas(tk.Frame):
 
@@ -377,7 +378,7 @@ class VentanaVentas(tk.Frame):
 
         btn_Cantidad = tk.Button(
             self.frame_concretar_venta,
-            text="Cantidad",
+            text="Modificar",
             bg=self.danger_color,
             fg="white",
             font=("Segoe UI", 10, "bold"),
@@ -642,6 +643,7 @@ class VentanaVentas(tk.Frame):
             self.show_productos()
 
     def cambiar_cantidad(self):
+
         selection = self.tabla_carrito.selection()
 
         if not selection:
@@ -649,14 +651,18 @@ class VentanaVentas(tk.Frame):
             return
 
         item = int(selection[0])
-        cantidad = simpledialog.askinteger("Remover", "Escriba la cantidad final")
+        for pr in self.carrito.productos:
+            if pr["id_producto"] == item:
+                frame_modificar = FM.FrameModificarVenta(self, self.carrito, item, pr, self.calcular_total, self.show_carrito, self.show_productos)
+        #cantidad = simpledialog.askinteger("Remover", "Escriba la cantidad final")
 
-        if cantidad is not None:
+        """if cantidad is not None:
+            
             respuesta = self.carrito.cambiar_cantidad(cantidad,item)
             if respuesta == False:
                 messagebox.showerror("Error", "Cantidad no disponible.")
             self.show_productos()
-            self.show_carrito()
+            self.show_carrito()"""
 
     def show_carrito(self):
         for item in self.tabla_carrito.get_children():

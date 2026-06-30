@@ -129,8 +129,8 @@ class VentanaInventario(tk.Frame):
         tabla_scroll_frame = tk.Frame(self.frame_tabla, bg=self.color_fondo)
         tabla_scroll_frame.pack(fill="both", expand=True)
 
-        self.columnas = ("id", "nombre", "descripcion", "presentacion", "categoria", "precio_compra", 
-                         "precio_venta", "stock","utilidad")
+        self.columnas = ("id", "nombre", "descripcion", "presentacion", "categoria", "precio_compra", "precio_venta", "precio_blister", "precio_caja", 
+                        "stock","utilidad")
         self.tabla_productos = ttk.Treeview(tabla_scroll_frame, columns=self.columnas, show="headings", height=10)
 
         # Configurar headings
@@ -141,6 +141,8 @@ class VentanaInventario(tk.Frame):
         self.tabla_productos.heading("categoria", text="Categoría")
         self.tabla_productos.heading("precio_compra", text="P. Compra")
         self.tabla_productos.heading("precio_venta", text="P. Venta")
+        self.tabla_productos.heading("precio_blister", text="P. Blíster")
+        self.tabla_productos.heading("precio_caja", text="P. Caja")
         self.tabla_productos.heading("stock", text="Stock")
         self.tabla_productos.heading("utilidad", text="Utilidad")
 
@@ -152,6 +154,8 @@ class VentanaInventario(tk.Frame):
         self.tabla_productos.column("categoria", width=100, anchor="center")
         self.tabla_productos.column("precio_compra", width=90, anchor="center")
         self.tabla_productos.column("precio_venta", width=90, anchor="center")
+        self.tabla_productos.column("precio_blister", width=90, anchor="center")
+        self.tabla_productos.column("precio_caja", width=90, anchor="center")
         self.tabla_productos.column("stock", width=70, anchor="center")
         self.tabla_productos.column("utilidad", width=70)
 
@@ -300,6 +304,8 @@ class VentanaInventario(tk.Frame):
                 producto.categoria,
                 f"Q{producto.precio_compra:.2f}",
                 f"Q{producto.precio_venta:.2f}",
+                f"Q{producto.precio_blister:.2f}",
+                f"Q{producto.precio_caja:.2f}",
                 producto.stock,
                 f"Q{producto.utilidad:.2f}"
             ))

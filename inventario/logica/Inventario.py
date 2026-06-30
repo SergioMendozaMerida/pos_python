@@ -29,15 +29,18 @@ class Inventario:
                     producto[5],
                     producto[6],
                     producto[7],
-                    producto[8]
+                    producto[8],
+                    producto[9],
+                    producto[10]
                 ))
         except Exception as e:
             messagebox.showerror("Error", f"Error al obtener los productos {e}")
 
-    def ingresar_producto(self, nombre, codigo, descripcion, presentacion, categoria, precio_compra, precio_venta, stock):
+    def ingresar_producto(self, nombre, codigo, descripcion, presentacion, categoria, precio_compra, precio_venta, precio_blister, precio_caja, stock):
         try:
-            self.cursor.execute("INSERT INTO productos (nombre,codigo_producto,descripcion,presentacion,categoria,precio_compra,precio_venta,stock) VALUES(?,?,?,?,?,?,?,?)",
-                                (nombre, codigo, descripcion,presentacion,categoria,precio_compra,precio_venta,stock))
+            self.cursor.execute("""INSERT INTO productos (nombre,codigo_producto,descripcion,presentacion,categoria,precio_compra,precio_venta,
+                                precio_blister,precio_caja,stock) VALUES(?,?,?,?,?,?,?,?,?,?)""",
+                                (nombre, codigo, descripcion,presentacion,categoria,precio_compra,precio_venta,precio_blister,precio_caja,stock))
             self.conexion.commit()
             self.obtener_productos()
         except Exception as e:
@@ -62,7 +65,9 @@ class Inventario:
                     producto[5],
                     producto[6],
                     producto[7],
-                    producto[8]
+                    producto[8],
+                    producto[9],
+                    producto[10]
                 ))
         except Exception as e:
             messagebox.showerror("Error", f"Error al buscar el producto {e}")
@@ -81,7 +86,9 @@ class Inventario:
                     producto[5],
                     producto[6],
                     producto[7],
-                    producto[8]
+                    producto[8],
+                    producto[9],
+                    producto[10]
                 )
             else:
                 return None
@@ -103,7 +110,9 @@ class Inventario:
                     producto[5],
                     producto[6],
                     producto[7],
-                    producto[8]
+                    producto[8],
+                    producto[9],
+                    producto[10]
                 )
             else:
                 return None
@@ -125,7 +134,9 @@ class Inventario:
                     producto[5],
                     producto[6],
                     producto[7],
-                    producto[8]
+                    producto[8],
+                    producto[9],
+                    producto[10]
                 )
             else:
                 return None
@@ -147,7 +158,9 @@ class Inventario:
                     producto[5],
                     producto[6],
                     producto[7],
-                    producto[8]
+                    producto[8],
+                    producto[9],
+                    producto[10]
                 )
             else:
                 return None
@@ -170,10 +183,10 @@ class Inventario:
         except Exception as e:
             messagebox.showerror("Error", f"Error al aumentar el stock {e}")
 
-    def editar_producto(self, id_producto, nombre, descripcion, presentacion, categoria, precio_compra, precio_venta):
+    def editar_producto(self, id_producto, nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, precio_blister, precio_caja):
         try:
-            self.cursor.execute("UPDATE productos SET nombre=?, descripcion=?, presentacion=?, categoria=?, precio_compra=?, precio_venta=? WHERE id_producto=?",
-                                (nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, id_producto))
+            self.cursor.execute("UPDATE productos SET nombre=?, descripcion=?, presentacion=?, categoria=?, precio_compra=?, precio_venta=?, precio_blister=?, precio_caja=? WHERE id_producto=?",
+                                (nombre, descripcion, presentacion, categoria, precio_compra, precio_venta, precio_blister, precio_caja, id_producto))
             self.conexion.commit()
             self.obtener_productos()
         except Exception as e:

@@ -176,6 +176,44 @@ class FormProductos(tk.Toplevel):
         )
         self.entry_precio_venta.pack(fill="both", expand=True, ipady=4)
 
+        # Fila 4.1: Precios adicionales (Blíster y Caja)
+        row_precios_adicionales = tk.Frame(self.main_frame, bg=self.color_fondo)
+        row_precios_adicionales.pack(fill="x", pady=(0, 15))
+
+        col_blister = tk.Frame(row_precios_adicionales, bg=self.color_fondo)
+        col_blister.pack(side="left", fill="both", expand=True, padx=(0, 10))
+
+        tk.Label(col_blister, text="Precio Blister Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_precio_blister = tk.Entry(
+            col_blister,
+            font=("Segoe UI", 10),
+            bg=self.color_entrada,
+            relief="flat",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_precio_blister.pack(fill="both", expand=True, ipady=4)
+        self.entry_precio_blister.insert(0, "0")
+
+        col_caja = tk.Frame(row_precios_adicionales, bg=self.color_fondo)
+        col_caja.pack(side="left", fill="both", expand=True)
+
+        tk.Label(col_caja, text="Precio Caja Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_precio_caja = tk.Entry(
+            col_caja,
+            font=("Segoe UI", 10),
+            bg=self.color_entrada,
+            relief="flat",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_precio_caja.pack(fill="both", expand=True, ipady=4)
+        self.entry_precio_caja.insert(0, "0")
+
         # Fila 5: Stock
         tk.Label(self.main_frame, text="Stock *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
         self.entry_stock = tk.Entry(
@@ -245,6 +283,8 @@ class FormProductos(tk.Toplevel):
         categoria = self.entry_categoria.get().strip()
         precio_compra = self.entry_precio_compra.get().strip()
         precio_venta = self.entry_precio_venta.get().strip()
+        precio_blister = self.entry_precio_blister.get().strip()
+        precio_caja = self.entry_precio_caja.get().strip()
         stock = self.entry_stock.get().strip()
 
         if not nombre:
@@ -259,6 +299,8 @@ class FormProductos(tk.Toplevel):
         try:
             precio_compra_val = float(precio_compra) if precio_compra else 0.0
             precio_venta_val = float(precio_venta) if precio_venta else 0.0
+            precio_blister_val = float(precio_blister) if precio_blister else 0.0
+            precio_caja_val = float(precio_caja) if precio_caja else 0.0
             stock_val = int(stock)
         except ValueError:
             messagebox.showwarning("Validación", "Precio y stock deben ser numéricos.")
@@ -272,6 +314,8 @@ class FormProductos(tk.Toplevel):
             categoria,
             precio_compra_val,
             precio_venta_val,
+            precio_blister_val,
+            precio_caja_val,
             stock_val
         )
 

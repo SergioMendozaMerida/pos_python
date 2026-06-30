@@ -48,24 +48,26 @@ class CarrtioVenta:
 
         for prod in self.productos:
             if prod["id_producto"] == id:
-                if cantidad + prod["cantidad"] > int(p[7]):
+                if cantidad + prod["cantidad"] > int(p[9]):
                     messagebox.showwarning("Stock insuficiente", f"No hay suficiente stock para agregar {cantidad} unidades de {prod['nombre']}. Stock disponible: {p[7] - prod['cantidad']}")
                     return False
                 prod["cantidad"] += cantidad
                 prod["sub_total"] = prod["precio_venta"] * prod["cantidad"]
                 return True
 
-        if cantidad > int(p[7]):
+        if cantidad > int(p[9]):
             return False
         else: 
             p_carrito = {
                 "id_producto": p[0],
                 "nombre": p[1],
                 "precio_compra": p[5],
-                "precio_venta": p[6],
-                "stock": p[7],
+                "precio_venta": float(p[6]),
+                "precio_blister": float(p[7]),
+                "precio_caja": float(p[8]),
+                "stock": p[9],
                 "cantidad": cantidad,
-                "sub_total": cantidad*p[6]
+                "sub_total": cantidad*float(p[6])
             }
         
             self.productos.append(p_carrito)
@@ -87,8 +89,33 @@ class CarrtioVenta:
 
         for prod in self.productos:
             if prod["id_producto"] == id:
-                if nueva_cantidad > int(p[7]):
+                if nueva_cantidad > int(p[9]):
                     return False
+                prod["cantidad"] = nueva_cantidad
+                prod["sub_total"] = prod["precio_venta"] * prod["cantidad"]
+                self.calcular_total()
+                return True
+
+    def cambiar_cantidad_unidades(self, nueva_cantidad, tipo_unidad, id):
+        conexion = sqlite3.connect("db_inventario.db")
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
+        p = cursor.fetchone()
+        conexion.close()
+
+        for prod in self.productos:
+            if prod["id_producto"] == id:
+                if nueva_cantidad > int(p[9]):
+                    messagebox.showerror("Error", "Cantidad no disponible.")
+                    return False
+                
+                if tipo_unidad == "unidad":
+                    prod["precio_venta"] = float(p[6])
+                if tipo_unidad == "blister":
+                    prod["precio_venta"] = float(p[7])
+                if tipo_unidad == "caja":
+                    prod["precio_venta"] = float(p[8])
+
                 prod["cantidad"] = nueva_cantidad
                 prod["sub_total"] = prod["precio_venta"] * prod["cantidad"]
                 self.calcular_total()

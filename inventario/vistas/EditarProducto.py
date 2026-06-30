@@ -139,6 +139,42 @@ class EditarProducto(tk.Toplevel):
         )
         self.entry_precio_venta.pack(fill="both", expand=True, ipady=4)
 
+        # Fila 4.1: Precios adicionales (Blister y Caja)
+        row_precios_adicionales = tk.Frame(self.main_frame, bg=self.color_fondo)
+        row_precios_adicionales.pack(fill="x", pady=(0, 15))
+
+        col_blister = tk.Frame(row_precios_adicionales, bg=self.color_fondo)
+        col_blister.pack(side="left", fill="both", expand=True, padx=(0, 10))
+
+        tk.Label(col_blister, text="Precio Blister Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_precio_blister = tk.Entry(
+            col_blister,
+            font=("Segoe UI", 10),
+            bg=self.color_entrada,
+            relief="flat",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_precio_blister.pack(fill="both", expand=True, ipady=4)
+
+        col_caja = tk.Frame(row_precios_adicionales, bg=self.color_fondo)
+        col_caja.pack(side="left", fill="both", expand=True)
+
+        tk.Label(col_caja, text="Precio Caja Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_precio_caja = tk.Entry(
+            col_caja,
+            font=("Segoe UI", 10),
+            bg=self.color_entrada,
+            relief="flat",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_precio_caja.pack(fill="both", expand=True, ipady=4)
+
         # Cargar datos del producto
         self.cargar_datos_producto()
 
@@ -182,12 +218,22 @@ class EditarProducto(tk.Toplevel):
 
     def cargar_datos_producto(self):
         """Carga los datos del producto en los campos del formulario"""
+        self.entry_nombre.delete(0, tk.END)
         self.entry_nombre.insert(0, self.producto.nombre)
+        self.entry_descripcion.delete(0, tk.END)
         self.entry_descripcion.insert(0, self.producto.descripcion)
+        self.entry_presentacion.delete(0, tk.END)
         self.entry_presentacion.insert(0, self.producto.presentacion)
+        self.entry_categoria.delete(0, tk.END)
         self.entry_categoria.insert(0, self.producto.categoria)
-        self.entry_precio_compra.insert(0, str(self.producto.precio_compra))
-        self.entry_precio_venta.insert(0, str(self.producto.precio_venta))
+        self.entry_precio_compra.delete(0, tk.END)
+        self.entry_precio_compra.insert(0, str(self.producto.precio_compra if self.producto.precio_compra is not None else 0))
+        self.entry_precio_venta.delete(0, tk.END)
+        self.entry_precio_venta.insert(0, str(self.producto.precio_venta if self.producto.precio_venta is not None else 0))
+        self.entry_precio_blister.delete(0, tk.END)
+        self.entry_precio_blister.insert(0, str(self.producto.precio_blister if self.producto.precio_blister is not None else 0))
+        self.entry_precio_caja.delete(0, tk.END)
+        self.entry_precio_caja.insert(0, str(self.producto.precio_caja if self.producto.precio_caja is not None else 0))
 
     def actualizar_producto(self):
         nombre = self.entry_nombre.get().strip()
@@ -196,6 +242,8 @@ class EditarProducto(tk.Toplevel):
         categoria = self.entry_categoria.get().strip()
         precio_compra = self.entry_precio_compra.get().strip()
         precio_venta = self.entry_precio_venta.get().strip()
+        precio_blister = self.entry_precio_blister.get().strip()
+        precio_caja = self.entry_precio_caja.get().strip()
 
         if not nombre:
             messagebox.showwarning("Validación", "Debe ingresar el nombre del producto.")
@@ -204,6 +252,8 @@ class EditarProducto(tk.Toplevel):
         try:
             precio_compra_val = float(precio_compra) if precio_compra else 0.0
             precio_venta_val = float(precio_venta) if precio_venta else 0.0
+            precio_blister_val = float(precio_blister) if precio_blister else 0.0
+            precio_caja_val = float(precio_caja) if precio_caja else 0.0
         except ValueError:
             messagebox.showwarning("Validación", "Precio y stock deben ser numéricos.")
             return
@@ -215,7 +265,9 @@ class EditarProducto(tk.Toplevel):
             presentacion,
             categoria,
             precio_compra_val,
-            precio_venta_val
+            precio_venta_val,
+            precio_blister_val,
+            precio_caja_val
         )
 
         if self.actualizar_callback:
