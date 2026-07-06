@@ -518,13 +518,20 @@ class VentanaVentas(tk.Frame):
             info_frame = tk.Frame(card, bg="white")
             info_frame.pack(side="left", fill="both", expand=True)
 
+            nombre = producto.nombre
+
+            if len(nombre) > 45:
+                nombre = nombre[:42] + "..."
+
             tk.Label(
                 info_frame, 
-                text=producto.nombre, 
+                text=nombre, 
                 bg="white", 
                 fg=self.text_color, 
                 font=("Segoe UI", 12, "bold"), 
-                anchor="w"
+                anchor="w",
+                justify="left",
+                wraplength=200
             ).pack(fill="x")
 
             # Cálculo de stock disponible en tiempo real
@@ -547,6 +554,8 @@ class VentanaVentas(tk.Frame):
 
             # Pequeña descripción o presentación
             presentacion = producto.presentacion if producto.presentacion else "Sin presentación"
+            if len(presentacion) > 25:
+                presentacion = presentacion[:22] + "..."
             tk.Label(
                 info_frame, 
                 text=f"Presentación: {presentacion}", 

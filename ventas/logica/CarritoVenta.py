@@ -27,10 +27,14 @@ class CarrtioVenta:
         self.nit = nit
 
     def obtener_numero_recibo(self):
-        conexion = sqlite3.connect("db_inventario.db")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT MAX(no_recibo) FROM  recibos")
-        p = cursor.fetchone()
+        try:
+            conexion = sqlite3.connect("db_inventario.db")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT MAX(no_recibo) FROM  recibos")
+            p = cursor.fetchone()
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al obtener el número de recibo {e}")
+            return
         if p[0] is None:
             self.numero_recibo = 1
             return
@@ -39,12 +43,16 @@ class CarrtioVenta:
         conexion.close()
 
     def agregar_producto(self, id, cantidad):
-            
-        conexion = sqlite3.connect("db_inventario.db")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
-        p = cursor.fetchone()
-        conexion.close()
+
+        try:    
+            conexion = sqlite3.connect("db_inventario.db")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
+            p = cursor.fetchone()
+            conexion.close()
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al obtener datos del producto {e}")
+            return
 
         for prod in self.productos:
             if prod["id_producto"] == id:
@@ -81,11 +89,14 @@ class CarrtioVenta:
 
     def cambiar_cantidad(self, nueva_cantidad, id):
 
-        conexion = sqlite3.connect("db_inventario.db")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
-        p = cursor.fetchone()
-        conexion.close()
+        try:
+            conexion = sqlite3.connect("db_inventario.db")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
+            p = cursor.fetchone()
+            conexion.close()
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al obtener los datos del producto {e}.")
 
         for prod in self.productos:
             if prod["id_producto"] == id:
@@ -97,11 +108,14 @@ class CarrtioVenta:
                 return True
 
     def cambiar_cantidad_unidades(self, nueva_cantidad, tipo_unidad, id):
-        conexion = sqlite3.connect("db_inventario.db")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
-        p = cursor.fetchone()
-        conexion.close()
+        try:
+            conexion = sqlite3.connect("db_inventario.db")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT * FROM  productos WHERE id_producto = ?", (id,))
+            p = cursor.fetchone()
+            conexion.close()
+        except Exception as e:
+            messagebox("Error", f"Error al obtener datos del producto {e}.")
 
         for prod in self.productos:
             if prod["id_producto"] == id:
@@ -133,17 +147,23 @@ class CarrtioVenta:
         conexion = sqlite3.connect("db_inventario.db")
         cursor = conexion.cursor()
         for p in self.productos:
-            cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha,usuario,costo) VALUES (?,?,?,?,?,?,?,?,?)',
-                           (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha,self.usuario.usuario,p['precio_compra']))
-            self.utilidad += p['sub_total'] - (p['precio_compra'] * p['cantidad'])
-            conexion.commit()
+            try:
+                cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha,usuario,costo) VALUES (?,?,?,?,?,?,?,?,?)',
+                            (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha,self.usuario.usuario,p['precio_compra']))
+                self.utilidad += p['sub_total'] - (p['precio_compra'] * p['cantidad'])
+                conexion.commit()
+            except Exception as e:
+                messagebox.showerror("Error", f"Error al concretar la venta {e}")
 
-        cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total,usuario, utilidad) VALUES(?,?,?,?,?,?,?,?,?)',
-                       (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total,self.usuario.usuario,self.utilidad))
-        conexion.commit()
-        self.utilidad = 0
-        #self.vaciar_carrito()
-        conexion.close()
+        try:
+            cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total,usuario, utilidad) VALUES(?,?,?,?,?,?,?,?,?)',
+                        (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total,self.usuario.usuario,self.utilidad))
+            conexion.commit()
+            self.utilidad = 0
+            #self.vaciar_carrito()
+            conexion.close()
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al guardar los datos del recibo {e}")
 
     def quitar_producto(self, id_producto):
         for producto in self.productos:

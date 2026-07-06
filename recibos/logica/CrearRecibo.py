@@ -22,6 +22,7 @@ class CrearRecibo:
         self.empresa = empresa.Empresa()
 
         self.ruta_documentos = Path.home() / "Documents/recibos_pos"
+        self.ruta_documentos.mkdir(parents=True, exist_ok=True)
 
     def crear_recibo(self):
         if self.empresa.impresion:
