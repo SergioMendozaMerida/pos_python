@@ -77,8 +77,9 @@ class CrearRecibo:
         
         c.setFont("Helvetica-Bold", 10)
         c.drawString(60, y - 10, "PRODUCTO")
-        c.drawRightString(350, y - 10, "PRECIO UNIT.")
-        c.drawRightString(430, y - 10, "CANT.")
+        c.drawRightString(320, y - 10, "PRECIO UNIT.")
+        c.drawRightString(395, y - 10, "CANT.")
+        c.drawRightString(470, y - 10, "DESC.")
         c.drawRightString(550, y - 10, "SUBTOTAL")
         
         c.line(50, y - 15, 562, y - 15) # Línea inferior encabezado
@@ -86,9 +87,11 @@ class CrearRecibo:
         y -= 35
         c.setFont("Helvetica", 10)
         for p in self.productos:
+            descuento = float(p.get('descuento', 0) or 0)
             c.drawString(60, y, str(p['nombre'])[:45]) # Limitar largo de nombre
-            c.drawRightString(350, y, f"Q {p['precio_venta']:,.2f}")
-            c.drawRightString(430, y, str(p['cantidad']))
+            c.drawRightString(320, y, f"Q {p['precio_venta']:,.2f}")
+            c.drawRightString(395, y, str(p['cantidad']))
+            c.drawRightString(470, y, f"Q {descuento:,.2f}")
             c.drawRightString(550, y, f"Q {p['sub_total']:,.2f}")
             y -= 20
 
@@ -114,7 +117,7 @@ class CrearRecibo:
         width = 80 * mm
         # Calculamos el alto dinámicamente según la cantidad de productos para evitar cortes
         items_count = len(self.productos)
-        estimated_height = (100 + (items_count * 12) + 40) * mm
+        estimated_height = (100 + (items_count * 16) + 40) * mm
         height = max(150 * mm, estimated_height)
 
         c = canvas.Canvas(str(self.ruta_documentos / f"recibo_{self.numero_recibo}.pdf"), pagesize=(width, height))
@@ -173,10 +176,16 @@ class CrearRecibo:
         
         c.setFont("Helvetica", 8)
         for p in self.productos:
+            descuento = float(p.get('descuento', 0) or 0)
             # Línea de producto: Cantidad x Nombre ... Total
             c.drawString(7 * mm, y, f"{p['cantidad']} x {str(p['nombre'])[:25]}")
             c.drawRightString(width - 7 * mm, y, f"Q{p['sub_total']:,.2f}")
-            y -= 5 * mm
+            y -= 4 * mm
+            if descuento > 0:
+                c.setFont("Helvetica", 7)
+                c.drawString(10 * mm, y, f"Desc.: Q{descuento:,.2f}")
+                c.setFont("Helvetica", 8)
+                y -= 4 * mm
         
         y -= 2 * mm
         c.line(35 * mm, y, width - 7 * mm, y)

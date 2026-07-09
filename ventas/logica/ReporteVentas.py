@@ -20,7 +20,7 @@ class ReporteVentas:
             self.ventas.clear()
             self.total_ventas = 0.0
             for v in ventas:
-                self.ventas.append(Venta.Venta(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9]))
+                self.ventas.append(Venta.Venta(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10]))
                 self.total_ventas += int(v[7])
             self.obtener_productos_mas_vendidos("", "")
             return ventas
@@ -41,7 +41,7 @@ class ReporteVentas:
             self.ventas.clear()
             self.total_ventas = 0.0
             for v in ventas:
-                self.ventas.append(Venta.Venta(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9]))
+                self.ventas.append(Venta.Venta(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10]))
                 self.total_ventas += int(v[7])
             self.obtener_productos_mas_vendidos("", "")
             return ventas
@@ -73,7 +73,7 @@ class ReporteVentas:
             self.ventas.clear()
             self.total_ventas = 0.0
             for venta in ventas_filtradas:
-                self.ventas.append(Venta.Venta(venta[0], venta[1], venta[2], venta[3], venta[4], venta[5], venta[6], venta[7], venta[8], venta[9]))
+                self.ventas.append(Venta.Venta(venta[0], venta[1], venta[2], venta[3], venta[4], venta[5], venta[6], venta[7], venta[8], venta[9], venta[10]))
                 self.total_ventas += venta[7]
             self.obtener_productos_mas_vendidos(fecha_inicio, fecha_fin)
         except Exception as e:

@@ -60,7 +60,7 @@ class CarrtioVenta:
                     messagebox.showwarning("Stock insuficiente", f"No hay suficiente stock para agregar {cantidad} unidades de {prod['nombre']}. Stock disponible: {p[7] - prod['cantidad']}")
                     return False
                 prod["cantidad"] += cantidad
-                prod["sub_total"] = prod["precio_venta"] * prod["cantidad"]
+                prod["sub_total"] = (prod["precio_venta"] * prod["cantidad"]) - prod["descuento"]
                 return True
 
         if cantidad > int(p[9]):
@@ -75,7 +75,8 @@ class CarrtioVenta:
                 "precio_caja": float(p[8]),
                 "stock": p[9],
                 "cantidad": cantidad,
-                "sub_total": cantidad*float(p[6])
+                "sub_total": cantidad*float(p[6]),
+                "descuento": 0.0
             }
         
             self.productos.append(p_carrito)
@@ -107,7 +108,7 @@ class CarrtioVenta:
                 self.calcular_total()
                 return True
 
-    def cambiar_cantidad_unidades(self, nueva_cantidad, tipo_unidad, id):
+    def cambiar_cantidad_unidades(self, nueva_cantidad, tipo_unidad, id, descuento):
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
@@ -131,7 +132,8 @@ class CarrtioVenta:
                     prod["precio_venta"] = float(p[8])
 
                 prod["cantidad"] = nueva_cantidad
-                prod["sub_total"] = prod["precio_venta"] * prod["cantidad"]
+                prod["descuento"] = descuento
+                prod["sub_total"] = (prod["precio_venta"] * prod["cantidad"]) - prod["descuento"]
                 self.calcular_total()
                 return True
     
@@ -148,8 +150,8 @@ class CarrtioVenta:
         cursor = conexion.cursor()
         for p in self.productos:
             try:
-                cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha,usuario,costo) VALUES (?,?,?,?,?,?,?,?,?)',
-                            (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha,self.usuario.usuario,p['precio_compra']))
+                cursor.execute('INSERT INTO ventas (id_producto,producto,precio,cantidad,sub_total,id_recibo,fecha,usuario,costo,descuento) VALUES (?,?,?,?,?,?,?,?,?,?)',
+                            (p['id_producto'],p['nombre'],p['precio_venta'],p['cantidad'],p['sub_total'],self.numero_recibo,self.fecha,self.usuario.usuario,p['precio_compra'],p['descuento']))
                 self.utilidad += p['sub_total'] - (p['precio_compra'] * p['cantidad'])
                 conexion.commit()
             except Exception as e:

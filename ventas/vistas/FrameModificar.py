@@ -5,7 +5,7 @@ class FrameModificarVenta(tk.Toplevel):
     def __init__(self, parent, carrito, producto=None, info_producto=None, calcular_total=None, show_carrito=None, actualizar_productos=None):
         super().__init__(parent)
         self.title("Modificar Venta")
-        self.geometry("400x380")
+        self.geometry("400x430")
         self.resizable(False, False)
         self.transient(parent)
         self.grab_set()
@@ -151,6 +151,21 @@ class FrameModificarVenta(tk.Toplevel):
         self.chk_box_blister.grid(row=0, column=1, pady=10, padx=5, sticky="w")
         self.chk_box_caja.grid(row=0, column=2, pady=10, padx=5, sticky="w")
 
+        self.entry_descuento = tk.Entry(
+            self.main_frame,
+            font=("Segoe UI", 12),
+            bg=self.color_card,
+            fg=self.color_texto,
+            relief="flat",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+
+        self.entry_descuento.pack(fill="x", pady=(0, 20), ipady=8)
+        self.entry_descuento.insert(0, f"{self.info_producto['descuento']}")
+
         self.chk_box_unidad.select()
         self.opciones = [self.chk_box_blister, self.chk_box_caja, self.chk_box_unidad]
 
@@ -211,12 +226,14 @@ class FrameModificarVenta(tk.Toplevel):
             messagebox.showerror("Validación", "Debe seleccionar al menos una opción: Unidad, Blíster o Caja.")
             return
 
+        descuento = int(self.entry_descuento.get())
+
         if self.state_unidad.get():
-            res = self.carrito.cambiar_cantidad_unidades(cantidad, "unidad", self.producto)
+            res = self.carrito.cambiar_cantidad_unidades(cantidad, "unidad", self.producto, descuento)
         elif self.state_blister.get():
-            res = self.carrito.cambiar_cantidad_unidades(cantidad, "blister", self.producto)
+            res = self.carrito.cambiar_cantidad_unidades(cantidad, "blister", self.producto, descuento)
         elif self.state_caja.get():
-            res = self.carrito.cambiar_cantidad_unidades(cantidad, "caja", self.producto)
+            res = self.carrito.cambiar_cantidad_unidades(cantidad, "caja", self.producto, descuento)
 
         if res:
             self.show_carrito()

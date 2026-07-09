@@ -237,7 +237,7 @@ class VentanaReporteVentas(tk.Frame):
         self.frame_tabla.grid_rowconfigure(0, weight=1)
         self.frame_tabla.grid_columnconfigure(0, weight=1)
 
-        columnas = ("No. Recibo", "Fecha", "Producto", "Cantidad", "Precio Unitario", "Total","utilidad")
+        columnas = ("No. Recibo", "Fecha", "Producto", "Cantidad", "Precio Unitario", "Total","utilidad", "Descuento")
         self.tabla_ventas = tk.ttk.Treeview(self.frame_tabla, columns=columnas, show="headings", height=10)
 
         self.tabla_ventas.heading("No. Recibo", text="No. Recibo")
@@ -247,6 +247,7 @@ class VentanaReporteVentas(tk.Frame):
         self.tabla_ventas.heading("Precio Unitario", text="Precio Unitario")
         self.tabla_ventas.heading("Total", text="Total")
         self.tabla_ventas.heading("utilidad", text="Utilidad")
+        self.tabla_ventas.heading("Descuento", text="Descuento")
         self.tabla_ventas.column("No. Recibo", width=100, anchor="center")
         self.tabla_ventas.column("Fecha", width=100, anchor="center")
         self.tabla_ventas.column("Producto", width=100, anchor="center")
@@ -254,6 +255,7 @@ class VentanaReporteVentas(tk.Frame):
         self.tabla_ventas.column("Precio Unitario", width=100, anchor="center")
         self.tabla_ventas.column("Total", width=100, anchor="center")
         self.tabla_ventas.column("utilidad", width=100, anchor="center")
+        self.tabla_ventas.column("Descuento", width=100, anchor="center")
 
         self.scroll_y = tk.Scrollbar(self.frame_tabla, orient="vertical", command=self.tabla_ventas.yview)
         self.scroll_x = tk.Scrollbar(self.frame_tabla, orient="horizontal", command=self.tabla_ventas.xview)
@@ -330,7 +332,8 @@ class VentanaReporteVentas(tk.Frame):
                 venta.cantidad,
                 f"Q {float(venta.precio):,.2f}",
                 f"Q {float(venta.sub_total):,.2f}",
-                f"Q {float(venta.utilidad):,.2f}"
+                f"Q {float(venta.utilidad):,.2f}",
+                f"Q {float(venta.descuento):,.2f}"
             ))
 
         self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
@@ -354,7 +357,8 @@ class VentanaReporteVentas(tk.Frame):
                 venta.cantidad,
                 f"Q {float(venta.precio):,.2f}",
                 f"Q {float(venta.sub_total):,.2f}",
-                f"Q {float(venta.utilidad):,.2f}"
+                f"Q {float(venta.utilidad):,.2f}",
+                f"Q {float(venta.descuento):,.2f}"
             ))
 
         self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
@@ -378,7 +382,8 @@ class VentanaReporteVentas(tk.Frame):
                 venta.cantidad,
                 f"Q {float(venta.precio):,.2f}",
                 f"Q {float(venta.sub_total):,.2f}",
-                f"Q {float(venta.utilidad):,.2f}"
+                f"Q {float(venta.utilidad):,.2f}",
+                f"Q {float(venta.descuento):,.2f}"
             ))
 
         self.lbl_total_ventas.config(text=f"Total Ventas: Q {self.reporte_ventas.total_ventas:,.2f}")
