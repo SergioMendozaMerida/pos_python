@@ -88,7 +88,7 @@ class Inventario:
                     producto[7],
                     producto[8],
                     producto[9],
-                    producto[10]
+                    producto[10],
                 )
             else:
                 return None

@@ -7,8 +7,6 @@ import inventario.vistas.FrameIngresoStock as FIS
 import categoria.FrameCategoria as FCAT
 import inventario.logica.crearReporteInventario as CRI
 
-
-
 class VentanaInventario(tk.Frame):
     def __init__(self, parent, usuario, actualizar_tabla_ingresos):
         super().__init__(parent)
@@ -328,6 +326,8 @@ class VentanaInventario(tk.Frame):
                 producto.categoria,
                 f"Q{producto.precio_compra:.2f}",
                 f"Q{producto.precio_venta:.2f}",
+                f"Q{producto.precio_blister:.2f}",
+                f"Q{producto.precio_caja:.2f}",
                 producto.stock,
                 f"Q{producto.utilidad:.2f}"
             ))

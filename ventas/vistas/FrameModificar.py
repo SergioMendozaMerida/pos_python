@@ -151,6 +151,15 @@ class FrameModificarVenta(tk.Toplevel):
         self.chk_box_blister.grid(row=0, column=1, pady=10, padx=5, sticky="w")
         self.chk_box_caja.grid(row=0, column=2, pady=10, padx=5, sticky="w")
 
+        self.lbl_descuento = tk.Label(
+            self.main_frame,
+            text="Descuento:",
+            font=fuente_negrita,
+            bg=self.color_fondo,
+            fg=self.color_texto
+        )
+        self.lbl_descuento.pack(anchor="w", pady=(0, 5))
+
         self.entry_descuento = tk.Entry(
             self.main_frame,
             font=("Segoe UI", 12),
@@ -163,7 +172,7 @@ class FrameModificarVenta(tk.Toplevel):
             highlightcolor=self.color_primario
         )
 
-        self.entry_descuento.pack(fill="x", pady=(0, 20), ipady=8)
+        self.entry_descuento.pack(fill="x", pady=(0, 5), ipady=8)
         self.entry_descuento.insert(0, f"{self.info_producto['descuento']}")
 
         self.chk_box_unidad.select()
