@@ -177,8 +177,8 @@ class CrearRecibo:
         c.setFont("Helvetica", 8)
         for p in self.productos:
             descuento = float(p.get('descuento', 0) or 0)
-            # Línea de producto: Cantidad x Nombre ... Total
-            c.drawString(7 * mm, y, f"{p['cantidad']} x {str(p['nombre'])[:25]}")
+            # Línea de producto: Cantidad x Nombre (Precio Unit.) ... Total
+            c.drawString(7 * mm, y, f"{p['cantidad']} x {str(p['nombre'])[:18]} (Q{p['precio_venta']:,.2f})")
             c.drawRightString(width - 7 * mm, y, f"Q{p['sub_total']:,.2f}")
             y -= 4 * mm
             if descuento > 0:

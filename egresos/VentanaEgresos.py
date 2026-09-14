@@ -1,83 +1,237 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+import customtkinter as ctk
 import egresos.Egresos as E
 import egresos.FormRegistrarEgreso as FRE
 import datetime
 import egresos.CrearReporteEgresos as CRE
 
-class VentanaEgresos(tk.Frame):
+class VentanaEgresos(ctk.CTkFrame):
     def __init__(self, parent, caja):
-        super().__init__(parent)
+        super().__init__(parent, fg_color="#f4f6f9")
 
         self.caja = caja
-
         self.registros = E.Egresos()
-        self.configure(bg="#f0f0f0")
+        
+        # Configuración de colores
+        self.color_fondo = "#f4f6f9"
+        self.color_primario = "#2c3e50"
+        self.color_secundario = "#0984e3"
+        self.color_boton = "#27ae60"
+        self.color_cancelar = "#d63031"
+        self.color_border = "#dfe6e9"
 
         self.color_btn_filtro = "#0984e3"
-        self.color_btn_filtro_seleccionado = "#b6d1e6"
+        self.color_btn_filtro_seleccionado = "#5dade2"
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # --- FRAME DE FILTROS ---
-        self.frame_filtros = tk.Frame(self, bg="#f0f0f0", padx=10, pady=10)
+        # 1. FRAME DE FILTROS
+        self.frame_filtros = ctk.CTkFrame(
+            self, 
+            fg_color="#ffffff",
+            corner_radius=8,
+            border_width=1,
+            border_color=self.color_border
+        )
         self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
-        self.frame_filtros.grid_columnconfigure((0, 1, 2), weight=1)
+        self.frame_filtros.grid_columnconfigure(0, weight=1)
 
-        # Campos de Filtro
-        tk.Label(self.frame_filtros, text="Razón / Concepto:", bg="#f0f0f0").grid(row=0, column=0, sticky="w", padx=(0, 5))
-        self.entry_razon = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        self.entry_razon.grid(row=1, column=0, sticky="ew", padx=(0, 5), pady=(0, 10))
+        ctk.CTkLabel(
+            self.frame_filtros,
+            text="Filtros de Egresos",
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
+            text_color=self.color_primario
+        ).grid(row=0, column=0, sticky="w", padx=15, pady=(10, 8))
 
-        tk.Label(self.frame_filtros, text="Proveedor:", bg="#f0f0f0").grid(row=0, column=1, sticky="w", padx=(0, 5))
-        self.entry_proveedor = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        self.entry_proveedor.grid(row=1, column=1, sticky="ew", padx=(0, 5), pady=(0, 10))
+        # Fila horizontal única para los 4 campos y el botón buscar
+        filters_row = ctk.CTkFrame(self.frame_filtros, fg_color="transparent")
+        filters_row.grid(row=1, column=0, sticky="ew", padx=15, pady=(0, 5))
+        filters_row.grid_columnconfigure((0, 1, 2, 3), weight=1)
+        filters_row.grid_columnconfigure(4, weight=0)
 
-        self.btn_buscar = tk.Button(self.frame_filtros, text="Buscar", bg="#0984e3", fg="white", relief="flat", cursor="hand2", width=15, command=self.filtrar_egresos)
-        self.btn_buscar.grid(row=1, column=2, sticky="w", padx=(5, 0), pady=(0, 10))
+        # 1. Razón / Concepto
+        ctk.CTkLabel(
+            filters_row, 
+            text="Razón / Concepto:", 
+            text_color=self.color_primario,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
+        ).grid(row=0, column=0, sticky="w", padx=(0, 5), pady=(0, 2))
+        
+        self.entry_razon = ctk.CTkEntry(
+            filters_row, 
+            font=ctk.CTkFont(family="Segoe UI", size=12),
+            placeholder_text="Razón o concepto...",
+            height=36
+        )
+        self.entry_razon.grid(row=1, column=0, sticky="ew", padx=(0, 10))
 
-        tk.Label(self.frame_filtros, text="Fecha inicio (AAAA-MM-DD):", bg="#f0f0f0").grid(row=2, column=0, sticky="w", padx=(0, 5))
-        self.entry_fecha_inicio = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        self.entry_fecha_inicio.grid(row=3, column=0, sticky="ew", padx=(0, 5), pady=(0, 10))
+        # 2. Proveedor
+        ctk.CTkLabel(
+            filters_row, 
+            text="Proveedor:", 
+            text_color=self.color_primario,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
+        ).grid(row=0, column=1, sticky="w", padx=(0, 5), pady=(0, 2))
+        
+        self.entry_proveedor = ctk.CTkEntry(
+            filters_row, 
+            font=ctk.CTkFont(family="Segoe UI", size=12),
+            placeholder_text="Proveedor...",
+            height=36
+        )
+        self.entry_proveedor.grid(row=1, column=1, sticky="ew", padx=(0, 10))
 
-        tk.Label(self.frame_filtros, text="Fecha fin (AAAA-MM-DD):", bg="#f0f0f0").grid(row=2, column=1, sticky="w", padx=(0, 5))
-        self.entry_fecha_fin = tk.Entry(self.frame_filtros, bg="#ffffff", relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        self.entry_fecha_fin.grid(row=3, column=1, sticky="ew", padx=(0, 5), pady=(0, 10))
+        # 3. Fecha Inicio
+        ctk.CTkLabel(
+            filters_row, 
+            text="Fecha inicio:", 
+            text_color=self.color_primario,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
+        ).grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 2))
+        
+        self.entry_fecha_inicio = ctk.CTkEntry(
+            filters_row, 
+            font=ctk.CTkFont(family="Segoe UI", size=12),
+            placeholder_text="YYYY-MM-DD",
+            height=36
+        )
+        self.entry_fecha_inicio.grid(row=1, column=2, sticky="ew", padx=(0, 10))
+
+        # 4. Fecha Fin
+        ctk.CTkLabel(
+            filters_row, 
+            text="Fecha fin:", 
+            text_color=self.color_primario,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
+        ).grid(row=0, column=3, sticky="w", padx=(0, 5), pady=(0, 2))
+        
+        self.entry_fecha_fin = ctk.CTkEntry(
+            filters_row, 
+            font=ctk.CTkFont(family="Segoe UI", size=12),
+            placeholder_text="YYYY-MM-DD",
+            height=36
+        )
+        self.entry_fecha_fin.grid(row=1, column=3, sticky="ew", padx=(0, 10))
+
+        # 5. Botón Buscar
+        self.btn_buscar = ctk.CTkButton(
+            filters_row, 
+            text="🔍 Buscar", 
+            fg_color=self.color_secundario, 
+            hover_color="#74b9ff",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=36,
+            width=100,
+            command=self.filtrar_egresos
+        )
+        self.btn_buscar.grid(row=1, column=4, sticky="e")
 
         # Eventos Enter para buscar
         self.entry_razon.bind("<Return>", lambda e: self.filtrar_egresos())
         self.entry_proveedor.bind("<Return>", lambda e: self.filtrar_egresos())
+        self.entry_fecha_inicio.bind("<Return>", lambda e: self.filtrar_egresos())
+        self.entry_fecha_fin.bind("<Return>", lambda e: self.filtrar_egresos())
 
-        # --- BOTONES PREDETERMINADOS ---
-        self.frame_filtros_pre = tk.Frame(self.frame_filtros, bg="#f0f0f0")
-        self.frame_filtros_pre.grid(row=4, column=0, columnspan=3, sticky="ew", pady=(5, 0))
+        # BOTONES PREDETERMINADOS
+        self.frame_filtros_pre = ctk.CTkFrame(self.frame_filtros, fg_color="transparent")
+        self.frame_filtros_pre.grid(row=2, column=0, sticky="ew", padx=15, pady=(5, 10))
         self.frame_filtros_pre.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
 
-        self.btn_hoy = tk.Button(self.frame_filtros_pre, text="Egresos de Hoy", bg=self.color_btn_filtro, fg="white", relief="flat", cursor="hand2", command=self.filtrar_hoy)
-        self.btn_hoy.grid(row=0, column=0, sticky="ew", padx=2)
+        self.btn_hoy = ctk.CTkButton(
+            self.frame_filtros_pre, 
+            text="📅 Hoy", 
+            fg_color=self.color_btn_filtro, 
+            hover_color="#5dade2",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=36,
+            command=self.filtrar_hoy
+        )
+        self.btn_hoy.grid(row=0, column=0, sticky="ew", padx=3, pady=2)
         
-        self.btn_semana = tk.Button(self.frame_filtros_pre, text="Esta Semana", bg=self.color_btn_filtro, fg="white", relief="flat", cursor="hand2", command=self.filtrar_semana)
-        self.btn_semana.grid(row=0, column=1, sticky="ew", padx=2)
+        self.btn_semana = ctk.CTkButton(
+            self.frame_filtros_pre, 
+            text="📊 Semana", 
+            fg_color=self.color_btn_filtro, 
+            hover_color="#5dade2",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=36,
+            command=self.filtrar_semana
+        )
+        self.btn_semana.grid(row=0, column=1, sticky="ew", padx=3, pady=2)
 
-        self.btn_mes = tk.Button(self.frame_filtros_pre, text="Este Mes", bg=self.color_btn_filtro, fg="white", relief="flat", cursor="hand2", command=self.filtrar_mes)
-        self.btn_mes.grid(row=0, column=2, sticky="ew", padx=2)
+        self.btn_mes = ctk.CTkButton(
+            self.frame_filtros_pre, 
+            text="📈 Mes", 
+            fg_color=self.color_btn_filtro, 
+            hover_color="#5dade2",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=36,
+            command=self.filtrar_mes
+        )
+        self.btn_mes.grid(row=0, column=2, sticky="ew", padx=3, pady=2)
 
-        self.btn_anio = tk.Button(self.frame_filtros_pre, text="Este Año", bg=self.color_btn_filtro, fg="white", relief="flat", cursor="hand2", command=self.filtrar_anio)
-        self.btn_anio.grid(row=0, column=3, sticky="ew", padx=2)
+        self.btn_anio = ctk.CTkButton(
+            self.frame_filtros_pre, 
+            text="📑 Año", 
+            fg_color=self.color_btn_filtro, 
+            hover_color="#5dade2",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=36,
+            command=self.filtrar_anio
+        )
+        self.btn_anio.grid(row=0, column=3, sticky="ew", padx=3, pady=2)
 
-        self.btn_limpiar = tk.Button(self.frame_filtros_pre, text="Limpiar Filtros", bg="#636e72", fg="white", relief="flat", cursor="hand2", command=self.limpiar_filtros)
-        self.btn_limpiar.grid(row=0, column=4, sticky="ew", padx=2)
+        self.btn_limpiar = ctk.CTkButton(
+            self.frame_filtros_pre, 
+            text="🗑️ Limpiar", 
+            fg_color=self.color_cancelar, 
+            hover_color="#c0392b",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=36,
+            command=self.limpiar_filtros
+        )
+        self.btn_limpiar.grid(row=0, column=4, sticky="ew", padx=3, pady=2)
 
         self.btns_filtros = [self.btn_hoy, self.btn_semana, self.btn_mes, self.btn_anio]
 
-        # --- TABLA ---
-        self.frame_tabla = tk.Frame(self, bg="#ffffff", padx=10, pady=10)
+        # 2. FRAME TABLA
+        self.frame_tabla = ctk.CTkFrame(
+            self,
+            fg_color="#ffffff",
+            corner_radius=8,
+            border_width=1,
+            border_color=self.color_border
+        )
         self.frame_tabla.grid(row=1, column=0, sticky="nsew", padx=10, pady=5)
-        self.frame_tabla.grid_rowconfigure(0, weight=1)
+        self.frame_tabla.grid_rowconfigure(1, weight=1)
         self.frame_tabla.grid_columnconfigure(0, weight=1)
 
-        self.tabla_egresos = ttk.Treeview(self.frame_tabla, columns=("Fecha", "Usuario", "Razon", "Proveedor", "Monto"), show="headings")
+        ctk.CTkLabel(
+            self.frame_tabla,
+            text="Historial de Egresos",
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
+            text_color=self.color_primario
+        ).grid(row=0, column=0, sticky="w", padx=15, pady=(10, 5))
+
+        tabla_inner_frame = ctk.CTkFrame(self.frame_tabla, fg_color="transparent")
+        tabla_inner_frame.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
+        tabla_inner_frame.grid_rowconfigure(0, weight=1)
+        tabla_inner_frame.grid_columnconfigure(0, weight=1)
+
+        self.tabla_egresos = ttk.Treeview(
+            tabla_inner_frame, 
+            columns=("Fecha", "Usuario", "Razon", "Proveedor", "Monto"), 
+            show="headings", 
+            height=10
+        )
         
         self.tabla_egresos.heading("Fecha", text="Fecha")
         self.tabla_egresos.heading("Usuario", text="Usuario")
@@ -91,44 +245,59 @@ class VentanaEgresos(tk.Frame):
         self.tabla_egresos.column("Proveedor", width=150, anchor="w")
         self.tabla_egresos.column("Monto", width=100, anchor="e")
 
-        self.scroll_y = tk.Scrollbar(self.frame_tabla, orient="vertical", command=self.tabla_egresos.yview)
+        style = ttk.Style()
+        style.theme_use("clam")
+
+        style.configure("Treeview",
+                        background="#ffffff",
+                        foreground="#2d3436",
+                        rowheight=34,
+                        fieldbackground="#ffffff",
+                        borderwidth=0,
+                        font=("Segoe UI", 12))
+
+        style.configure("Treeview.Heading",
+                        background="#f1f2f6",
+                        foreground="#2d3436",
+                        relief="flat",
+                        font=("Segoe UI", 12, "bold"))
+
+        style.map("Treeview", 
+                background=[('selected', "#74b9ff")],
+                foreground=[('selected', "white")])
+
+        self.scroll_y = ttk.Scrollbar(tabla_inner_frame, orient="vertical", command=self.tabla_egresos.yview)
         self.tabla_egresos.configure(yscrollcommand=self.scroll_y.set)
         self.tabla_egresos.grid(row=0, column=0, sticky="nsew")
         self.scroll_y.grid(row=0, column=1, sticky="ns")
 
-        # --- BOTONES DE ACCIÓN ---
-        self.frame_botones = tk.Frame(self, bg="#f0f0f0", padx=10, pady=10)
-        self.frame_botones.grid(row=2, column=0, sticky="ew", padx=10, pady=(5, 10))
+        # 3. BOTONES DE ACCIÓN
+        self.frame_botones = ctk.CTkFrame(self, fg_color="transparent")
+        self.frame_botones.grid(row=2, column=0, sticky="ew", padx=10, pady=(2, 10))
 
-        self.btn_registrar = tk.Button(
+        self.btn_registrar = ctk.CTkButton(
             self.frame_botones, 
             text="➕ Registrar Nuevo Egreso", 
-            bg="#00b894", 
-            fg="white", 
-            relief="flat", 
-            padx=20, 
-            pady=10, 
-            cursor="hand2", 
-            font=("Segoe UI", 10, "bold"),
+            fg_color="#00b894", 
+            hover_color="#009476",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=40,
             command=self.abrir_formulario_registro
         )
-        self.btn_registrar.pack(side="left")
+        self.btn_registrar.pack(side="left", padx=(0, 10))
 
-        self.btn_exportar_excel = tk.Button(
+        self.btn_exportar_excel = ctk.CTkButton(
             self.frame_botones,
             text="📤 Exportar a Excel",
-            bg="#27ae60",
-            fg="white",
-            font=("Segoe UI", 10, "bold"),
-            relief="flat",
-            bd=0,
-            padx=15,
-            pady=8,
-            cursor="hand2",
-            activebackground="#5e49b5",
+            fg_color="#27ae60",
+            hover_color="#229954",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=40,
             command=self.exportar_egresos_excel
         )
-        self.btn_exportar_excel.pack(side="left", padx=(10, 0))
+        self.btn_exportar_excel.pack(side="left")
 
         self.actualizar_tabla()
 
@@ -154,7 +323,6 @@ class VentanaEgresos(tk.Frame):
             ))
 
     def abrir_formulario_registro(self):
-
         if self.caja.estado == False:
             messagebox.showerror("Caja Cerrada", "Debe abrir la caja para poder registrar un egreso.")
             return
@@ -210,7 +378,8 @@ class VentanaEgresos(tk.Frame):
 
     def resaltar_boton(self, btn_target):
         self.limpiar_botones_estilo()
-        btn_target.config(bg=self.color_btn_filtro_seleccionado)
+        btn_target.configure(fg_color=self.color_btn_filtro_seleccionado)
 
     def limpiar_botones_estilo(self):
-        for btn in self.btns_filtros: btn.config(bg=self.color_btn_filtro)
+        for btn in self.btns_filtros: 
+            btn.configure(fg_color=self.color_btn_filtro, text_color="white")

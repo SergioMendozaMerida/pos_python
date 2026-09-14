@@ -71,8 +71,11 @@ class EditarProducto(tk.Toplevel):
         self.entry_categoria = ttk.Combobox(
             col2_frame,
             font=("Segoe UI", 10),
-            values=self.categorias
-                )
+            values=self.categorias,
+            state='readonly'
+            )
+        if self.categorias:
+            self.entry_categoria.current(0)
         self.entry_categoria.pack(fill="both", expand=True, ipady=4)
 
         # Fila 2: Descripción

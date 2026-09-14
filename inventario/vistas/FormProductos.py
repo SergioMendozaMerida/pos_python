@@ -93,8 +93,11 @@ class FormProductos(tk.Toplevel):
         self.entry_categoria = ttk.Combobox(
             col_cat_frame,
             font=("Segoe UI", 10),
-            values=self.categorias
+            values=self.categorias,
+            state='readonly'
         )
+        if self.categorias:
+            self.entry_categoria.current(0)
         self.entry_categoria.pack(fill="both", expand=True, ipady=4)
 
         tk.Button(
@@ -107,7 +110,7 @@ class FormProductos(tk.Toplevel):
             bd=0,
             cursor="hand2",
             pady=8,
-            command=self.abrir_frame_categoria
+            command=self.abrir_frame_categoria,
         ).pack(fill="x", pady=(10, 0))
 
         col_pres_frame = tk.Frame(row2_frame, bg=self.color_fondo)
