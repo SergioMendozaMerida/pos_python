@@ -1,5 +1,6 @@
 import ctypes
 import tkinter as tk
+import customtkinter as ctk
 from tkinter import messagebox
 import inventario.vistas.VentanaInventario as vi
 import ventas.vistas.VentanaVentas as Vv
@@ -16,6 +17,7 @@ import egresos.VentanaEgresos as VE
 import caja.VentanaSesionesCaja as VSC
 import caja.caja as Caja
 import licencia.Licenciamiento as Licenciamiento
+from PIL import Image
 
 myappid = 'anabel.pos.1.0'
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
@@ -40,6 +42,15 @@ class VentanaPrincipal(tk.Tk):
 
         self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
         self.login_frame.pack(fill="both", expand=True)
+
+        imagen_inventory = Image.open("assets/icons/inventory.png")
+
+        self.icon_inventory = ctk.CTkImage(
+            light_image=imagen_inventory,
+            dark_image=imagen_inventory,
+            size=(20,20)
+        )
+
         
     def dibujar_frames(self):
 
@@ -72,118 +83,117 @@ class VentanaPrincipal(tk.Tk):
         self.frm_menu_bar.pack(fill="x")
         self.frm_menu_bar.pack_propagate(False) # Mantiene el alto fijo
 
-        # Estilo para los botones: flat, sin bordes gruesos y con cursor de mano
-        # Cambia "flat": True por "relief": "flat"
+        # Estilo para los botones en CustomTkinter
         self.btn_style = {
-            "bg": button_color,
-            "fg": text_color,
-            "activebackground": "#1abc9c",
-            "activeforeground": "white",
-            "relief": "flat",    # <--- Esta es la opción correcta
-            "bd": 0,             # Border width en 0 refuerza el efecto flat
-            "padx": 15,
-            "font": ("Segoe UI", 10, "bold"),
+            "fg_color": "#34495e",
+            "text_color": "#ffffff",
+            "hover_color": "#1abc9c",
+            "corner_radius": 6,
+            "font": ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+            "height": 36,
             "cursor": "hand2"
         }
 
         # Botón Inventario
-        self.btn_inventario = tk.Button(
+        self.btn_inventario = ctk.CTkButton(
             self.frm_menu_bar, 
-            text="📦 Inventario", 
-            command=lambda: self.draw_frames(self.inventario,  self.btn_inventario),
+            text="Inventario",
+            image=self.icon_inventory,
+            command=lambda: self.draw_frames(self.inventario, self.btn_inventario),
             **self.btn_style
         )
-        self.btn_inventario.pack(side="left", fill="y", padx=2)
+        self.btn_inventario.pack(side="left", padx=3, pady=7)
 
         # Botón Ventas
-        self.btn_ventas = tk.Button(
-            self.frm_menu_bar, 
+        self.btn_ventas = ctk.CTkButton(
+            self.frm_menu_bar,
             text="💰 Ventas", 
             command=lambda: self.draw_frames(self.ventas, self.btn_ventas),
             **self.btn_style
         )
-        self.btn_ventas.pack(side="left", fill="y", padx=2)
+        self.btn_ventas.pack(side="left", padx=3, pady=7)
 
         # Botón Reporte de Ventas
-        self.btn_reporte_ventas = tk.Button(
+        self.btn_reporte_ventas = ctk.CTkButton(
             self.frm_menu_bar, 
             text="📊 R. Ventas", 
             command=lambda: self.draw_frames(self.ventana_reporte_ventas, self.btn_reporte_ventas),
             **self.btn_style
         )
-        self.btn_reporte_ventas.pack(side="left", fill="y", padx=2)
+        self.btn_reporte_ventas.pack(side="left", padx=3, pady=7)
 
-        self.btn_recibos = tk.Button(
+        self.btn_recibos = ctk.CTkButton(
             self.frm_menu_bar, 
             text="🧾 Recibos", 
             command=lambda: self.draw_frames(self.recibos, self.btn_recibos),
             **self.btn_style
         )
-        self.btn_recibos.pack(side="left", fill="y", padx=2)
+        self.btn_recibos.pack(side="left", padx=3, pady=7)
 
-        self.btn_ingresos_stock = tk.Button(
+        self.btn_ingresos_stock = ctk.CTkButton(
             self.frm_menu_bar,
             text="📥 I. Stock", 
             command=lambda: self.draw_frames(self.ingresos_stock, self.btn_ingresos_stock),
             **self.btn_style
         )
-        self.btn_ingresos_stock.pack(side="left", fill="y", padx=2)
+        self.btn_ingresos_stock.pack(side="left", padx=3, pady=7)
 
-        self.btn_egresos = tk.Button(
+        self.btn_egresos = ctk.CTkButton(
             self.frm_menu_bar,
             text="💸 Egresos", 
             command=lambda: self.draw_frames(self.ventana_egresos, self.btn_egresos),
             **self.btn_style
         )
-        self.btn_egresos.pack(side="left", fill="y", padx=2)
+        self.btn_egresos.pack(side="left", padx=3, pady=7)
 
-        self.btn_sesiones_caja = tk.Button(
+        self.btn_sesiones_caja = ctk.CTkButton(
             self.frm_menu_bar,
             text="🏧 Sesiones Caja", 
             command=lambda: self.draw_frames(self.ventana_sesiones_caja, self.btn_sesiones_caja),
             **self.btn_style
         )
-        self.btn_sesiones_caja.pack(side="left", fill="y", padx=2)
+        self.btn_sesiones_caja.pack(side="left", padx=3, pady=7)
 
         # Botón Datos de Empresa
-        self.btn_datos_empresa = tk.Button(
+        self.btn_datos_empresa = ctk.CTkButton(
             self.frm_menu_bar, 
             text="🏢 Empresa", 
             command=lambda: self.draw_frames(self.datos_empresa, self.btn_datos_empresa),
             **self.btn_style
         )
-        self.btn_datos_empresa.pack(side="left", fill="y", padx=2)
+        self.btn_datos_empresa.pack(side="left", padx=3, pady=7)
         
         if self.usuario.rol == "admin":
 
             # Botón Usuarios
-            self.btn_usuarios = tk.Button(
+            self.btn_usuarios = ctk.CTkButton(
                 self.frm_menu_bar, 
                 text="👥 Usuarios", 
                 command=lambda: self.draw_frames(self.admin_usuarios, self.btn_usuarios),
                 **self.btn_style
             )
-            self.btn_usuarios.pack(side="left", fill="y", padx=2)
+            self.btn_usuarios.pack(side="left", padx=3, pady=7)
 
         # Botón Términos y Condiciones
-        self.btn_terminos = tk.Button(
+        self.btn_terminos = ctk.CTkButton(
             self.frm_menu_bar, 
             text="ℹ️", 
+            width=40,
             command=lambda: self.draw_frames(self.terminos_condiciones, self.btn_terminos),
             **self.btn_style
         )
-        self.btn_terminos.pack(side="left", fill="y", padx=2)
+        self.btn_terminos.pack(side="left", padx=3, pady=7)
 
         # Botón Cerrar Sesión (Alineado a la derecha)
-        self.btn_logout = tk.Button(
+        self.btn_logout = ctk.CTkButton(
             self.frm_menu_bar, 
             text="🚪 Cerrar", 
             command=self.cerrar_sesion,
             **self.btn_style
         )
         # Personalización de color para resaltar la acción de salida
-        self.btn_logout.configure(bg="#a93226", activebackground="#e74c3c")
-        self.btn_logout.pack(side="right", fill="y", padx=5)
+        self.btn_logout.configure(fg_color="#a93226", hover_color="#e74c3c")
+        self.btn_logout.pack(side="right", padx=6, pady=7)
 
         self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos, self.datos_empresa, 
                        self.admin_usuarios, self.ingresos_stock, self.ventana_egresos, self.ventana_sesiones_caja, self.terminos_condiciones]
@@ -218,11 +228,14 @@ class VentanaPrincipal(tk.Tk):
         # Resetear el estilo de todos los botones
         for btn in self.botones:
             if btn:
-                btn.configure(**self.btn_style)
+                if btn == self.btn_logout:
+                    btn.configure(fg_color="#a93226")
+                else:
+                    btn.configure(fg_color="#34495e")
 
         # Aplicar estilo al botón activo
         if boton:
-            boton.configure(bg="#1abc9c", activebackground="#1abc9c")
+            boton.configure(fg_color="#1abc9c")
 
 ventana = VentanaPrincipal()
 ventana.mainloop()
