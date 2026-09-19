@@ -3,6 +3,7 @@ from tkinter import messagebox
 import customtkinter as ctk
 import login.login as lg
 from PIL import Image, ImageTk
+from assets.icons.AnabellIcons import AnabellIcons
 
 class LoginFrame(ctk.CTkFrame):
     def __init__(self, parent, dibujar_frames):
@@ -40,6 +41,16 @@ class LoginFrame(ctk.CTkFrame):
             pass
 
         self.login = lg.Login()
+        #self.iconos = AbI.AnabellIcons()
+
+        #creando imagenes
+        #self.icon_user = self.obtener_imagen("assets/icons/user.png")
+        self.icon_user = AnabellIcons.obtener_imagen('user')
+        self.icon_password = AnabellIcons.obtener_imagen('password')
+        self.icon_login = AnabellIcons.obtener_imagen('login')
+
+        #self.icon_password = self.iconos.obtener_imagen('password')
+        #self.icon_login = self.iconos.obtener_imagen('login')
 
         # Grid principal para centrar la tarjeta de login
         self.grid_rowconfigure(0, weight=1)
@@ -70,7 +81,7 @@ class LoginFrame(ctk.CTkFrame):
 
         ctk.CTkLabel(
             self.header_login, 
-            text="ACCESO AL SISTEMA", 
+            text="INICIO DE SESIÓN", 
             font=ctk.CTkFont(family="Segoe UI", size=16, weight="bold"), 
             text_color="white"
         ).pack(pady=18, padx=40)
@@ -86,10 +97,12 @@ class LoginFrame(ctk.CTkFrame):
         # Usuario
         ctk.CTkLabel(
             self.form_container, 
-            text="Usuario", 
+            text="  Usuario", 
+            image=self.icon_user,
+            compound="left",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"), 
             text_color=self.color_texto
-        ).pack(anchor="w", pady=(0, 4))
+        ).pack(anchor="w", pady=(0, 6))
         
         self.entry_usuario = ctk.CTkEntry(
             self.form_container, 
@@ -103,10 +116,12 @@ class LoginFrame(ctk.CTkFrame):
         # Contraseña
         ctk.CTkLabel(
             self.form_container, 
-            text="Contraseña", 
+            text="  Contraseña", 
+            image=self.icon_password,
+            compound="left",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"), 
             text_color=self.color_texto
-        ).pack(anchor="w", pady=(0, 4))
+        ).pack(anchor="w", pady=(0, 6))
         
         self.entry_contrasena = ctk.CTkEntry(
             self.form_container, 
@@ -121,10 +136,11 @@ class LoginFrame(ctk.CTkFrame):
         # Botón Entrar
         self.btn_login = ctk.CTkButton(
             self.form_container, 
-            text="Entrar", 
+            text="Entrar",
+            image=self.icon_login,
             font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold"), 
-            fg_color=self.color_primario, 
-            hover_color="#0769b5",
+            fg_color="#01b11e", 
+            hover_color="#2cff60",
             text_color="white", 
             height=44,
             command=self.login_attempt
@@ -134,6 +150,17 @@ class LoginFrame(ctk.CTkFrame):
         self.entry_usuario.focus()
         self.entry_usuario.bind("<Return>", lambda event: self.entry_contrasena.focus())
         self.entry_contrasena.bind("<Return>", lambda event: self.login_attempt())
+
+    def obtener_imagen(self, ruta):  
+        try:
+            archivo = Image.open(ruta)
+            return ctk.CTkImage(
+                light_image=archivo,
+                dark_image=archivo,
+                size=(18, 18)
+            )
+        except Exception:
+            return None
 
     def login_attempt(self):
         username = self.entry_usuario.get()

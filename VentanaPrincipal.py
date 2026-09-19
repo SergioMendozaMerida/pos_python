@@ -43,15 +43,26 @@ class VentanaPrincipal(tk.Tk):
         self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
         self.login_frame.pack(fill="both", expand=True)
 
-        imagen_inventory = Image.open("assets/icons/inventory.png")
+        self.icon_inventory = self.obtener_imagen("assets/icons/inventory.png")
+        self.icon_shoping = self.obtener_imagen("assets/icons/shopping.png")
+        self.icon_reports = self.obtener_imagen("assets/icons/reports.png")
+        self.icon_recibos = self.obtener_imagen("assets/icons/recibos.png")
+        self.icon_egresos = self.obtener_imagen("assets/icons/egresos.png")
+        self.icon_caja = self.obtener_imagen("assets/icons/caja.png")
+        self.icon_users = self.obtener_imagen("assets/icons/users.png")
+        self.icon_settings = self.obtener_imagen("assets/icons/settings.png")
+        self.icon_info = self.obtener_imagen("assets/icons/info.png")
+        self.icon_cerrarSesion = self.obtener_imagen("assets/icons/logout.png")
 
-        self.icon_inventory = ctk.CTkImage(
-            light_image=imagen_inventory,
-            dark_image=imagen_inventory,
+    def obtener_imagen(self, ruta):  
+        archivo = Image.open(ruta)
+
+        return ctk.CTkImage(
+            light_image=archivo,
+            dark_image=archivo,
             size=(20,20)
         )
 
-        
     def dibujar_frames(self):
 
         self.resizable(True, True)
@@ -91,6 +102,7 @@ class VentanaPrincipal(tk.Tk):
             "corner_radius": 6,
             "font": ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
             "height": 36,
+            "width": 100,
             "cursor": "hand2"
         }
 
@@ -107,7 +119,8 @@ class VentanaPrincipal(tk.Tk):
         # Botón Ventas
         self.btn_ventas = ctk.CTkButton(
             self.frm_menu_bar,
-            text="💰 Ventas", 
+            text="Ventas", 
+            image=self.icon_shoping,
             command=lambda: self.draw_frames(self.ventas, self.btn_ventas),
             **self.btn_style
         )
@@ -116,7 +129,8 @@ class VentanaPrincipal(tk.Tk):
         # Botón Reporte de Ventas
         self.btn_reporte_ventas = ctk.CTkButton(
             self.frm_menu_bar, 
-            text="📊 R. Ventas", 
+            text="R. Ventas",
+            image=self.icon_reports,
             command=lambda: self.draw_frames(self.ventana_reporte_ventas, self.btn_reporte_ventas),
             **self.btn_style
         )
@@ -124,7 +138,8 @@ class VentanaPrincipal(tk.Tk):
 
         self.btn_recibos = ctk.CTkButton(
             self.frm_menu_bar, 
-            text="🧾 Recibos", 
+            text="Recibos",
+            image=self.icon_recibos, 
             command=lambda: self.draw_frames(self.recibos, self.btn_recibos),
             **self.btn_style
         )
@@ -132,7 +147,8 @@ class VentanaPrincipal(tk.Tk):
 
         self.btn_ingresos_stock = ctk.CTkButton(
             self.frm_menu_bar,
-            text="📥 I. Stock", 
+            text="R.I. Stock", 
+            image=self.icon_reports,
             command=lambda: self.draw_frames(self.ingresos_stock, self.btn_ingresos_stock),
             **self.btn_style
         )
@@ -140,7 +156,8 @@ class VentanaPrincipal(tk.Tk):
 
         self.btn_egresos = ctk.CTkButton(
             self.frm_menu_bar,
-            text="💸 Egresos", 
+            text="Egresos",
+            image=self.icon_egresos,
             command=lambda: self.draw_frames(self.ventana_egresos, self.btn_egresos),
             **self.btn_style
         )
@@ -148,7 +165,8 @@ class VentanaPrincipal(tk.Tk):
 
         self.btn_sesiones_caja = ctk.CTkButton(
             self.frm_menu_bar,
-            text="🏧 Sesiones Caja", 
+            text="Sesiones Caja",
+            image=self.icon_caja,
             command=lambda: self.draw_frames(self.ventana_sesiones_caja, self.btn_sesiones_caja),
             **self.btn_style
         )
@@ -157,7 +175,8 @@ class VentanaPrincipal(tk.Tk):
         # Botón Datos de Empresa
         self.btn_datos_empresa = ctk.CTkButton(
             self.frm_menu_bar, 
-            text="🏢 Empresa", 
+            text="Configuración",
+            image=self.icon_settings,
             command=lambda: self.draw_frames(self.datos_empresa, self.btn_datos_empresa),
             **self.btn_style
         )
@@ -168,7 +187,8 @@ class VentanaPrincipal(tk.Tk):
             # Botón Usuarios
             self.btn_usuarios = ctk.CTkButton(
                 self.frm_menu_bar, 
-                text="👥 Usuarios", 
+                text="Usuarios",
+                image=self.icon_users,
                 command=lambda: self.draw_frames(self.admin_usuarios, self.btn_usuarios),
                 **self.btn_style
             )
@@ -177,8 +197,8 @@ class VentanaPrincipal(tk.Tk):
         # Botón Términos y Condiciones
         self.btn_terminos = ctk.CTkButton(
             self.frm_menu_bar, 
-            text="ℹ️", 
-            width=40,
+            text="Info",
+            image=self.icon_info,
             command=lambda: self.draw_frames(self.terminos_condiciones, self.btn_terminos),
             **self.btn_style
         )
@@ -187,7 +207,8 @@ class VentanaPrincipal(tk.Tk):
         # Botón Cerrar Sesión (Alineado a la derecha)
         self.btn_logout = ctk.CTkButton(
             self.frm_menu_bar, 
-            text="🚪 Cerrar", 
+            text="Cerrar",
+            image=self.icon_cerrarSesion,
             command=self.cerrar_sesion,
             **self.btn_style
         )
