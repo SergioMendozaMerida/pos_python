@@ -274,29 +274,65 @@ class VentanaReporteVentas(ctk.CTkFrame):
 
         ctk.CTkLabel(
             self.frame_resumen_tabla,
-            text="Resumen",
+            text="Resumen Financiero",
             font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color=self.color_primario
-        ).grid(row=0, column=0, sticky="w", padx=15, pady=(8, 2))
+        ).grid(row=0, column=0, sticky="w", padx=15, pady=(8, 5))
 
         resumen_labels_frame = ctk.CTkFrame(self.frame_resumen_tabla, fg_color="transparent")
         resumen_labels_frame.grid(row=1, column=0, sticky="ew", padx=15, pady=(0, 10))
+        resumen_labels_frame.grid_columnconfigure(0, weight=1)
+        resumen_labels_frame.grid_columnconfigure(1, weight=1)
+
+        # Tarjeta KPI 1: Total Ventas
+        card_ventas = ctk.CTkFrame(
+            resumen_labels_frame,
+            fg_color="#f8f9fa",
+            corner_radius=8,
+            border_width=1,
+            border_color="#e2e8f0"
+        )
+        card_ventas.grid(row=0, column=0, sticky="ew", padx=(0, 8), pady=2)
+
+        ctk.CTkLabel(
+            card_ventas,
+            text="💰 TOTAL VENTAS",
+            font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+            text_color="#0984e3"
+        ).pack(anchor="w", padx=12, pady=(8, 2))
 
         self.lbl_total_ventas = ctk.CTkLabel(
-            resumen_labels_frame, 
+            card_ventas, 
             text="Total Ventas: Q 0.00", 
-            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold"), 
-            text_color=self.color_primario
+            font=ctk.CTkFont(family="Segoe UI", size=15, weight="bold"), 
+            text_color="#2c3e50"
         )
-        self.lbl_total_utilidades = ctk.CTkLabel(
-            resumen_labels_frame, 
-            text="Total Utilidades: Q 0.00", 
-            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold"), 
-            text_color=self.color_primario
-        )
+        self.lbl_total_ventas.pack(anchor="w", padx=12, pady=(0, 10))
 
-        self.lbl_total_ventas.grid(row=0, column=0, sticky="w", pady=(0, 2))
-        self.lbl_total_utilidades.grid(row=1, column=0, sticky="w", pady=(0, 2))
+        # Tarjeta KPI 2: Total Utilidades
+        card_utilidades = ctk.CTkFrame(
+            resumen_labels_frame,
+            fg_color="#f8f9fa",
+            corner_radius=8,
+            border_width=1,
+            border_color="#e2e8f0"
+        )
+        card_utilidades.grid(row=0, column=1, sticky="ew", padx=(8, 0), pady=2)
+
+        ctk.CTkLabel(
+            card_utilidades,
+            text="📈 TOTAL UTILIDADES",
+            font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+            text_color="#27ae60"
+        ).pack(anchor="w", padx=12, pady=(8, 2))
+
+        self.lbl_total_utilidades = ctk.CTkLabel(
+            card_utilidades, 
+            text="Total Utilidades: Q 0.00", 
+            font=ctk.CTkFont(family="Segoe UI", size=15, weight="bold"), 
+            text_color="#27ae60"
+        )
+        self.lbl_total_utilidades.pack(anchor="w", padx=12, pady=(0, 10))
 
         # 4. Frame Botón Exportar
         self.frame_botones_exportar = ctk.CTkFrame(self, fg_color="transparent")

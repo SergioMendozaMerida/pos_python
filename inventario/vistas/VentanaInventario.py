@@ -7,6 +7,7 @@ import inventario.vistas.EditarProducto as EP
 import inventario.vistas.FrameIngresoStock as FIS
 import categoria.FrameCategoria as FCAT
 import inventario.logica.crearReporteInventario as CRI
+from assets.icons.AnabellIcons import AnabellIcons
 
 class VentanaInventario(ctk.CTkFrame):
     def __init__(self, parent, usuario, actualizar_tabla_ingresos):
@@ -27,6 +28,14 @@ class VentanaInventario(ctk.CTkFrame):
         # Frame principal con padding
         self.main_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.main_frame.pack(fill="both", expand=True, padx=12, pady=12)
+
+        self.icon_buscar = AnabellIcons.obtener_imagen('search_inventory')
+        self.icon_add = AnabellIcons.obtener_imagen('add')
+        self.icon_editar = AnabellIcons.obtener_imagen('edit')
+        self.icon_categoria = AnabellIcons.obtener_imagen('category')
+        self.icon_export = AnabellIcons.obtener_imagen('export')
+        self.icon_agregar_stock = AnabellIcons.obtener_imagen('add_stock')
+        self.icon_borrar = AnabellIcons.obtener_imagen('delete')
 
         # Frame búsqueda
         self.frame_buscar = ctk.CTkFrame(
@@ -106,7 +115,8 @@ class VentanaInventario(ctk.CTkFrame):
 
         btn_buscar = ctk.CTkButton(
             label_frame, 
-            text="🔍 Buscar",
+            text="Buscar",
+            image=self.icon_buscar,
             fg_color=self.color_secundario,
             hover_color="#74b9ff",
             text_color="white",
@@ -208,7 +218,8 @@ class VentanaInventario(ctk.CTkFrame):
 
         self.btn_ingresar = ctk.CTkButton(
             self.frame_botones,
-            text="➕ Nuevo",
+            text="Nuevo",
+            image=self.icon_add,
             fg_color=self.color_boton,
             hover_color="#229954",
             text_color="white",
@@ -220,7 +231,8 @@ class VentanaInventario(ctk.CTkFrame):
 
         self.btn_editar = ctk.CTkButton(
             self.frame_botones,
-            text="✏️ Editar",
+            text="Editar",
+            image=self.icon_editar,
             fg_color=self.color_secundario,
             hover_color="#74b9ff",
             text_color="white",
@@ -232,7 +244,8 @@ class VentanaInventario(ctk.CTkFrame):
 
         self.btn_eliminar = ctk.CTkButton(
             self.frame_botones,
-            text="🗑️ Eliminar",
+            text="Eliminar",
+            image=self.icon_borrar,
             fg_color=self.color_cancelar,
             hover_color="#c0392b",
             text_color="white",
@@ -244,7 +257,8 @@ class VentanaInventario(ctk.CTkFrame):
 
         self.btn_categorias = ctk.CTkButton(
             self.frame_botones,
-            text="🏷️ Categorías",
+            text="Categorías",
+            image=self.icon_categoria,
             fg_color="#e67e22",
             hover_color="#d35400",
             text_color="white",
@@ -256,7 +270,8 @@ class VentanaInventario(ctk.CTkFrame):
 
         self.btn_ingreso_stock = ctk.CTkButton(
             self.frame_botones,
-            text="📦 Ingreso Stock",
+            text="Ingreso Stock",
+            image=self.icon_agregar_stock,
             fg_color="#8e44ad",
             hover_color="#71368a",
             text_color="white",
@@ -268,7 +283,8 @@ class VentanaInventario(ctk.CTkFrame):
 
         self.btn_exportar_excel = ctk.CTkButton(
             self.frame_botones,
-            text="📊 Exportar",
+            text="Exportar",
+            image=self.icon_export,
             fg_color="#16a085",
             hover_color="#117864",
             text_color="white",

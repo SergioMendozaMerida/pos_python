@@ -475,7 +475,10 @@ class VentanaRecibos(ctk.CTkFrame):
 
         item = selection[0]
         self.ruta_documentos = Path.home() / "Documents/recibos_pos"
-        os.startfile(f"{self.ruta_documentos}/recibo_{item}.pdf")
+        if os.path.exists(f"{self.ruta_documentos}/recibo_{item}.pdf"):
+            os.startfile(f"{self.ruta_documentos}/recibo_{item}.pdf")
+        else:
+            messagebox.showerror('Error', f'recibo_{item}.pdf no fue encontrado, puede ser que el archivo haya sido eliminado o cambiado de ubicación.')
 
     def exportar_recibos_excel(self):
         if not getattr(self.recibos, 'recibos', None):

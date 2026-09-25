@@ -7,6 +7,7 @@ import ventas.vistas.FrameTerminarVenta as FTV
 import caja.FrameAbrirCerrarCaja as FAC
 import caja.FrameDetalleCaja as FDC
 import ventas.vistas.FrameModificar as FM
+from assets.icons.AnabellIcons import AnabellIcons
 
 class VentanaVentas(ctk.CTkFrame):
 
@@ -29,6 +30,12 @@ class VentanaVentas(ctk.CTkFrame):
         self.primary_hover = "#74b9ff"
         self.success_color = "#00b894"
         self.danger_color = "#d63031"
+
+        self.icon_agregar_al_carrito = AnabellIcons.obtener_imagen('add_shopping')
+        self.icon_buscar = AnabellIcons.obtener_imagen('search_inventory')
+        self.icon_lock_close = AnabellIcons.obtener_imagen('lock')
+        self.icon_lock_open = AnabellIcons.obtener_imagen('lock_open')
+        self.icon_caja = AnabellIcons.obtener_imagen('caja')
 
         # Configuración de grid para el frame principal
         self.grid_columnconfigure(0, weight=1)
@@ -111,6 +118,7 @@ class VentanaVentas(ctk.CTkFrame):
         btn_buscar = ctk.CTkButton(
             search_controls_frame,
             text="Buscar",
+            image=self.icon_buscar,
             fg_color=self.primary_color,
             hover_color=self.primary_hover,
             text_color="white",
@@ -368,7 +376,8 @@ class VentanaVentas(ctk.CTkFrame):
         if not self.caja.estado:
             # Caso: Caja Cerrada -> Sugerir Apertura
             self.btn_abrir_cerrar_caja.configure(
-                text="🔓 ABRIR CAJA",
+                text="ABRIR CAJA",
+                image=self.icon_lock_open,
                 fg_color=self.success_color,
                 hover_color="#009476",
                 text_color="white",
@@ -378,7 +387,8 @@ class VentanaVentas(ctk.CTkFrame):
         else:
             # Caso: Caja Abierta -> Sugerir Cierre
             self.btn_abrir_cerrar_caja.configure(
-                text="🔒 CERRAR JORNADA",
+                text="CERRAR JORNADA",
+                image=self.icon_lock_close,
                 fg_color=self.danger_color,
                 hover_color="#b32626",
                 text_color="white",
@@ -389,7 +399,8 @@ class VentanaVentas(ctk.CTkFrame):
         self.btn_abrir_cerrar_caja.pack(fill="x", padx=10, pady=(10, 5))
 
         self.btn_ver_estado_caja.configure(
-            text="📋 VER RESUMEN DE SESIÓN",
+            text="VER RESUMEN DE SESIÓN",
+            image=self.icon_caja,
             fg_color="#2c3e50", 
             hover_color="#34495e",
             text_color="white",
@@ -512,13 +523,14 @@ class VentanaVentas(ctk.CTkFrame):
 
             btn_agregar = ctk.CTkButton(
                 action_frame,
-                text="+ Agregar",
+                text="Add",
+                image=self.icon_agregar_al_carrito,
                 fg_color=self.primary_color,
                 hover_color=self.primary_hover,
                 text_color="white",
                 font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
                 height=32,
-                width=90,
+                width=32,
                 command=lambda p=producto: self.agregar(p),
             )
             btn_agregar.pack(side="bottom", anchor="e")
