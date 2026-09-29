@@ -9,6 +9,8 @@ class FrameModificarVenta(ctk.CTkToplevel):
         self.geometry("450x540")
         self.resizable(False, False)
         self.transient(parent)
+        self.lift()
+        self.after(10, self._set_focus_and_grab)
         self.grab_set()
         self.focus_set()
 
@@ -178,6 +180,11 @@ class FrameModificarVenta(ctk.CTkToplevel):
             self.chk_box_blister.destroy()
         if info_producto["precio_caja"] <= 0:
             self.chk_box_caja.destroy()
+
+    def _set_focus_and_grab(self):
+        """Asegura el foco y bloquea la interacción con la ventana padre de forma limpia."""
+        self.grab_set()
+        self.focus_force()  # Forzar el foco de entrada en esta ventana
 
     def desactivar_opciones(self, opcion_seleccionada):
         if opcion_seleccionada.winfo_exists():

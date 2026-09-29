@@ -438,8 +438,9 @@ class VentanaVentas(ctk.CTkFrame):
             return
 
         self.carrito.agregar_producto(producto.id_producto, 1)
+        self.actualizar_stock_escaneado(producto)
         self.show_carrito()
-        self.show_productos()
+        #self.show_productos()
         self.entry_codigo.delete(0, tk.END)
         self.calcular_total()
 
@@ -455,6 +456,8 @@ class VentanaVentas(ctk.CTkFrame):
     def show_productos(self):
         for item in self.frame_item_productos.winfo_children():
             item.destroy()
+
+        self.stock_labels = {}
             
         for producto in self.inventario.productos:
             card = ctk.CTkFrame(
@@ -498,6 +501,7 @@ class VentanaVentas(ctk.CTkFrame):
                 anchor="w"
             )
             stock_label.pack(fill="x", pady=(2, 0))
+            self.stock_labels[producto.id_producto] = stock_label
 
             presentacion = producto.presentacion if producto.presentacion else "Sin presentación"
             if len(presentacion) > 25:
@@ -535,6 +539,19 @@ class VentanaVentas(ctk.CTkFrame):
             )
             btn_agregar.pack(side="bottom", anchor="e")
 
+    def actualizar_stock_escaneado(self, producto):
+    # Calcular stock restante
+        stock_actual = producto.stock
+        for pc in self.carrito.productos:
+            if pc["id_producto"] == producto.id_producto:
+                stock_actual -= pc["cantidad"]
+
+        # Actualizar texto directamente si el Label existe en pantalla
+        if producto.id_producto in self.stock_labels:
+            self.stock_labels[producto.id_producto].configure(
+                text=f"Disponible: {stock_actual} unidades"
+            )
+
     def agregar(self, producto):
         if self.caja.estado == False:
             messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
@@ -550,7 +567,8 @@ class VentanaVentas(ctk.CTkFrame):
             messagebox.showerror("Error", "Cantidad No disponible.")
             return
         self.show_carrito()
-        self.show_productos()
+        #self.show_productos()
+        self.actualizar_stock_escaneado(producto)
         self.entry_codigo.delete(0, tk.END)
         self.entry_nombre.delete(0, tk.END)
         self.entry_descripcion.delete(0, tk.END)
