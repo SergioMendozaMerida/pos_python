@@ -225,6 +225,8 @@ class VentanaPrincipal(tk.Tk):
                         self.btn_sesiones_caja, self.btn_terminos, self.btn_logout]
 
         self.draw_frames(self.ventas, self.btn_ventas)
+        self.state("zoomed")  # Maximiza la ventana al iniciar
+        #self.resizable(False, False) 
 
     def cerrar_sesion(self):
         if messagebox.askyesno("Cerrar Sesión", "¿Está seguro de que desea salir del sistema?"):

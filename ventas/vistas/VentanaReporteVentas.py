@@ -37,18 +37,21 @@ class VentanaReporteVentas(ctk.CTkFrame):
             border_width=1,
             border_color=self.color_border
         )
-        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
+        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(6, 3))
         self.frame_filtros.grid_columnconfigure(0, weight=1)
         self.frame_filtros.grid_columnconfigure(1, weight=1)
         self.frame_filtros.grid_columnconfigure(2, weight=1)
-        self.frame_filtros.grid_columnconfigure(3, weight=0)
+        self.frame_filtros.grid_columnconfigure(3, weight=1)
+        self.frame_filtros.grid_columnconfigure(4, weight=0)
+        self.frame_filtros.grid_columnconfigure(5, weight=0)
+        self.frame_filtros.grid_columnconfigure(6, weight=0)
 
         ctk.CTkLabel(
             self.frame_filtros,
             text="Filtros de Ventas",
             font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color=self.color_primario
-        ).grid(row=0, column=0, columnspan=5, sticky="w", padx=15, pady=(10, 5))
+        ).grid(row=0, column=0, columnspan=7, sticky="w", padx=15, pady=(6, 2))
 
         self.lbl_nombre_producto = ctk.CTkLabel(
             self.frame_filtros, 
@@ -68,25 +71,46 @@ class VentanaReporteVentas(ctk.CTkFrame):
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         )
-        
+
+        self.lbl_filtros_pre = ctk.CTkLabel(
+            self.frame_filtros,
+            text="Filtros predeterminados:",
+            text_color=self.color_primario,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
+        )
+
         self.entry_nombre_producto = ctk.CTkEntry(
             self.frame_filtros, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="Nombre producto...",
-            height=36
+            height=32,
+            width=150
         )
         self.entry_fecha_inicio = ctk.CTkEntry(
             self.frame_filtros, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="YYYY-MM-DD",
-            height=36
+            height=32,
+            width=125
         )
         self.entry_fecha_fin = ctk.CTkEntry(
             self.frame_filtros, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="YYYY-MM-DD",
-            height=36
+            height=32,
+            width=125
         )
+
+        self.filtros_pre = ctk.CTkComboBox(
+            self.frame_filtros,
+            font=ctk.CTkFont(family="Segoe UI", size=12),
+            values=["Todo", "Hoy", "Semana", "Mes", "Año"],
+            height=32,
+            width=140,
+            state="readonly",
+            command=self.filtrar_ventas_predeterminadas
+        )
+        self.filtros_pre.set("Todos")
         
         self.bton_buscar = ctk.CTkButton(
             self.frame_filtros, 
@@ -95,7 +119,7 @@ class VentanaReporteVentas(ctk.CTkFrame):
             hover_color="#74b9ff",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
+            height=32,
             width=95,
             command=self.filtrar_ventas
         )
@@ -106,86 +130,34 @@ class VentanaReporteVentas(ctk.CTkFrame):
             hover_color="#74b9ff",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
+            height=32,
             width=90,
             command=self.mostrar_ventas_desc
         )
 
-        self.lbl_nombre_producto.grid(row=1, column=0, sticky="w", padx=15, pady=(0, 2))
-        self.entry_nombre_producto.grid(row=2, column=0, sticky="ew", padx=(15, 5), pady=(0, 5))
-        self.lbl_fecha_inicio.grid(row=1, column=1, sticky="w", padx=5, pady=(0, 2))
-        self.entry_fecha_inicio.grid(row=2, column=1, sticky="ew", padx=5, pady=(0, 5))
-        self.lbl_fecha_fin.grid(row=1, column=2, sticky="w", padx=5, pady=(0, 2))
-        self.entry_fecha_fin.grid(row=2, column=2, sticky="ew", padx=5, pady=(0, 5))
-        self.bton_buscar.grid(row=2, column=3, sticky="ew", padx=(5, 5), pady=(0, 5))
-        self.bton_ordenar_desc.grid(row=2, column=4, sticky="ew", padx=(5, 15), pady=(0, 5))
-
-        self.frame_filtros_predeterminados = ctk.CTkFrame(self.frame_filtros, fg_color="transparent")
-        self.frame_filtros_predeterminados.grid(row=3, column=0, columnspan=5, sticky="ew", padx=15, pady=(5, 10))
-        self.frame_filtros_predeterminados.grid_columnconfigure(0, weight=1)
-        self.frame_filtros_predeterminados.grid_columnconfigure(1, weight=1)
-        self.frame_filtros_predeterminados.grid_columnconfigure(2, weight=1)
-        self.frame_filtros_predeterminados.grid_columnconfigure(3, weight=1)
-        self.frame_filtros_predeterminados.grid_columnconfigure(4, weight=1)
-
-        self.btn_ventas_hoy = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
-            text="📅 Hoy", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_ventas_hoy
-        )
-        self.btn_ventas_semana = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
-            text="📊 Semana", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_ventas_semana
-        )
-        self.btn_ventas_mes = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
-            text="📈 Mes", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_ventas_mes
-        )
-        self.btn_ventas_año = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
-            text="📑 Año", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_ventas_año
-        )
         self.btn_limpiar_filtros = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
+            self.frame_filtros,
             text="🗑️ Limpiar", 
             fg_color="#d63031", 
             hover_color="#c0392b",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
+            height=32,
+            width=100,
             command=self.limpiar_filtros
         )
 
-        self.btn_ventas_hoy.grid(row=0, column=0, sticky="ew", padx=3, pady=2)
-        self.btn_ventas_semana.grid(row=0, column=1, sticky="ew", padx=3, pady=2)
-        self.btn_ventas_mes.grid(row=0, column=2, sticky="ew", padx=3, pady=2)
-        self.btn_ventas_año.grid(row=0, column=3, sticky="ew", padx=3, pady=2)
-        self.btn_limpiar_filtros.grid(row=0, column=4, sticky="ew", padx=3, pady=2)
-
-        self.btns_filtros = [self.btn_ventas_hoy, self.btn_ventas_semana, self.btn_ventas_mes, self.btn_ventas_año]
+        self.lbl_nombre_producto.grid(row=1, column=0, sticky="w", padx=15, pady=(0, 1))
+        self.entry_nombre_producto.grid(row=2, column=0, sticky="ew", padx=(15, 5), pady=(0, 4))
+        self.lbl_fecha_inicio.grid(row=1, column=1, sticky="w", padx=5, pady=(0, 1))
+        self.entry_fecha_inicio.grid(row=2, column=1, sticky="ew", padx=5, pady=(0, 4))
+        self.lbl_fecha_fin.grid(row=1, column=2, sticky="w", padx=5, pady=(0, 1))
+        self.entry_fecha_fin.grid(row=2, column=2, sticky="ew", padx=5, pady=(0, 4))
+        self.lbl_filtros_pre.grid(row=1, column=3, sticky="w", padx=5, pady=(0, 1))
+        self.filtros_pre.grid(row=2, column=3, sticky="ew", padx=5, pady=(0, 4))
+        self.bton_buscar.grid(row=2, column=4, sticky="ew", padx=5, pady=(0, 4))
+        self.bton_ordenar_desc.grid(row=2, column=5, sticky="ew", padx=(5, 15), pady=(0, 4))
+        self.btn_limpiar_filtros.grid(row=2, column=6, sticky="ew", padx=(5, 15), pady=(0, 4))
 
         # 2. Frame Tabla
         self.frame_tabla = ctk.CTkFrame(
@@ -272,59 +244,53 @@ class VentanaReporteVentas(ctk.CTkFrame):
         self.frame_resumen_tabla.grid(row=2, column=0, sticky="ew", padx=10, pady=5)
         self.frame_resumen_tabla.grid_columnconfigure(0, weight=1)
 
-        ctk.CTkLabel(
-            self.frame_resumen_tabla,
-            text="Resumen Financiero",
-            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
-            text_color=self.color_primario
-        ).grid(row=0, column=0, sticky="w", padx=15, pady=(8, 5))
-
         resumen_labels_frame = ctk.CTkFrame(self.frame_resumen_tabla, fg_color="transparent")
-        resumen_labels_frame.grid(row=1, column=0, sticky="ew", padx=15, pady=(0, 10))
+        resumen_labels_frame.grid(row=0, column=0, sticky="ew", padx=15, pady=(6, 6))
         resumen_labels_frame.grid_columnconfigure(0, weight=1)
         resumen_labels_frame.grid_columnconfigure(1, weight=1)
+        resumen_labels_frame.grid_columnconfigure(2, weight=1)
 
         # Tarjeta KPI 1: Total Ventas
         card_ventas = ctk.CTkFrame(
             resumen_labels_frame,
-            fg_color="#f8f9fa",
+            fg_color="#e8f3ff",
             corner_radius=8,
             border_width=1,
-            border_color="#e2e8f0"
+            border_color="#74b9ff"
         )
-        card_ventas.grid(row=0, column=0, sticky="ew", padx=(0, 8), pady=2)
+        card_ventas.grid(row=0, column=0, sticky="nsew", padx=4, pady=2)
 
         ctk.CTkLabel(
             card_ventas,
             text="💰 TOTAL VENTAS",
             font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
             text_color="#0984e3"
-        ).pack(anchor="w", padx=12, pady=(8, 2))
+        ).pack(anchor="w", padx=12, pady=(4, 0))
 
         self.lbl_total_ventas = ctk.CTkLabel(
             card_ventas, 
             text="Total Ventas: Q 0.00", 
             font=ctk.CTkFont(family="Segoe UI", size=15, weight="bold"), 
-            text_color="#2c3e50"
+            text_color="#174a6e"
         )
-        self.lbl_total_ventas.pack(anchor="w", padx=12, pady=(0, 10))
+        self.lbl_total_ventas.pack(anchor="w", padx=12, pady=(0, 4))
 
         # Tarjeta KPI 2: Total Utilidades
         card_utilidades = ctk.CTkFrame(
             resumen_labels_frame,
-            fg_color="#f8f9fa",
+            fg_color="#e8f7ed",
             corner_radius=8,
             border_width=1,
-            border_color="#e2e8f0"
+            border_color="#70c58a"
         )
-        card_utilidades.grid(row=0, column=1, sticky="ew", padx=(8, 0), pady=2)
+        card_utilidades.grid(row=0, column=1, sticky="nsew", padx=4, pady=2)
 
         ctk.CTkLabel(
             card_utilidades,
             text="📈 TOTAL UTILIDADES",
             font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
-            text_color="#27ae60"
-        ).pack(anchor="w", padx=12, pady=(8, 2))
+            text_color="#176b38"
+        ).pack(anchor="w", padx=12, pady=(4, 0))
 
         self.lbl_total_utilidades = ctk.CTkLabel(
             card_utilidades, 
@@ -332,12 +298,19 @@ class VentanaReporteVentas(ctk.CTkFrame):
             font=ctk.CTkFont(family="Segoe UI", size=15, weight="bold"), 
             text_color="#27ae60"
         )
-        self.lbl_total_utilidades.pack(anchor="w", padx=12, pady=(0, 10))
+        self.lbl_total_utilidades.pack(anchor="w", padx=12, pady=(0, 4))
 
-        # 4. Frame Botón Exportar
-        self.frame_botones_exportar = ctk.CTkFrame(self, fg_color="transparent")
-        self.frame_botones_exportar.grid(row=3, column=0, sticky="ew", padx=10, pady=(2, 10))
+        # 4. Frame Botón Exportar integrado al resumen
+        self.frame_botones_exportar = ctk.CTkFrame(
+            resumen_labels_frame,
+            fg_color="#eef6ff",
+            corner_radius=8,
+            border_width=1,
+            border_color=self.color_border
+        )
+        self.frame_botones_exportar.grid(row=0, column=2, sticky="nsew", padx=4, pady=2)
         self.frame_botones_exportar.grid_columnconfigure(0, weight=1)
+        self.frame_botones_exportar.grid_rowconfigure(0, weight=1)
 
         self.btn_exportar_excel = ctk.CTkButton(
             self.frame_botones_exportar, 
@@ -346,11 +319,11 @@ class VentanaReporteVentas(ctk.CTkFrame):
             hover_color="#229954",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=40,
+            height=32,
             command=self.generar_reporte_excel
         )
 
-        self.btn_exportar_excel.grid(row=0, column=0, sticky="ew")
+        self.btn_exportar_excel.grid(row=0, column=0, sticky="nsew", padx=8, pady=5)
 
         self.mostrar_ventas(self.reporte_ventas.ventas)
 
@@ -428,6 +401,7 @@ class VentanaReporteVentas(ctk.CTkFrame):
         self.nombre_reporte = f"{self.hoy} - reporte ventas"
 
     def filtrar_ventas(self):
+        self.filtros_pre.set("Todo")
         nombre_producto = self.entry_nombre_producto.get()
         fecha_inicio = self.entry_fecha_inicio.get()
         fecha_fin = self.entry_fecha_fin.get()
@@ -438,18 +412,12 @@ class VentanaReporteVentas(ctk.CTkFrame):
         self.crear_reporte_ventas.set_nombre(f"{nombre_producto} - {fecha_inicio} a {fecha_fin} reporte")
 
     def filtrar_ventas_hoy(self):
-        self.limpiar_botones_filtros()
-        self.btn_ventas_hoy.configure(fg_color=self.color_btn_filtro_seleccionado)
-
         self.reporte_ventas.filtrar_ventas(datetime.date.today(), datetime.date.today(), "")
 
         self.mostrar_ventas(self.reporte_ventas.ventas)
         self.crear_reporte_ventas.set_nombre(f"{self.hoy} - Reporte Diario")
 
     def filtrar_ventas_semana(self):
-        self.limpiar_botones_filtros()
-        self.btn_ventas_semana.configure(fg_color=self.color_btn_filtro_seleccionado)
-
         hoy = datetime.date.today()
         inicio_semana = hoy - datetime.timedelta(days=hoy.weekday())
         fin_semana = inicio_semana + datetime.timedelta(days=6)
@@ -458,9 +426,6 @@ class VentanaReporteVentas(ctk.CTkFrame):
         self.crear_reporte_ventas.set_nombre(f"{inicio_semana} a {fin_semana} - Reporte Semanal")
 
     def filtrar_ventas_mes(self):
-        self.limpiar_botones_filtros()
-        self.btn_ventas_mes.configure(fg_color=self.color_btn_filtro_seleccionado)
-
         hoy = datetime.date.today()
         inicio_mes = hoy.replace(day=1)
         if hoy.month == 12:
@@ -478,9 +443,6 @@ class VentanaReporteVentas(ctk.CTkFrame):
         self.crear_reporte_ventas.set_nombre(f"{anio} - {nombre_mes} - Reporte Mensual")
 
     def filtrar_ventas_año(self):
-        self.limpiar_botones_filtros()
-        self.btn_ventas_año.configure(fg_color=self.color_btn_filtro_seleccionado)
-
         incio_año = datetime.date(datetime.date.today().year, 1, 1)
         fin_año = datetime.date(datetime.date.today().year, 12, 31)
         self.reporte_ventas.filtrar_ventas(incio_año, fin_año, "")
@@ -490,16 +452,22 @@ class VentanaReporteVentas(ctk.CTkFrame):
 
         self.crear_reporte_ventas.set_nombre(f"{año} Reporte Anual")
 
-    def limpiar_botones_filtros(self):
-        for btn in self.btns_filtros:
-            btn.configure(fg_color=self.color_btn_filtro, text_color="white")
+    def filtrar_ventas_predeterminadas(self, filtro):
+        if filtro == "Hoy":
+            self.filtrar_ventas_hoy()
+        elif filtro == "Semana":
+            self.filtrar_ventas_semana()
+        elif filtro == "Mes":
+            self.filtrar_ventas_mes()
+        elif filtro == "Año":
+            self.filtrar_ventas_año()
+        else:
+            self.actualizar_ventas()
 
     def limpiar_filtros(self):
         self.entry_nombre_producto.delete(0, tk.END)
         self.entry_fecha_inicio.delete(0, tk.END)
         self.entry_fecha_fin.delete(0, tk.END)
-
-        self.limpiar_botones_filtros()
 
         self.reporte_ventas.obtener_ventas()
         self.mostrar_ventas(self.reporte_ventas.ventas)
