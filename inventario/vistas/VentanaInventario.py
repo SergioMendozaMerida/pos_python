@@ -38,35 +38,35 @@ class VentanaInventario(ctk.CTkFrame):
         self.icon_borrar = AnabellIcons.obtener_imagen('delete')
 
         # Frame búsqueda
-        self.frame_buscar = ctk.CTkFrame(
+        self.frame_contenedor_filtros = ctk.CTkFrame(
             self.main_frame, 
             fg_color="#ffffff",
             corner_radius=8,
             border_width=1,
             border_color=self.color_border
         )
-        self.frame_buscar.pack(fill="x", pady=(0, 12))
+        self.frame_contenedor_filtros.pack(fill="x", pady=(0, 12))
 
         ctk.CTkLabel(
-            self.frame_buscar,
+            self.frame_contenedor_filtros,
             text="Buscar Productos",
             font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color=self.color_primario
         ).pack(anchor="w", padx=15, pady=(12, 5))
 
         # Inputs y botón búsqueda
-        label_frame = ctk.CTkFrame(self.frame_buscar, fg_color="transparent")
-        label_frame.pack(fill="x", padx=15, pady=(0, 12))
+        self.frame_filtros = ctk.CTkFrame(self.frame_contenedor_filtros, fg_color="transparent")
+        self.frame_filtros.pack(fill="x", padx=15, pady=(0, 12))
 
         ctk.CTkLabel(
-            label_frame, 
+            self.frame_filtros, 
             text="Nombre:", 
             text_color=self.color_primario, 
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         ).pack(side="left", padx=(0, 5))
 
         self.entry_nombre = ctk.CTkEntry(
-            label_frame, 
+            self.frame_filtros, 
             width=200, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="Nombre...",
@@ -77,14 +77,14 @@ class VentanaInventario(ctk.CTkFrame):
         self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
 
         ctk.CTkLabel(
-            label_frame, 
+            self.frame_filtros, 
             text="Descripción:", 
             text_color=self.color_primario, 
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         ).pack(side="left", padx=(0, 5))
 
         self.entry_descripcion = ctk.CTkEntry(
-            label_frame, 
+            self.frame_filtros, 
             width=200, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="Descripción...",
@@ -95,14 +95,14 @@ class VentanaInventario(ctk.CTkFrame):
         self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
 
         ctk.CTkLabel(
-            label_frame, 
+            self.frame_filtros, 
             text="Código:", 
             text_color=self.color_cancelar, 
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         ).pack(side="left", padx=(0, 5))
 
         self.entry_codigo = ctk.CTkEntry(
-            label_frame, 
+            self.frame_filtros, 
             width=200, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="Código...",
@@ -114,7 +114,7 @@ class VentanaInventario(ctk.CTkFrame):
         self.entry_codigo.focus()
 
         btn_buscar = ctk.CTkButton(
-            label_frame, 
+            self.frame_filtros, 
             text="Buscar",
             image=self.icon_buscar,
             fg_color=self.color_secundario,

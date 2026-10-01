@@ -26,39 +26,40 @@ class VentanaIngresosStock(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
 
         # 1. FRAME DE FILTROS
-        self.frame_filtros = ctk.CTkFrame(
+        self.frame_contenedor_filtros = ctk.CTkFrame(
             self, 
             fg_color="#ffffff",
             corner_radius=8,
             border_width=1,
             border_color=self.color_border
         )
-        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
-        self.frame_filtros.grid_columnconfigure(0, weight=1)
+        self.frame_contenedor_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
+        self.frame_contenedor_filtros.grid_columnconfigure(0, weight=1)
 
         ctk.CTkLabel(
-            self.frame_filtros,
+            self.frame_contenedor_filtros,
             text="Filtros de Ingresos de Stock",
             font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color=self.color_primario
         ).grid(row=0, column=0, sticky="w", padx=15, pady=(10, 8))
 
         # Fila horizontal única para los 4 campos y el botón buscar
-        filters_row = ctk.CTkFrame(self.frame_filtros, fg_color="transparent")
-        filters_row.grid(row=1, column=0, sticky="ew", padx=15, pady=(0, 5))
-        filters_row.grid_columnconfigure((0, 1, 2, 3), weight=1)
-        filters_row.grid_columnconfigure(4, weight=0)
+        self.frame_filtros = ctk.CTkFrame(self.frame_contenedor_filtros, fg_color="transparent")
+        self.frame_filtros.grid(row=1, column=0, sticky="ew", padx=15, pady=(0, 5))
+        self.frame_filtros.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
+        self.frame_filtros.grid_columnconfigure(5, weight=0)
+        self.frame_filtros.grid_columnconfigure(6, weight=0)
 
         # 1. Producto
         ctk.CTkLabel(
-            filters_row, 
+            self.frame_filtros, 
             text="Producto:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         ).grid(row=0, column=0, sticky="w", padx=(0, 5), pady=(0, 2))
         
         self.entry_producto = ctk.CTkEntry(
-            filters_row, 
+            self.frame_filtros, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="Nombre producto...",
             height=36
@@ -67,14 +68,14 @@ class VentanaIngresosStock(ctk.CTkFrame):
 
         # 2. Proveedor
         ctk.CTkLabel(
-            filters_row, 
+            self.frame_filtros, 
             text="Proveedor:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         ).grid(row=0, column=1, sticky="w", padx=(0, 5), pady=(0, 2))
         
         self.entry_proveedor = ctk.CTkEntry(
-            filters_row, 
+            self.frame_filtros, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="Proveedor...",
             height=36
@@ -83,14 +84,14 @@ class VentanaIngresosStock(ctk.CTkFrame):
 
         # 3. Fecha Inicio
         ctk.CTkLabel(
-            filters_row, 
+            self.frame_filtros, 
             text="Fecha inicio:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         ).grid(row=0, column=2, sticky="w", padx=(0, 5), pady=(0, 2))
         
         self.entry_fecha_inicio = ctk.CTkEntry(
-            filters_row, 
+            self.frame_filtros, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="YYYY-MM-DD",
             height=36
@@ -99,14 +100,14 @@ class VentanaIngresosStock(ctk.CTkFrame):
 
         # 4. Fecha Fin
         ctk.CTkLabel(
-            filters_row, 
+            self.frame_filtros, 
             text="Fecha fin:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         ).grid(row=0, column=3, sticky="w", padx=(0, 5), pady=(0, 2))
         
         self.entry_fecha_fin = ctk.CTkEntry(
-            filters_row, 
+            self.frame_filtros, 
             font=ctk.CTkFont(family="Segoe UI", size=12),
             placeholder_text="YYYY-MM-DD",
             height=36
@@ -115,7 +116,7 @@ class VentanaIngresosStock(ctk.CTkFrame):
 
         # 5. Botón Buscar
         self.btn_buscar = ctk.CTkButton(
-            filters_row, 
+            self.frame_filtros, 
             text="🔍 Buscar", 
             fg_color=self.color_secundario, 
             hover_color="#74b9ff",
@@ -125,7 +126,7 @@ class VentanaIngresosStock(ctk.CTkFrame):
             width=100,
             command=self.filtrar_ingresos
         )
-        self.btn_buscar.grid(row=1, column=4, sticky="e")
+        self.btn_buscar.grid(row=1, column=5, sticky="ew", padx=3)
 
         # Eventos Enter para buscar
         self.entry_producto.bind("<Return>", lambda e: self.filtrar_ingresos())
@@ -133,61 +134,33 @@ class VentanaIngresosStock(ctk.CTkFrame):
         self.entry_fecha_inicio.bind("<Return>", lambda e: self.filtrar_ingresos())
         self.entry_fecha_fin.bind("<Return>", lambda e: self.filtrar_ingresos())
 
-        # BOTONES PREDETERMINADOS
-        self.frame_filtros_pre = ctk.CTkFrame(self.frame_filtros, fg_color="transparent")
-        self.frame_filtros_pre.grid(row=2, column=0, sticky="ew", padx=15, pady=(5, 10))
-        self.frame_filtros_pre.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
+        self.lbl_filtros_pre = ctk.CTkLabel(
+            self.frame_filtros,
+            text="Filtros predeterminados:",
+            text_color=self.color_primario,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
+        )
+        self.lbl_filtros_pre.grid(row=0, column=4, sticky="w", padx=3, pady=(0, 2))
 
-        self.btn_hoy = ctk.CTkButton(
-            self.frame_filtros_pre, 
-            text="📅 Hoy", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+        self.filtros_pre = ctk.CTkComboBox(
+            self.frame_filtros,
+            font=ctk.CTkFont(family="Segoe UI", size=12),
+            values=["Todo", "Hoy", "Semana", "Mes", "Año"],
             height=36,
-            command=self.filtrar_hoy
+            state="readonly",
+            command=lambda valor: {
+                "Todo": self.limpiar_filtros,
+                "Hoy": self.filtrar_hoy,
+                "Semana": self.filtrar_semana,
+                "Mes": self.filtrar_mes,
+                "Año": self.filtrar_anio
+            }[valor]()
         )
-        self.btn_hoy.grid(row=0, column=0, sticky="ew", padx=3, pady=2)
-        
-        self.btn_semana = ctk.CTkButton(
-            self.frame_filtros_pre, 
-            text="📊 Semana", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_semana
-        )
-        self.btn_semana.grid(row=0, column=1, sticky="ew", padx=3, pady=2)
-
-        self.btn_mes = ctk.CTkButton(
-            self.frame_filtros_pre, 
-            text="📈 Mes", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_mes
-        )
-        self.btn_mes.grid(row=0, column=2, sticky="ew", padx=3, pady=2)
-
-        self.btn_anio = ctk.CTkButton(
-            self.frame_filtros_pre, 
-            text="📑 Año", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_anio
-        )
-        self.btn_anio.grid(row=0, column=3, sticky="ew", padx=3, pady=2)
+        self.filtros_pre.set("Todo")
+        self.filtros_pre.grid(row=1, column=4, sticky="ew", padx=3)
 
         self.btn_limpiar = ctk.CTkButton(
-            self.frame_filtros_pre, 
+            self.frame_filtros, 
             text="🗑️ Limpiar", 
             fg_color=self.color_cancelar, 
             hover_color="#c0392b",
@@ -196,9 +169,7 @@ class VentanaIngresosStock(ctk.CTkFrame):
             height=36,
             command=self.limpiar_filtros
         )
-        self.btn_limpiar.grid(row=0, column=4, sticky="ew", padx=3, pady=2)
-
-        self.btns_filtros = [self.btn_hoy, self.btn_semana, self.btn_mes, self.btn_anio]
+        self.btn_limpiar.grid(row=1, column=6, sticky="ew", padx=3)
 
         # 2. FRAME TABLA
         self.frame_tabla = ctk.CTkFrame(
@@ -277,6 +248,7 @@ class VentanaIngresosStock(ctk.CTkFrame):
         self.frame_botones_opciones = ctk.CTkFrame(self, fg_color="transparent")
         self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=10, pady=(2, 10))
         self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
+        self.frame_botones_opciones.grid_columnconfigure(1, weight=0)
 
         self.btn_exportar_ingresos_excel = ctk.CTkButton(
             self.frame_botones_opciones,
@@ -285,10 +257,11 @@ class VentanaIngresosStock(ctk.CTkFrame):
             hover_color="#229954",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=40,
+            height=36,
+            width=180,
             command=self.exportar_ingresos_excel
         )
-        self.btn_exportar_ingresos_excel.grid(row=0, column=0, sticky="ew")
+        self.btn_exportar_ingresos_excel.grid(row=0, column=1, sticky="e")
 
         self.actualizar_tabla()
 
@@ -319,14 +292,12 @@ class VentanaIngresosStock(ctk.CTkFrame):
 
         self.registros.filtrar_ingresos(producto, proveedor, f_inicio, f_fin)
         self.mostrar_ingresos()
-        self.limpiar_botones_estilo()
 
     def filtrar_hoy(self):
         self.limpiar_filtros_entries()
         hoy = datetime.date.today().strftime("%Y-%m-%d")
         self.registros.filtrar_ingresos("", "", hoy, hoy)
         self.mostrar_ingresos()
-        self.resaltar_boton(self.btn_hoy)
 
     def filtrar_semana(self):
         self.limpiar_filtros_entries()
@@ -335,7 +306,6 @@ class VentanaIngresosStock(ctk.CTkFrame):
         fin = hoy.strftime("%Y-%m-%d")
         self.registros.filtrar_ingresos("", "", inicio, fin)
         self.mostrar_ingresos()
-        self.resaltar_boton(self.btn_semana)
 
     def filtrar_mes(self):
         self.limpiar_filtros_entries()
@@ -343,18 +313,15 @@ class VentanaIngresosStock(ctk.CTkFrame):
         inicio = hoy.replace(day=1).strftime("%Y-%m-%d")
         self.registros.filtrar_ingresos("", "", inicio, "")
         self.mostrar_ingresos()
-        self.resaltar_boton(self.btn_mes)
 
     def filtrar_anio(self):
         self.limpiar_filtros_entries()
         inicio = datetime.date(datetime.date.today().year, 1, 1).strftime("%Y-%m-%d")
         self.registros.filtrar_ingresos("", "", inicio, "")
         self.mostrar_ingresos()
-        self.resaltar_boton(self.btn_anio)
 
     def limpiar_filtros(self):
         self.limpiar_filtros_entries()
-        self.limpiar_botones_estilo()
         self.actualizar_tabla()
 
     def limpiar_filtros_entries(self):
@@ -362,14 +329,6 @@ class VentanaIngresosStock(ctk.CTkFrame):
         self.entry_proveedor.delete(0, tk.END)
         self.entry_fecha_inicio.delete(0, tk.END)
         self.entry_fecha_fin.delete(0, tk.END)
-
-    def resaltar_boton(self, btn_target):
-        self.limpiar_botones_estilo()
-        btn_target.configure(fg_color=self.color_btn_filtro_seleccionado)
-
-    def limpiar_botones_estilo(self):
-        for btn in self.btns_filtros:
-            btn.configure(fg_color=self.color_btn_filtro, text_color="white")
 
     def exportar_ingresos_excel(self):
         if not self.registros.ingresos:

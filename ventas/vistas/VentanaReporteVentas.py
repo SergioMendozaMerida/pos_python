@@ -30,14 +30,25 @@ class VentanaReporteVentas(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
 
         # 1. Frame Filtros
-        self.frame_filtros = ctk.CTkFrame(
+        self.frame_contenedor_filtros = ctk.CTkFrame(
             self, 
             fg_color="#ffffff",
             corner_radius=8,
             border_width=1,
             border_color=self.color_border
         )
-        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(6, 3))
+        self.frame_contenedor_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(6, 3))
+        self.frame_contenedor_filtros.grid_columnconfigure(0, weight=1)
+
+        ctk.CTkLabel(
+            self.frame_contenedor_filtros,
+            text="Filtros de Ventas",
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
+            text_color=self.color_primario
+        ).grid(row=0, column=0, sticky="w", padx=15, pady=(6, 2))
+
+        self.frame_filtros = ctk.CTkFrame(self.frame_contenedor_filtros, fg_color="transparent")
+        self.frame_filtros.grid(row=1, column=0, sticky="ew", padx=15, pady=(0, 4))
         self.frame_filtros.grid_columnconfigure(0, weight=1)
         self.frame_filtros.grid_columnconfigure(1, weight=1)
         self.frame_filtros.grid_columnconfigure(2, weight=1)
@@ -45,13 +56,6 @@ class VentanaReporteVentas(ctk.CTkFrame):
         self.frame_filtros.grid_columnconfigure(4, weight=0)
         self.frame_filtros.grid_columnconfigure(5, weight=0)
         self.frame_filtros.grid_columnconfigure(6, weight=0)
-
-        ctk.CTkLabel(
-            self.frame_filtros,
-            text="Filtros de Ventas",
-            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
-            text_color=self.color_primario
-        ).grid(row=0, column=0, columnspan=7, sticky="w", padx=15, pady=(6, 2))
 
         self.lbl_nombre_producto = ctk.CTkLabel(
             self.frame_filtros, 
@@ -407,8 +411,7 @@ class VentanaReporteVentas(ctk.CTkFrame):
         fecha_fin = self.entry_fecha_fin.get()
         self.reporte_ventas.filtrar_ventas(fecha_inicio, fecha_fin, nombre_producto)
         self.mostrar_ventas(self.reporte_ventas.ventas)
-        self.limpiar_botones_filtros()
-
+        
         self.crear_reporte_ventas.set_nombre(f"{nombre_producto} - {fecha_inicio} a {fecha_fin} reporte")
 
     def filtrar_ventas_hoy(self):

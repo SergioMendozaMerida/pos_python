@@ -31,33 +31,36 @@ class VentanaRecibos(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
 
         # 1. Frame Filtros
-        self.frame_filtros = ctk.CTkFrame(
+        self.frame_contenedor_filtros = ctk.CTkFrame(
             self, 
             fg_color="#ffffff",
             corner_radius=8,
             border_width=1,
             border_color=self.color_border
         )
-        self.frame_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
-        self.frame_filtros.grid_columnconfigure(0, weight=1)
-        self.frame_filtros.grid_columnconfigure(1, weight=1)
-        self.frame_filtros.grid_columnconfigure(2, weight=1)
-        self.frame_filtros.grid_columnconfigure(3, weight=0)
+        self.frame_contenedor_filtros.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 5))
+        self.frame_contenedor_filtros.grid_columnconfigure(0, weight=1)
 
         ctk.CTkLabel(
-            self.frame_filtros,
+            self.frame_contenedor_filtros,
             text="Filtros de Recibos",
             font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color=self.color_primario
-        ).grid(row=0, column=0, columnspan=4, sticky="w", padx=15, pady=(10, 5))
+        ).grid(row=0, column=0, sticky="w", padx=15, pady=(10, 8))
+
+        self.frame_filtros = ctk.CTkFrame(self.frame_contenedor_filtros, fg_color="transparent")
+        self.frame_filtros.grid(row=1, column=0, sticky="ew", padx=15, pady=(0, 5))
+        self.frame_filtros.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+        self.frame_filtros.grid_columnconfigure(7, weight=0)
+        self.frame_filtros.grid_columnconfigure(8, weight=0)
 
         # Labels y Entries para filtros
-        ctk.CTkLabel(
+        self.lbl_no_recibo = ctk.CTkLabel(
             self.frame_filtros, 
             text="No. Recibo:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
-        ).grid(row=1, column=0, sticky="w", padx=15, pady=(0, 2))
+        )
         
         self.entry_no_recibo = ctk.CTkEntry(
             self.frame_filtros, 
@@ -65,14 +68,13 @@ class VentanaRecibos(ctk.CTkFrame):
             placeholder_text="No. Recibo...",
             height=36
         )
-        self.entry_no_recibo.grid(row=2, column=0, sticky="ew", padx=(15, 5), pady=(0, 5))
 
-        ctk.CTkLabel(
+        self.lbl_nombre_cliente = ctk.CTkLabel(
             self.frame_filtros, 
             text="Cliente:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
-        ).grid(row=1, column=1, sticky="w", padx=5, pady=(0, 2))
+        )
         
         self.entry_nombre_cliente = ctk.CTkEntry(
             self.frame_filtros, 
@@ -80,14 +82,13 @@ class VentanaRecibos(ctk.CTkFrame):
             placeholder_text="Nombre cliente...",
             height=36
         )
-        self.entry_nombre_cliente.grid(row=2, column=1, sticky="ew", padx=5, pady=(0, 5))
-
-        ctk.CTkLabel(
+        
+        self.lbl_dpi = ctk.CTkLabel(
             self.frame_filtros, 
             text="DPI:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
-        ).grid(row=1, column=2, sticky="w", padx=5, pady=(0, 2))
+        )
         
         self.entry_dpi = ctk.CTkEntry(
             self.frame_filtros, 
@@ -95,14 +96,13 @@ class VentanaRecibos(ctk.CTkFrame):
             placeholder_text="DPI...",
             height=36
         )
-        self.entry_dpi.grid(row=2, column=2, sticky="ew", padx=(5, 15), pady=(0, 5))
-
-        ctk.CTkLabel(
+        
+        self.lbl_nit = ctk.CTkLabel(
             self.frame_filtros, 
             text="NIT:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
-        ).grid(row=3, column=0, sticky="w", padx=15, pady=(0, 2))
+        )
         
         self.entry_nit = ctk.CTkEntry(
             self.frame_filtros, 
@@ -110,14 +110,13 @@ class VentanaRecibos(ctk.CTkFrame):
             placeholder_text="NIT...",
             height=36
         )
-        self.entry_nit.grid(row=4, column=0, sticky="ew", padx=(15, 5), pady=(0, 5))
-
-        ctk.CTkLabel(
+        
+        self.lbl_fecha_inicio = ctk.CTkLabel(
             self.frame_filtros, 
             text="Fecha inicio:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
-        ).grid(row=3, column=1, sticky="w", padx=5, pady=(0, 2))
+        )
         
         self.entry_fecha_inicio = ctk.CTkEntry(
             self.frame_filtros, 
@@ -125,14 +124,13 @@ class VentanaRecibos(ctk.CTkFrame):
             placeholder_text="YYYY-MM-DD",
             height=36
         )
-        self.entry_fecha_inicio.grid(row=4, column=1, sticky="ew", padx=5, pady=(0, 5))
-
-        ctk.CTkLabel(
+        
+        self.lbl_fecha_fin = ctk.CTkLabel(
             self.frame_filtros, 
             text="Fecha fin:", 
             text_color=self.color_primario,
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
-        ).grid(row=3, column=2, sticky="w", padx=5, pady=(0, 2))
+        )
         
         self.entry_fecha_fin = ctk.CTkEntry(
             self.frame_filtros, 
@@ -140,8 +138,7 @@ class VentanaRecibos(ctk.CTkFrame):
             placeholder_text="YYYY-MM-DD",
             height=36
         )
-        self.entry_fecha_fin.grid(row=4, column=2, sticky="ew", padx=5, pady=(0, 5))
-
+        
         self.btn_buscar = ctk.CTkButton(
             self.frame_filtros, 
             text="🔍 Buscar", 
@@ -153,7 +150,6 @@ class VentanaRecibos(ctk.CTkFrame):
             width=100,
             command=self.filtrar_recibos
         )
-        self.btn_buscar.grid(row=4, column=3, sticky="ew", padx=(5, 15), pady=(0, 5))
 
         self.entry_no_recibo.bind("<Return>", lambda event: self.filtrar_recibos())
         self.entry_nombre_cliente.bind("<Return>", lambda event: self.filtrar_recibos())
@@ -162,64 +158,31 @@ class VentanaRecibos(ctk.CTkFrame):
         self.entry_fecha_inicio.bind("<Return>", lambda event: self.filtrar_recibos())
         self.entry_fecha_fin.bind("<Return>", lambda event: self.filtrar_recibos())
         
-        self.frame_filtros_predeterminados = ctk.CTkFrame(self.frame_filtros, fg_color="transparent")
-        self.frame_filtros_predeterminados.grid(row=5, column=0, columnspan=4, sticky="ew", padx=15, pady=(5, 10))
-        self.frame_filtros_predeterminados.grid_columnconfigure(0, weight=1)
-        self.frame_filtros_predeterminados.grid_columnconfigure(1, weight=1)
-        self.frame_filtros_predeterminados.grid_columnconfigure(2, weight=1)
-        self.frame_filtros_predeterminados.grid_columnconfigure(3, weight=1)
-        self.frame_filtros_predeterminados.grid_columnconfigure(4, weight=1)
-
-        self.btn_recibos_hoy = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
-            text="📅 Hoy", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_recibos_hoy
+        self.lbl_filtros_pre = ctk.CTkLabel(
+            self.frame_filtros,
+            text="Filtros predeterminados:",
+            text_color=self.color_primario,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         )
-        self.btn_recibos_hoy.grid(row=0, column=0, sticky="ew", padx=3, pady=2)
         
-        self.btn_recibos_semana = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
-            text="📊 Semana", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+        self.filtros_pre = ctk.CTkComboBox(
+            self.frame_filtros,
+            font=ctk.CTkFont(family="Segoe UI", size=12),
+            values=["Todo", "Hoy", "Semana", "Mes", "Año"],
             height=36,
-            command=self.filtrar_recibos_semana
+            state="readonly",
+            command=lambda valor: {
+                "Todo": self.limpiar_filtros,
+                "Hoy": self.filtrar_recibos_hoy,
+                "Semana": self.filtrar_recibos_semana,
+                "Mes": self.filtrar_recibos_mes,
+                "Año": self.filtrar_recibos_anio
+            }[valor]()
         )
-        self.btn_recibos_semana.grid(row=0, column=1, sticky="ew", padx=3, pady=2)
-        
-        self.btn_recibios_mes = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
-            text="📈 Mes", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_recibos_mes
-        )
-        self.btn_recibios_mes.grid(row=0, column=2, sticky="ew", padx=3, pady=2)
-        
-        self.btn_recibos_anio = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
-            text="📑 Año", 
-            fg_color=self.color_btn_filtro, 
-            hover_color="#5dade2",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=36,
-            command=self.filtrar_recibos_anio
-        )
-        self.btn_recibos_anio.grid(row=0, column=3, sticky="ew", padx=3, pady=2)
+        self.filtros_pre.set("Todo")
         
         self.btn_limpiar_filtros = ctk.CTkButton(
-            self.frame_filtros_predeterminados, 
+            self.frame_filtros, 
             text="🗑️ Limpiar", 
             fg_color=self.color_cancelar, 
             hover_color="#c0392b",
@@ -228,9 +191,23 @@ class VentanaRecibos(ctk.CTkFrame):
             height=36,
             command=self.limpiar_filtros
         )
-        self.btn_limpiar_filtros.grid(row=0, column=4, sticky="ew", padx=3, pady=2)
-
-        self.btns_filtros = [self.btn_recibos_hoy, self.btn_recibos_semana, self.btn_recibios_mes, self.btn_recibos_anio]
+        
+        self.lbl_no_recibo.grid(row=1, column=0, sticky="w", padx=(15, 5), pady=(0, 1))
+        self.entry_no_recibo.grid(row=2, column=0, sticky="ew", padx=(15, 5), pady=(0, 5))
+        self.lbl_nombre_cliente.grid(row=1, column=1, sticky="w", padx=5, pady=(0, 1))
+        self.entry_nombre_cliente.grid(row=2, column=1, sticky="ew", padx=5, pady=(0, 5))
+        self.lbl_dpi.grid(row=1, column=2, sticky="w", padx=5, pady=(0, 1))
+        self.entry_dpi.grid(row=2, column=2, sticky="ew", padx=5, pady=(0, 5))
+        self.lbl_nit.grid(row=1, column=3, sticky="w", padx=5, pady=(0, 1))
+        self.entry_nit.grid(row=2, column=3, sticky="ew", padx=5, pady=(0, 5))
+        self.lbl_fecha_inicio.grid(row=1, column=4, sticky="w", padx=5, pady=(0, 1))
+        self.entry_fecha_inicio.grid(row=2, column=4, sticky="ew", padx=5, pady=(0, 5))
+        self.lbl_fecha_fin.grid(row=1, column=5, sticky="w", padx=5, pady=(0, 1))
+        self.entry_fecha_fin.grid(row=2, column=5, sticky="ew", padx=5, pady=(0, 5))
+        self.lbl_filtros_pre.grid(row=1, column=6, sticky="w", padx=5, pady=(0, 1))
+        self.filtros_pre.grid(row=2, column=6, sticky="ew", padx=5, pady=(0, 5))
+        self.btn_buscar.grid(row=2, column=7, sticky="ew", padx=5, pady=(0, 5))
+        self.btn_limpiar_filtros.grid(row=2, column=8, sticky="ew", padx=(5, 15), pady=(0, 5))
 
         # 2. Frame Tabla Recibos
         self.frame_tabla_recibos = ctk.CTkFrame(
@@ -306,9 +283,10 @@ class VentanaRecibos(ctk.CTkFrame):
         self.frame_botones_opciones = ctk.CTkFrame(self, fg_color="transparent")
         self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=10, pady=(2, 10))
         self.frame_botones_opciones.grid_rowconfigure(0, weight=1)
-        self.frame_botones_opciones.grid_columnconfigure(0, weight=1, uniform="btns")
-        self.frame_botones_opciones.grid_columnconfigure(1, weight=1, uniform="btns")
-        self.frame_botones_opciones.grid_columnconfigure(2, weight=1, uniform="btns")
+        self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
+        self.frame_botones_opciones.grid_columnconfigure(1, weight=0)
+        self.frame_botones_opciones.grid_columnconfigure(2, weight=0)
+        self.frame_botones_opciones.grid_columnconfigure(3, weight=0)
 
         self.btn_ver_ventas = ctk.CTkButton(
             self.frame_botones_opciones, 
@@ -317,10 +295,11 @@ class VentanaRecibos(ctk.CTkFrame):
             hover_color="#74b9ff",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=40,
+            height=36,
+            width=190,
             command=self.ver_detalle
         )
-        self.btn_ver_ventas.grid(row=0, column=0, padx=(0, 3), sticky="nsew")
+        self.btn_ver_ventas.grid(row=0, column=1, padx=3, sticky="e")
         
         self.btn_ver_recibo_pdf = ctk.CTkButton(
             self.frame_botones_opciones, 
@@ -329,10 +308,11 @@ class VentanaRecibos(ctk.CTkFrame):
             hover_color="#229954",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=40,
+            height=36,
+            width=160,
             command=self.ver_recibo_pdf
         )
-        self.btn_ver_recibo_pdf.grid(row=0, column=1, padx=3, sticky="nsew")
+        self.btn_ver_recibo_pdf.grid(row=0, column=2, padx=3, sticky="e")
 
         self.btn_exportar_recibos_excel = ctk.CTkButton(
             self.frame_botones_opciones,
@@ -341,10 +321,11 @@ class VentanaRecibos(ctk.CTkFrame):
             hover_color="#117864",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=40,
+            height=36,
+            width=205,
             command=self.exportar_recibos_excel
         )
-        self.btn_exportar_recibos_excel.grid(row=0, column=2, padx=(3, 0), sticky="nsew")
+        self.btn_exportar_recibos_excel.grid(row=0, column=3, padx=(3, 0), sticky="e")
 
         self.mostrar_recibos()
 
@@ -382,11 +363,8 @@ class VentanaRecibos(ctk.CTkFrame):
         self.recibos.filtrar_recibos(no_recibo, nombre_cliente, dpi, nit, fecha_inicio, fecha_fin)
 
         self.mostrar_recibos()
-        self.limpiar_botones_filtros()
 
     def filtrar_recibos_hoy(self):
-        self.limpiar_botones_filtros()
-        self.btn_recibos_hoy.configure(fg_color=self.color_btn_filtro_seleccionado)
         
         self.limpiar_filtros()
         fecha_inicio = datetime.date.today().strftime("%Y-%m-%d")
@@ -396,8 +374,6 @@ class VentanaRecibos(ctk.CTkFrame):
         self.mostrar_recibos()
 
     def filtrar_recibos_semana(self):
-        self.limpiar_botones_filtros()
-        self.btn_recibos_semana.configure(fg_color=self.color_btn_filtro_seleccionado)
         
         self.limpiar_filtros()
 
@@ -409,8 +385,6 @@ class VentanaRecibos(ctk.CTkFrame):
         self.mostrar_recibos()
 
     def filtrar_recibos_mes(self):
-        self.limpiar_botones_filtros()
-        self.btn_recibios_mes.configure(fg_color=self.color_btn_filtro_seleccionado)
 
         self.limpiar_filtros()
         
@@ -424,10 +398,7 @@ class VentanaRecibos(ctk.CTkFrame):
         self.recibos.filtrar_recibos("", "", "", "", fecha_inicio, fecha_fin)
         self.mostrar_recibos()
 
-    def filtrar_recibos_anio(self):
-        self.limpiar_botones_filtros()
-        self.btn_recibos_anio.configure(fg_color=self.color_btn_filtro_seleccionado)
-        
+    def filtrar_recibos_anio(self):        
         self.limpiar_filtros()
 
         fecha_inicio = datetime.date(datetime.date.today().year, 1, 1)
@@ -443,13 +414,7 @@ class VentanaRecibos(ctk.CTkFrame):
         self.entry_nit.delete(0, tk.END)
         self.entry_fecha_inicio.delete(0, tk.END)
         self.entry_fecha_fin.delete(0, tk.END)
-        self.limpiar_botones_filtros()
         self.recibos.obtener_recibos()
-        self.mostrar_recibos()
-
-    def limpiar_botones_filtros(self):
-        for btn in self.btns_filtros:
-            btn.configure(fg_color=self.color_btn_filtro, text_color="white")
         self.mostrar_recibos()
 
     def ver_detalle(self):
