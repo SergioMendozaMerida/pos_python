@@ -6,6 +6,7 @@ import usuarios.FormEditarUsuario as FEU
 import usuarios.FormContrasenia as FC
 import usuarios.FormRol as FR
 import usuarios.FormUsuarioNuevo as FUN
+from assets.icons.AnabellIcons import AnabellIcons
 
 class FrameUsuarios(ctk.CTkFrame):
     def __init__(self, parent):
@@ -19,6 +20,13 @@ class FrameUsuarios(ctk.CTkFrame):
         self.color_boton = "#27ae60"
         self.color_cancelar = "#d63031"
         self.color_border = "#dfe6e9"
+
+        self.icono_agregar = AnabellIcons.obtener_imagen("add")
+        self.icono_inactivar = AnabellIcons.obtener_imagen("not")
+        self.icono_editar = AnabellIcons.obtener_imagen("edit")
+        self.icono_activar = AnabellIcons.obtener_imagen("check")
+        self.icono_cambiar_password = AnabellIcons.obtener_imagen("key")
+        self.icono_cambiar_rol = AnabellIcons.obtener_imagen("role")
 
         # Configuración de pesos para que la tabla se expanda
         self.grid_rowconfigure(1, weight=1)
@@ -43,7 +51,8 @@ class FrameUsuarios(ctk.CTkFrame):
 
         self.btn_crear = ctk.CTkButton(
             self.frame_superior, 
-            text="+ Crear Nuevo Usuario", 
+            text="Crear Nuevo Usuario", 
+            image=self.icono_agregar,
             fg_color="#00b894", 
             hover_color="#009476",
             text_color="white",
@@ -128,9 +137,10 @@ class FrameUsuarios(ctk.CTkFrame):
         btn_act_font = ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
 
         self.btn_inactivar = ctk.CTkButton(
-            self.frame_acciones, 
-            text="🚫 Inactivar", 
-            fg_color="#e17055", 
+            self.frame_acciones,
+            text="Inactivar",
+            image=self.icono_inactivar,
+            fg_color="#e17055",
             hover_color="#d63031",
             text_color="white",
             font=btn_act_font,
@@ -140,9 +150,10 @@ class FrameUsuarios(ctk.CTkFrame):
         self.btn_inactivar.pack(side="left", padx=10, pady=10)
 
         self.btn_activar = ctk.CTkButton(
-            self.frame_acciones, 
-            text="✅ Activar", 
-            fg_color="#00b894", 
+            self.frame_acciones,
+            text="Activar",
+            image=self.icono_activar,
+            fg_color="#00b894",
             hover_color="#009476",
             text_color="white",
             font=btn_act_font,
@@ -153,7 +164,8 @@ class FrameUsuarios(ctk.CTkFrame):
 
         self.btn_editar = ctk.CTkButton(
             self.frame_acciones, 
-            text="✏️ Editar Datos", 
+            text="Editar Datos", 
+            image=self.icono_editar,
             fg_color=self.color_secundario, 
             hover_color="#74b9ff",
             text_color="white",
@@ -164,9 +176,10 @@ class FrameUsuarios(ctk.CTkFrame):
         self.btn_editar.pack(side="left", padx=(0, 10), pady=10)
 
         self.btn_pass = ctk.CTkButton(
-            self.frame_acciones, 
-            text="🔑 Cambiar Contraseña", 
-            fg_color="#6c5ce7", 
+            self.frame_acciones,
+            text="Cambiar Contraseña",
+            image=self.icono_cambiar_password,
+            fg_color="#6c5ce7",
             hover_color="#574b90",
             text_color="white",
             font=btn_act_font,
@@ -176,9 +189,10 @@ class FrameUsuarios(ctk.CTkFrame):
         self.btn_pass.pack(side="left", padx=(0, 10), pady=10)
 
         self.btn_rol = ctk.CTkButton(
-            self.frame_acciones, 
-            text="🛡️ Cambiar Rol", 
-            fg_color="#e67e22", 
+            self.frame_acciones,
+            text="Cambiar Rol",
+            image=self.icono_cambiar_rol,
+            fg_color="#e67e22",
             hover_color="#d35400",
             text_color="white",
             font=btn_act_font,

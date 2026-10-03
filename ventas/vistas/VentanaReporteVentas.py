@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import customtkinter as ctk
 import reportes.CrearReportes as CR
+from assets.icons.AnabellIcons import AnabellIcons
 
 class VentanaReporteVentas(ctk.CTkFrame):
     def __init__(self, parent, reporte_ventas):
@@ -28,6 +29,11 @@ class VentanaReporteVentas(ctk.CTkFrame):
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
+
+        self.icono_buscar = AnabellIcons.obtener_imagen("search_inventory")
+        self.icono_limpiar = AnabellIcons.obtener_imagen("clean")
+        self.icono_exportar = AnabellIcons.obtener_imagen("export")
+        self.icono_ordenar_desc = AnabellIcons.obtener_imagen("arrow_down")
 
         # 1. Frame Filtros
         self.frame_contenedor_filtros = ctk.CTkFrame(
@@ -105,6 +111,10 @@ class VentanaReporteVentas(ctk.CTkFrame):
             width=125
         )
 
+        self.entry_nombre_producto.bind("<Return>", lambda event: self.filtrar_ventas())
+        self.entry_fecha_inicio.bind("<Return>", lambda event: self.filtrar_ventas())
+        self.entry_fecha_fin.bind("<Return>", lambda event: self.filtrar_ventas())
+
         self.filtros_pre = ctk.CTkComboBox(
             self.frame_filtros,
             font=ctk.CTkFont(family="Segoe UI", size=12),
@@ -118,7 +128,8 @@ class VentanaReporteVentas(ctk.CTkFrame):
         
         self.bton_buscar = ctk.CTkButton(
             self.frame_filtros, 
-            text="🔍 Buscar", 
+            text="Buscar", 
+            image=self.icono_buscar,
             fg_color=self.color_secundario, 
             hover_color="#74b9ff",
             text_color="white",
@@ -129,7 +140,8 @@ class VentanaReporteVentas(ctk.CTkFrame):
         )
         self.bton_ordenar_desc = ctk.CTkButton(
             self.frame_filtros, 
-            text="⬇️ Desc", 
+            text="Desc", 
+            image=self.icono_ordenar_desc,
             fg_color=self.color_secundario, 
             hover_color="#74b9ff",
             text_color="white",
@@ -141,7 +153,8 @@ class VentanaReporteVentas(ctk.CTkFrame):
 
         self.btn_limpiar_filtros = ctk.CTkButton(
             self.frame_filtros,
-            text="🗑️ Limpiar", 
+            text="Limpiar",
+            image=self.icono_limpiar,
             fg_color="#d63031", 
             hover_color="#c0392b",
             text_color="white",
@@ -318,7 +331,8 @@ class VentanaReporteVentas(ctk.CTkFrame):
 
         self.btn_exportar_excel = ctk.CTkButton(
             self.frame_botones_exportar, 
-            text="📊 Exportar a Excel", 
+            text="Exportar a Excel", 
+            image=self.icono_exportar,
             fg_color=self.color_boton, 
             hover_color="#229954",
             text_color="white",

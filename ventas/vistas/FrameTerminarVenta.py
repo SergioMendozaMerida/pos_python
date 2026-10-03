@@ -9,6 +9,8 @@ class FrameTerminarVenta(tk.Toplevel):
         self.geometry("400x350")
         self.resizable(False, False)
         self.configure(bg="#f0f0f0")
+        self.transient(parent)
+        self.grab_set()
 
         self.carrito = carrito
         self.limpiar_carrito = limpiar_carrito
@@ -81,13 +83,6 @@ class FrameTerminarVenta(tk.Toplevel):
         except ValueError:
             self.lbl_cambio.configure(text=f"{self.entry_pago.get()} no es un número valido.")
             return False
-
-        if self.timer_id:
-            self.after_cancel(self.timer_id)
-            self.timer_id = None
-
-        cambio = float(self.entry_pago.get()) - self.carrito.total
-        self.lbl_cambio.configure(text=f"Q  {cambio:.2f}")
 
     def concretar_venta(self, event=None):
         self.carrito.concretar_venta()

@@ -4,6 +4,7 @@ import customtkinter as ctk
 import ingresos.ingresos as I
 import datetime
 import ingresos.CrearReporteIngresos as CRI
+from assets.icons.AnabellIcons import AnabellIcons
 
 class VentanaIngresosStock(ctk.CTkFrame):
     def __init__(self, parent):
@@ -21,6 +22,10 @@ class VentanaIngresosStock(ctk.CTkFrame):
 
         self.color_btn_filtro = "#0984e3"
         self.color_btn_filtro_seleccionado = "#5dade2"
+
+        self.icono_buscar = AnabellIcons.obtener_imagen("search_inventory")
+        self.icono_limpiar = AnabellIcons.obtener_imagen("clean")
+        self.icono_exportar = AnabellIcons.obtener_imagen("export")
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -116,9 +121,10 @@ class VentanaIngresosStock(ctk.CTkFrame):
 
         # 5. Botón Buscar
         self.btn_buscar = ctk.CTkButton(
-            self.frame_filtros, 
-            text="🔍 Buscar", 
-            fg_color=self.color_secundario, 
+            self.frame_filtros,
+            text="Buscar",
+            image=self.icono_buscar,
+            fg_color=self.color_secundario,
             hover_color="#74b9ff",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
@@ -160,9 +166,10 @@ class VentanaIngresosStock(ctk.CTkFrame):
         self.filtros_pre.grid(row=1, column=4, sticky="ew", padx=3)
 
         self.btn_limpiar = ctk.CTkButton(
-            self.frame_filtros, 
-            text="🗑️ Limpiar", 
-            fg_color=self.color_cancelar, 
+            self.frame_filtros,
+            text="Limpiar",
+            image=self.icono_limpiar,
+            fg_color=self.color_cancelar,
             hover_color="#c0392b",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
@@ -252,7 +259,8 @@ class VentanaIngresosStock(ctk.CTkFrame):
 
         self.btn_exportar_ingresos_excel = ctk.CTkButton(
             self.frame_botones_opciones,
-            text="📤 Exportar a Excel",
+            text="Exportar a Excel",
+            image=self.icono_exportar,
             fg_color="#27ae60",
             hover_color="#229954",
             text_color="white",

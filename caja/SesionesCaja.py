@@ -9,7 +9,7 @@ class SesionesCaja:
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("SELECT * FROM caja")
+            cursor.execute("SELECT * FROM caja ORDER BY fecha DESC")
             sesiones_db = cursor.fetchall()
             self.sesiones.clear()
             for s in sesiones_db:

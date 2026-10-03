@@ -45,8 +45,8 @@ class LoginFrame(ctk.CTkFrame):
 
         #creando imagenes
         #self.icon_user = self.obtener_imagen("assets/icons/user.png")
-        self.icon_user = AnabellIcons.obtener_imagen('user')
-        self.icon_password = AnabellIcons.obtener_imagen('password')
+        self.icon_user = AnabellIcons.obtener_imagen('user_black')
+        self.icon_password = AnabellIcons.obtener_imagen('password_black')
         self.icon_login = AnabellIcons.obtener_imagen('login')
 
         #self.icon_password = self.iconos.obtener_imagen('password')

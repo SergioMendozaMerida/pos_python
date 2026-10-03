@@ -7,6 +7,7 @@ import recibos.logica.CrearReporteRecibos as CRR
 import datetime
 import recibos.vistas.FrameDetalleRecibo as FDR
 import os
+from assets.icons.AnabellIcons import AnabellIcons
 
 class VentanaRecibos(ctk.CTkFrame):
     def __init__(self, parent):
@@ -26,6 +27,12 @@ class VentanaRecibos(ctk.CTkFrame):
 
         self.color_btn_filtro = "#0984e3"
         self.color_btn_filtro_seleccionado = "#5dade2"
+
+        self.icono_buscar = AnabellIcons.obtener_imagen("search_inventory")
+        self.icono_limpiar = AnabellIcons.obtener_imagen("clean")
+        self.icono_ver = AnabellIcons.obtener_imagen("look")
+        self.icono_ver_pdf = AnabellIcons.obtener_imagen("pdf")
+        self.icono_exportar = AnabellIcons.obtener_imagen("export")
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -141,8 +148,9 @@ class VentanaRecibos(ctk.CTkFrame):
         
         self.btn_buscar = ctk.CTkButton(
             self.frame_filtros, 
-            text="🔍 Buscar", 
-            fg_color=self.color_secundario, 
+            text="Buscar",
+            image=self.icono_buscar,
+            fg_color=self.color_secundario,
             hover_color="#74b9ff",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
@@ -183,7 +191,8 @@ class VentanaRecibos(ctk.CTkFrame):
         
         self.btn_limpiar_filtros = ctk.CTkButton(
             self.frame_filtros, 
-            text="🗑️ Limpiar", 
+            text="Limpiar", 
+            image=self.icono_limpiar,
             fg_color=self.color_cancelar, 
             hover_color="#c0392b",
             text_color="white",
@@ -290,7 +299,8 @@ class VentanaRecibos(ctk.CTkFrame):
 
         self.btn_ver_ventas = ctk.CTkButton(
             self.frame_botones_opciones, 
-            text="👁️ Ver Ventas del Recibo", 
+            text="Ver Ventas del Recibo", 
+            image=self.icono_ver,
             fg_color=self.color_secundario, 
             hover_color="#74b9ff",
             text_color="white",
@@ -303,7 +313,8 @@ class VentanaRecibos(ctk.CTkFrame):
         
         self.btn_ver_recibo_pdf = ctk.CTkButton(
             self.frame_botones_opciones, 
-            text="📄 Ver Recibo PDF", 
+            text="Ver Recibo PDF", 
+            image=self.icono_ver_pdf,
             fg_color=self.color_boton, 
             hover_color="#229954",
             text_color="white",
@@ -316,7 +327,8 @@ class VentanaRecibos(ctk.CTkFrame):
 
         self.btn_exportar_recibos_excel = ctk.CTkButton(
             self.frame_botones_opciones,
-            text="📤 Exportar Recibos a Excel",
+            text="Exportar Recibos a Excel",
+            image=self.icono_exportar,
             fg_color="#16a085",
             hover_color="#117864",
             text_color="white",

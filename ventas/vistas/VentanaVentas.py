@@ -645,7 +645,7 @@ class VentanaVentas(ctk.CTkFrame):
         frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito, self.actualizar_recibos, 
                                                self.actualizar_ventas, self.usuario, self.calcular_total)
 
-        self.show_carrito()
+        #self.show_carrito()
         
     def limpiar_carrito(self):
         for item in self.tabla_carrito.get_children():

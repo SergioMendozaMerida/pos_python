@@ -2,8 +2,10 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import customtkinter as ctk
 import caja.SesionesCaja as SC
+import caja.TablaSesionesCaja as TSC
 import datetime
 import caja.CrearReporteSesionCaja as CRSC
+from assets.icons.AnabellIcons import AnabellIcons
 
 class VentanaSesionesCaja(ctk.CTkFrame):
     def __init__(self, parent):
@@ -21,6 +23,10 @@ class VentanaSesionesCaja(ctk.CTkFrame):
 
         self.color_btn_filtro = "#0984e3"
         self.color_btn_filtro_seleccionado = "#5dade2"
+
+        self.icono_buscar = AnabellIcons.obtener_imagen("search_inventory")
+        self.icono_limpiar = AnabellIcons.obtener_imagen("clean")
+        self.icono_exportar = AnabellIcons.obtener_imagen("export")
 
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -100,9 +106,10 @@ class VentanaSesionesCaja(ctk.CTkFrame):
 
         # 4. Botón Buscar
         self.btn_buscar = ctk.CTkButton(
-            self.frame_filtros, 
-            text="🔍 Buscar", 
-            fg_color=self.color_secundario, 
+            self.frame_filtros,
+            text="Buscar",
+            image=self.icono_buscar,
+            fg_color=self.color_secundario,
             hover_color="#74b9ff",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
@@ -143,9 +150,10 @@ class VentanaSesionesCaja(ctk.CTkFrame):
         self.filtros_pre.grid(row=1, column=3, sticky="ew", padx=3)
 
         self.btn_limpiar = ctk.CTkButton(
-            self.frame_filtros, 
-            text="🗑️ Limpiar", 
-            fg_color=self.color_cancelar, 
+            self.frame_filtros,
+            text="Limpiar",
+            image=self.icono_limpiar,
+            fg_color=self.color_cancelar,
             hover_color="#c0392b",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
@@ -173,63 +181,28 @@ class VentanaSesionesCaja(ctk.CTkFrame):
             text_color=self.color_primario
         ).grid(row=0, column=0, sticky="w", padx=15, pady=(10, 5))
 
-        tabla_inner_frame = ctk.CTkFrame(self.frame_tabla, fg_color="transparent")
-        tabla_inner_frame.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
-        tabla_inner_frame.grid_rowconfigure(0, weight=1)
-        tabla_inner_frame.grid_columnconfigure(0, weight=1)
-
-        cols = ("Fecha", "Usuario", "S. Inicial", "Ventas", "Gastos", "S. Final", "Cierre", "Dif.", "Estado")
-        self.tabla_sesiones = ttk.Treeview(tabla_inner_frame, columns=cols, show="headings")
-        
-        for col in cols:
-            self.tabla_sesiones.heading(col, text=col)
-            self.tabla_sesiones.column(col, width=95, anchor="center")
-
-        style = ttk.Style()
-        style.theme_use("clam")
-
-        style.configure("Treeview",
-                        background="#ffffff",
-                        foreground="#2d3436",
-                        rowheight=34,
-                        fieldbackground="#ffffff",
-                        borderwidth=0,
-                        font=("Segoe UI", 12))
-
-        style.configure("Treeview.Heading",
-                        background="#f1f2f6",
-                        foreground="#2d3436",
-                        relief="flat",
-                        font=("Segoe UI", 12, "bold"))
-
-        style.map("Treeview", 
-                background=[('selected', "#74b9ff")],
-                foreground=[('selected', "white")])
-
-        self.scroll_y = ttk.Scrollbar(tabla_inner_frame, orient="vertical", command=self.tabla_sesiones.yview)
-        self.scroll_x = ttk.Scrollbar(tabla_inner_frame, orient="horizontal", command=self.tabla_sesiones.xview)
-        self.tabla_sesiones.configure(yscrollcommand=self.scroll_y.set, xscrollcommand=self.scroll_x.set)
-
-        self.tabla_sesiones.grid(row=0, column=0, sticky="nsew")
-        self.scroll_y.grid(row=0, column=1, sticky="ns")
-        self.scroll_x.grid(row=1, column=0, sticky="ew")
+        self.tabla_sesiones = TSC.TablaSesionesCaja(self.frame_tabla, self.logica.sesiones)
+        self.tabla_sesiones.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
 
         # 3. FRAME BOTÓN EXPORTAR
         self.frame_botones_opciones = ctk.CTkFrame(self, fg_color="transparent")
         self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=10, pady=(2, 10))
         self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
+        self.frame_botones_opciones.grid_columnconfigure(1, weight=0)
 
         self.btn_exportar_sesiones_excel = ctk.CTkButton(
             self.frame_botones_opciones,
-            text="📤 Exportar Sesiones a Excel",
+            text="Exportar Sesiones a Excel",
+            image=self.icono_exportar,
             fg_color="#27ae60",
             hover_color="#229954",
             text_color="white",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
             height=40,
+            width=180,
             command=self.exportar_sesiones_excel
         )
-        self.btn_exportar_sesiones_excel.grid(row=0, column=0, sticky="ew")
+        self.btn_exportar_sesiones_excel.grid(row=0, column=1, sticky="e")
 
         self.actualizar_tabla()
 
@@ -238,16 +211,7 @@ class VentanaSesionesCaja(ctk.CTkFrame):
         self.mostrar_sesiones()
 
     def mostrar_sesiones(self):
-        for item in self.tabla_sesiones.get_children():
-            self.tabla_sesiones.delete(item)
-
-        for s in self.logica.sesiones:
-            estado_txt = "Abierta" if s.estado else "Cerrada"
-            self.tabla_sesiones.insert("", tk.END, values=(
-                s.fecha, s.usuario, f"Q{s.saldo_inicial:,.2f}", f"Q{s.ingresos_ventas:,.2f}",
-                f"Q{s.egresos:,.2f}", f"Q{s.saldo_final:,.2f}", f"Q{s.efectivo_final:,.2f}",
-                f"Q{s.diferencia:,.2f}", estado_txt
-            ))
+        self.tabla_sesiones.actualizar(self.logica.sesiones)
 
     def filtrar_sesiones(self):
         self.logica.filtrar_sesiones(self.entry_fecha_inicio.get(), self.entry_fecha_fin.get(), self.entry_usuario.get())
