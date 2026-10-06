@@ -17,20 +17,20 @@ import egresos.VentanaEgresos as VE
 import caja.VentanaSesionesCaja as VSC
 import caja.caja as Caja
 import licencia.Licenciamiento as Licenciamiento
-from PIL import Image
+from PIL import Image, ImageTk
 
 myappid = 'anabel.pos.1.0'
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-class VentanaPrincipal(tk.Tk):
+class VentanaPrincipal(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.geometry("1200x700")
+        self.centrar_ventana(1200, 700)
         self.resizable(False,False)
         self.title("Anabel POS")
-        #self.iconbitmap("anabel.ico")
-        icono = tk.PhotoImage(file="anabel.png")
-        self.iconphoto(True, icono)
+        self.iconbitmap("anabel.ico")
+        self.icono = ImageTk.PhotoImage(file="anabel.png")
+        self.wm_iconphoto(True, self.icono)
 
         licencia = Licenciamiento.Licenciamiento()
         auth = licencia.validar()
@@ -240,8 +240,13 @@ class VentanaPrincipal(tk.Tk):
             self.login_frame = lf.LoginFrame(self, self.dibujar_frames)
             self.login_frame.pack(fill="both", expand=True)
 
-            self.geometry("1200x700")
+            self.centrar_ventana(1200, 700)
             self.resizable(False, False)
+
+    def centrar_ventana(self, ancho, alto):
+        x = (self.winfo_screenwidth() - ancho) // 2
+        y = (self.winfo_screenheight() - alto) // 2
+        self.geometry(f"{ancho}x{alto}+{x}+{y}")
 
     def draw_frames(self, new_frame, boton=None):
         for frame in self.frames:

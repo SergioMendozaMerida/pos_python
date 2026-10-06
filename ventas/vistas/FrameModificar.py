@@ -13,6 +13,7 @@ class FrameModificarVenta(ctk.CTkToplevel):
         self.after(10, self._set_focus_and_grab)
         self.grab_set()
         self.focus_set()
+        self.parent = parent
 
         self.carrito = carrito
         self.producto = producto
@@ -224,4 +225,5 @@ class FrameModificarVenta(ctk.CTkToplevel):
         if res:
             self.show_carrito()
             self.actualizar_productos()
+            self.parent.entry_codigo.focus_set()
             self.destroy()

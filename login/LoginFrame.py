@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
 import login.login as lg
+from pathlib import Path
 from PIL import Image, ImageTk
 from assets.icons.AnabellIcons import AnabellIcons
 
@@ -19,26 +20,21 @@ class LoginFrame(ctk.CTkFrame):
         self.color_texto = "#2d3436"
 
         # --- IMAGEN DE FONDO ---
-        ruta_imagen = "./img/fondo.jpg"
-        try:
-            imagen = Image.open(ruta_imagen)
-            imagen = imagen.resize((1200, 700))
-            self.fondo_img = ImageTk.PhotoImage(imagen)
-
-            self.fondo = tk.Label(
-                self,
-                image=self.fondo_img,
-                bd=0,
-                highlightthickness=0
-            )
-            self.fondo.place(
-                x=0,
-                y=0,
-                relwidth=1,
-                relheight=1
-            )
-        except Exception:
-            pass
+        ruta_imagen = Path(__file__).resolve().parents[1] / "img" / "fondo.png"
+        self._fondo_original = Image.open(ruta_imagen).convert("RGB")
+        self._fondo_size = None
+        self.fondo = tk.Label(
+            self,
+            bd=0,
+            highlightthickness=0
+        )
+        self.fondo.place(
+            x=0,
+            y=0,
+            relwidth=1,
+            relheight=1
+        )
+        self.bind("<Configure>", self._actualizar_fondo)
 
         self.login = lg.Login()
         #self.iconos = AbI.AnabellIcons()
@@ -147,9 +143,19 @@ class LoginFrame(ctk.CTkFrame):
         )
         self.btn_login.pack(fill="x", pady=(5, 0))
 
-        self.entry_usuario.focus()
+        self.after(100, self.entry_usuario.focus_set)
         self.entry_usuario.bind("<Return>", lambda event: self.entry_contrasena.focus())
         self.entry_contrasena.bind("<Return>", lambda event: self.login_attempt())
+
+    def _actualizar_fondo(self, event):
+        size = (event.width, event.height)
+        if size == self._fondo_size or min(size) <= 1:
+            return
+
+        imagen = self._fondo_original.resize(size, Image.Resampling.LANCZOS)
+        self.fondo_img = ImageTk.PhotoImage(imagen)
+        self.fondo.configure(image=self.fondo_img)
+        self._fondo_size = size
 
     def obtener_imagen(self, ruta):  
         try:
@@ -167,7 +173,7 @@ class LoginFrame(ctk.CTkFrame):
         password = self.entry_contrasena.get()
         respuesta = self.login.comprobar_credenciales(username, password)
         if respuesta:
-            self.dibujar_frames()
             self.destroy()
+            self.dibujar_frames()
         else:
             messagebox.showerror("Credenciales invalidas", "Usuario o contraseña incorrectos.")

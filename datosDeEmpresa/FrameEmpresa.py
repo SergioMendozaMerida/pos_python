@@ -1,27 +1,37 @@
-import tkinter as tk
-from tkinter import messagebox, ttk
+import customtkinter as ctk
 
-class FrameEmpresa(tk.Frame):
+
+class FrameEmpresa(ctk.CTkFrame):
     def __init__(self, parent, empresa, usuario):
-        super().__init__(parent)
+        super().__init__(parent, fg_color="#f4f6f9")
 
         self.empresa = empresa
         self.usuario = usuario
+        self.color_primario = "#2c3e50"
+        self.color_acento = "#0984e3"
+        self.color_borde = "#dfe6e9"
+        self.color_texto = "#2d3436"
 
-        self.configure(bg="#f0f0f0")
-
-        # Centrado del contenido en el frame principal
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # Contenedor estilo "tarjeta"
-        self.container = tk.Frame(self, bg="#ffffff", padx=30, pady=30, relief="raised", bd=1)
-        self.container.grid(row=0, column=0)
+        self.container = ctk.CTkFrame(
+            self,
+            fg_color="white",
+            corner_radius=14,
+            border_width=1,
+            border_color=self.color_borde
+        )
+        self.container.grid(row=0, column=0, padx=30, pady=30)
+        self.container.grid_columnconfigure(1, weight=1)
 
-        # Título del Frame
-        tk.Label(self.container, text="DATOS DE LA EMPRESA", font=("Arial", 16, "bold"), bg="#ffffff", fg="#333333").grid(row=0, column=0, columnspan=2, pady=(0, 20))
+        ctk.CTkLabel(
+            self.container,
+            text="DATOS DE LA EMPRESA",
+            font=ctk.CTkFont(family="Segoe UI", size=20, weight="bold"),
+            text_color=self.color_primario
+        ).grid(row=0, column=0, columnspan=2, sticky="w", padx=30, pady=(26, 22))
 
-        # Definición de campos basada en los atributos de la clase Empresa
         self.campos_info = [
             ("Nombre Comercial:", "nombre"),
             ("Representante Legal:", "representante"),
@@ -33,82 +43,114 @@ class FrameEmpresa(tk.Frame):
             ("Impresión (Carta/Ticket):", "impresion")
         ]
 
-        # Diccionarios para almacenar variables y widgets
         self.vars = {}
         self.entries = {}
 
-        # Creación dinámica de Labels y Entries
-        for i, (label_text, attr) in enumerate(self.campos_info):
+        for i, (label_text, attr) in enumerate(self.campos_info, start=1):
             valor_inicial = getattr(self.empresa, attr)
-            
             if attr == "impresion":
-                self.vars[attr] = tk.StringVar(value="Carta" if valor_inicial else "Ticket")
+                self.vars[attr] = ctk.StringVar(
+                    value="Carta" if valor_inicial else "Ticket"
+                )
             else:
-                self.vars[attr] = tk.StringVar(value=str(valor_inicial))
+                self.vars[attr] = ctk.StringVar(value=str(valor_inicial))
 
-            tk.Label(self.container, text=label_text, bg="#ffffff", font=("Arial", 10, "bold")).grid(row=i+1, column=0, sticky="w", pady=8, padx=(0, 15))
-            
+            ctk.CTkLabel(
+                self.container,
+                text=label_text,
+                font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+                text_color=self.color_texto
+            ).grid(row=i, column=0, sticky="w", padx=(30, 18), pady=7)
+
             if attr == "impresion":
-                widget = ttk.Combobox(self.container, textvariable=self.vars[attr], values=["Carta", "Ticket"], state="disabled", width=43, font=("Arial", 11))
+                widget = ctk.CTkComboBox(
+                    self.container,
+                    variable=self.vars[attr],
+                    values=["Carta", "Ticket"],
+                    state="disabled",
+                    width=440,
+                    height=36,
+                    font=ctk.CTkFont(family="Segoe UI", size=12),
+                    border_color=self.color_borde,
+                    button_color=self.color_acento,
+                    button_hover_color="#0873c4"
+                )
             else:
-                widget = tk.Entry(self.container, textvariable=self.vars[attr], width=45, font=("Arial", 11), 
-                                 state="readonly", relief="flat", highlightthickness=1, 
-                                 highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-            widget.grid(row=i+1, column=1, pady=8, sticky="ew")
+                widget = ctk.CTkEntry(
+                    self.container,
+                    textvariable=self.vars[attr],
+                    state="disabled",
+                    width=440,
+                    height=36,
+                    font=ctk.CTkFont(family="Segoe UI", size=12),
+                    border_color=self.color_borde,
+                    text_color=self.color_texto
+                )
+            widget.grid(row=i, column=1, sticky="ew", padx=(0, 30), pady=7)
             self.entries[attr] = widget
 
-        # Frame para botones
-        self.frame_btns = tk.Frame(self.container, bg="#ffffff")
-        self.frame_btns.grid(row=len(self.campos_info) + 1, column=0, columnspan=2, pady=(25, 0))
+        self.frame_btns = ctk.CTkFrame(self.container, fg_color="transparent")
+        self.frame_btns.grid(
+            row=len(self.campos_info) + 1,
+            column=0,
+            columnspan=2,
+            pady=(24, 26)
+        )
 
         if self.usuario.rol == "admin":
+            button_style = {
+                "font": ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+                "text_color": "white",
+                "height": 40,
+                "corner_radius": 8,
+                "cursor": "hand2"
+            }
+            self.btn_editar = ctk.CTkButton(
+                self.frame_btns,
+                text="Editar datos",
+                fg_color=self.color_acento,
+                hover_color="#0873c4",
+                command=self.habilitar_edicion,
+                **button_style
+            )
+            self.btn_editar.pack(side="left", padx=8)
 
-            self.btn_editar = tk.Button(self.frame_btns, text="Editar Datos", bg="#0984e3", fg="white", 
-                                    relief="flat", padx=20, pady=8, cursor="hand2", 
-                                    font=("Arial", 10, "bold"), command=self.habilitar_edicion)
-            self.btn_editar.pack(side="left", padx=10)
-
-            self.btn_guardar = tk.Button(self.frame_btns, text="Guardar Cambios", bg="#00b894", fg="white", 
-                                        relief="flat", padx=20, pady=8, cursor="hand2", 
-                                        font=("Arial", 10, "bold"), state="disabled", command=self.guardar_cambios)
-            self.btn_guardar.pack(side="left", padx=10)
+            self.btn_guardar = ctk.CTkButton(
+                self.frame_btns,
+                text="Guardar cambios",
+                fg_color="#00a878",
+                hover_color="#008f66",
+                state="disabled",
+                command=self.guardar_cambios,
+                **button_style
+            )
+            self.btn_guardar.pack(side="left", padx=8)
 
     def habilitar_edicion(self):
         """Habilita los campos para escritura."""
         for attr, widget in self.entries.items():
-            if attr == "impresion":
-                widget.config(state="readonly") # readonly permite seleccionar de la lista pero no escribir
-            else:
-                widget.config(state="normal")
-        
-        self.btn_editar.config(state="disabled")
-        self.btn_guardar.config(state="normal")
-        self.entries["nombre"].focus()
+            widget.configure(state="readonly" if attr == "impresion" else "normal")
+
+        self.btn_editar.configure(state="disabled")
+        self.btn_guardar.configure(state="normal")
+        self.entries["nombre"].focus_set()
 
     def guardar_cambios(self):
         """Actualiza el objeto empresa y vuelve a bloquear los campos."""
+        telefono = self.vars["telefono"].get()
+        self.empresa.set_datos(
+            self.vars["nombre"].get(),
+            self.vars["representante"].get(),
+            self.vars["nit"].get(),
+            int(telefono) if telefono.isdigit() else 0,
+            self.vars["correo"].get(),
+            self.vars["direccion"].get(),
+            self.vars["slogan"].get(),
+            self.vars["impresion"].get() == "Carta"
+        )
 
-        try:
-            self.empresa.set_datos(
-                self.vars["nombre"].get(),
-                self.vars["representante"].get(),
-                self.vars["nit"].get(),
-                int(self.vars["telefono"].get()) if self.vars["telefono"].get().isdigit() else 0,
-                self.vars["correo"].get(),
-                self.vars["direccion"].get(),
-                self.vars["slogan"].get(),
-                self.vars["impresion"].get() == "Carta"
-            )
+        for widget in self.entries.values():
+            widget.configure(state="disabled")
 
-            for attr, widget in self.entries.items():
-                if attr == "impresion":
-                    widget.config(state="disabled")
-                else:
-                    widget.config(state="readonly")
-
-            self.btn_editar.config(state="normal")
-            self.btn_guardar.config(state="disabled")
-        except Exception as e:
-            messagebox.showerror("Error", f"No se pudieron guardar los cambios: {e}")
-
-        
+        self.btn_editar.configure(state="normal")
+        self.btn_guardar.configure(state="disabled")

@@ -465,27 +465,32 @@ class VentanaVentas(ctk.CTkFrame):
                 fg_color="#ffffff",
                 border_width=1,
                 border_color=self.border_color,
-                corner_radius=8,
-                height=125
+                corner_radius=12,
+                height=148
             )
             card.pack_propagate(False)
-            card.pack(fill="x", padx=5, pady=5)
+            card.pack(fill="x", padx=7, pady=6)
+            card.grid_columnconfigure(0, weight=1)
+            card.grid_columnconfigure(1, weight=0, minsize=112)
+            card.grid_rowconfigure(0, weight=1)
 
             info_frame = ctk.CTkFrame(card, fg_color="transparent")
-            info_frame.pack(side="left", fill="both", expand=True, padx=12, pady=10)
+            info_frame.grid(row=0, column=0, sticky="nsew", padx=(15, 8), pady=12)
+            info_frame.grid_columnconfigure(0, weight=1)
 
             nombre = producto.nombre
-            if len(nombre) > 25:
-                nombre = nombre[:25] + "..."
-
+            if len(nombre) > 42:
+                nombre = nombre[:39] + "..."
             ctk.CTkLabel(
-                info_frame, 
-                text=nombre, 
-                text_color=self.text_color, 
-                font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"), 
+                info_frame,
+                text=nombre,
+                text_color=self.text_color,
+                font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
+                height=44,
                 anchor="w",
-                justify="left"
-            ).pack(fill="x")
+                justify="left",
+                wraplength=220
+            ).grid(row=0, column=0, sticky="ew")
 
             stock_actual = producto.stock
             for pc in self.carrito.productos:
@@ -494,50 +499,58 @@ class VentanaVentas(ctk.CTkFrame):
 
             color_stock = self.success_color if stock_actual > 5 else self.danger_color
             stock_label = ctk.CTkLabel(
-                info_frame, 
-                text=f"Disponible: {stock_actual} unidades", 
-                text_color=color_stock, 
-                font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"), 
+                info_frame,
+                text=f"Disponible: {stock_actual} unidades",
+                text_color=color_stock,
+                fg_color="#f1f5f9",
+                corner_radius=6,
+                font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+                height=28,
                 anchor="w"
             )
-            stock_label.pack(fill="x", pady=(2, 0))
+            stock_label.grid(row=2, column=0, sticky="w", pady=(7, 0), padx=(0, 2))
             self.stock_labels[producto.id_producto] = stock_label
 
             presentacion = producto.presentacion if producto.presentacion else "Sin presentación"
-            if len(presentacion) > 25:
-                presentacion = presentacion[:22] + "..."
+            if len(presentacion) > 42:
+                presentacion = presentacion[:39] + "..."
             ctk.CTkLabel(
-                info_frame, 
-                text=f"Presentación: {presentacion}", 
-                text_color=self.sub_text, 
-                font=ctk.CTkFont(family="Segoe UI", size=11), 
-                anchor="w"
-            ).pack(fill="x", pady=(2, 0))
+                info_frame,
+                text=presentacion,
+                text_color=self.sub_text,
+                font=ctk.CTkFont(family="Segoe UI", size=11),
+                height=28,
+                anchor="w",
+                wraplength=220
+            ).grid(row=1, column=0, sticky="ew", pady=(4, 0))
 
             action_frame = ctk.CTkFrame(card, fg_color="transparent")
-            action_frame.pack(side="right", fill="y", padx=12, pady=10)
+            action_frame.grid(row=0, column=1, sticky="nsew", padx=(4, 13), pady=12)
+            action_frame.grid_columnconfigure(0, weight=1)
+            action_frame.grid_rowconfigure(1, weight=1)
 
             ctk.CTkLabel(
-                action_frame, 
-                text=f"Q{producto.precio_venta:,.2f}", 
-                text_color=self.primary_color, 
-                font=ctk.CTkFont(family="Segoe UI", size=16, weight="bold"), 
+                action_frame,
+                text=f"Q {producto.precio_venta:,.2f}",
+                text_color=self.primary_color,
+                font=ctk.CTkFont(family="Segoe UI", size=16, weight="bold"),
                 anchor="e"
-            ).pack(fill="x", pady=(0, 5))
+            ).grid(row=0, column=0, sticky="e", pady=(2, 8))
 
             btn_agregar = ctk.CTkButton(
                 action_frame,
-                text="Add",
+                text="Agregar",
                 image=self.icon_agregar_al_carrito,
                 fg_color=self.primary_color,
                 hover_color=self.primary_hover,
                 text_color="white",
                 font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-                height=32,
-                width=32,
+                height=36,
+                width=100,
+                corner_radius=8,
                 command=lambda p=producto: self.agregar(p),
             )
-            btn_agregar.pack(side="bottom", anchor="e")
+            btn_agregar.grid(row=1, column=0, sticky="sew")
 
     def actualizar_stock_escaneado(self, producto):
     # Calcular stock restante
