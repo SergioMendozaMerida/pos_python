@@ -148,7 +148,7 @@ class VentanaInventario(ctk.CTkFrame):
         tabla_scroll_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
 
         self.columnas = ("id", "nombre", "descripcion", "presentacion", "categoria", "precio_compra", "precio_venta", "precio_blister", "precio_caja", 
-                        "stock", "utilidad")
+                        "stock", "utilidad", "stock_minimo")
         self.tabla_productos = ttk.Treeview(tabla_scroll_frame, columns=self.columnas, show="headings", height=10)
 
         # Configurar headings
@@ -163,7 +163,7 @@ class VentanaInventario(ctk.CTkFrame):
         self.tabla_productos.heading("precio_caja", text="P. Caja")
         self.tabla_productos.heading("stock", text="Stock")
         self.tabla_productos.heading("utilidad", text="Utilidad")
-
+        self.tabla_productos.heading("stock_minimo", text="Stock Mínimo")
         # Configurar ancho de columnas
         self.tabla_productos.column("id", width=0, stretch=False)
         self.tabla_productos.column("nombre", width=130, anchor="w")
@@ -176,7 +176,7 @@ class VentanaInventario(ctk.CTkFrame):
         self.tabla_productos.column("precio_caja", width=90, anchor="center")
         self.tabla_productos.column("stock", width=70, anchor="center")
         self.tabla_productos.column("utilidad", width=80, anchor="center")
-
+        self.tabla_productos.column("stock_minimo", width=90, anchor="center")
         style = ttk.Style()
         style.theme_use("clam")
 
@@ -344,7 +344,8 @@ class VentanaInventario(ctk.CTkFrame):
                 f"Q{producto.precio_blister:.2f}",
                 f"Q{producto.precio_caja:.2f}",
                 producto.stock,
-                f"Q{producto.utilidad:.2f}"
+                f"Q{producto.utilidad:.2f}",
+                producto.stock_minimo
             ))
 
     def buscar_producto(self, nombre="", descripcion="", codigo=""):
@@ -368,7 +369,8 @@ class VentanaInventario(ctk.CTkFrame):
                 f"Q{producto.precio_blister:.2f}",
                 f"Q{producto.precio_caja:.2f}",
                 producto.stock,
-                f"Q{producto.utilidad:.2f}"
+                f"Q{producto.utilidad:.2f}",
+                producto.stock_minimo
             ))
 
     def abrir_editar_formulario(self):

@@ -178,6 +178,20 @@ class EditarProducto(tk.Toplevel):
         )
         self.entry_precio_caja.pack(fill="both", expand=True, ipady=4)
 
+        # Stock mínimo
+        tk.Label(self.main_frame, text="Stock mínimo *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_stock_minimo = tk.Entry(
+            self.main_frame,
+            font=("Segoe UI", 10),
+            bg=self.color_entrada,
+            relief="flat",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_stock_minimo.pack(fill="x", pady=(0, 15), ipady=4)
+
         # Cargar datos del producto
         self.cargar_datos_producto()
 
@@ -237,6 +251,8 @@ class EditarProducto(tk.Toplevel):
         self.entry_precio_blister.insert(0, str(self.producto.precio_blister if self.producto.precio_blister is not None else 0))
         self.entry_precio_caja.delete(0, tk.END)
         self.entry_precio_caja.insert(0, str(self.producto.precio_caja if self.producto.precio_caja is not None else 0))
+        self.entry_stock_minimo.delete(0, tk.END)
+        self.entry_stock_minimo.insert(0, str(self.producto.stock_minimo if self.producto.stock_minimo is not None else 0))
 
     def actualizar_producto(self):
         nombre = self.entry_nombre.get().strip()
@@ -247,6 +263,7 @@ class EditarProducto(tk.Toplevel):
         precio_venta = self.entry_precio_venta.get().strip()
         precio_blister = self.entry_precio_blister.get().strip()
         precio_caja = self.entry_precio_caja.get().strip()
+        stock_minimo = self.entry_stock_minimo.get().strip()
 
         if not nombre:
             messagebox.showwarning("Validación", "Debe ingresar el nombre del producto.")
@@ -257,8 +274,9 @@ class EditarProducto(tk.Toplevel):
             precio_venta_val = float(precio_venta) if precio_venta else 0.0
             precio_blister_val = float(precio_blister) if precio_blister else 0.0
             precio_caja_val = float(precio_caja) if precio_caja else 0.0
+            stock_minimo_val = int(stock_minimo)
         except ValueError:
-            messagebox.showwarning("Validación", "Precio y stock deben ser numéricos.")
+            messagebox.showwarning("Validación", "Precio y stock mínimo deben ser numéricos.")
             return
 
         self.inventario.editar_producto(
@@ -270,7 +288,8 @@ class EditarProducto(tk.Toplevel):
             precio_compra_val,
             precio_venta_val,
             precio_blister_val,
-            precio_caja_val
+            precio_caja_val,
+            stock_minimo_val
         )
 
         if self.actualizar_callback:

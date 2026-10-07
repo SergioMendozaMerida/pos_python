@@ -218,9 +218,15 @@ class FormProductos(tk.Toplevel):
         self.entry_precio_caja.insert(0, "0")
 
         # Fila 5: Stock
-        tk.Label(self.main_frame, text="Stock *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        row_stock = tk.Frame(self.main_frame, bg=self.color_fondo)
+        row_stock.pack(fill="x", pady=(0, 20))
+
+        col_stock = tk.Frame(row_stock, bg=self.color_fondo)
+        col_stock.pack(side="left", fill="both", expand=True, padx=(0, 10))
+
+        tk.Label(col_stock, text="Stock *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
         self.entry_stock = tk.Entry(
-            self.main_frame, 
+            col_stock,
             font=("Segoe UI", 10), 
             bg=self.color_entrada, 
             relief="flat", 
@@ -229,7 +235,23 @@ class FormProductos(tk.Toplevel):
             highlightbackground=self.color_borde,
             highlightcolor=self.color_primario
         )
-        self.entry_stock.pack(fill="x", pady=(0, 20), ipady=4)
+        self.entry_stock.pack(fill="both", expand=True, ipady=4)
+
+        col_stock_minimo = tk.Frame(row_stock, bg=self.color_fondo)
+        col_stock_minimo.pack(side="left", fill="both", expand=True)
+
+        tk.Label(col_stock_minimo, text="Stock mínimo *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
+        self.entry_stock_minimo = tk.Entry(
+            col_stock_minimo,
+            font=("Segoe UI", 10),
+            bg=self.color_entrada,
+            relief="flat",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground=self.color_borde,
+            highlightcolor=self.color_primario
+        )
+        self.entry_stock_minimo.pack(fill="both", expand=True, ipady=4)
 
         # Frame de botones
         btn_frame = tk.Frame(self.main_frame, bg=self.color_fondo)
@@ -289,6 +311,7 @@ class FormProductos(tk.Toplevel):
         precio_blister = self.entry_precio_blister.get().strip()
         precio_caja = self.entry_precio_caja.get().strip()
         stock = self.entry_stock.get().strip()
+        stock_minimo = self.entry_stock_minimo.get().strip()
 
         if not nombre:
             messagebox.showwarning("Validación", "Debe ingresar el nombre del producto.")
@@ -305,8 +328,9 @@ class FormProductos(tk.Toplevel):
             precio_blister_val = float(precio_blister) if precio_blister else 0.0
             precio_caja_val = float(precio_caja) if precio_caja else 0.0
             stock_val = int(stock)
+            stock_minimo_val = int(stock_minimo)
         except ValueError:
-            messagebox.showwarning("Validación", "Precio y stock deben ser numéricos.")
+            messagebox.showwarning("Validación", "Precio, stock y stock mínimo deben ser numéricos.")
             return
 
         self.inventario.ingresar_producto(
@@ -319,7 +343,8 @@ class FormProductos(tk.Toplevel):
             precio_venta_val,
             precio_blister_val,
             precio_caja_val,
-            stock_val
+            stock_val,
+            stock_minimo_val
         )
 
         if self.actualizar_callback:
