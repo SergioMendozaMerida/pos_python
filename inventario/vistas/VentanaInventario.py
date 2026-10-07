@@ -5,6 +5,7 @@ import inventario.logica.Inventario as inv
 import inventario.vistas.FormProductos as FP
 import inventario.vistas.EditarProducto as EP
 import inventario.vistas.FrameIngresoStock as FIS
+import inventario.vistas.tabla_inventario as TI
 import categoria.FrameCategoria as FCAT
 import inventario.logica.crearReporteInventario as CRI
 from assets.icons.AnabellIcons import AnabellIcons
@@ -36,6 +37,7 @@ class VentanaInventario(ctk.CTkFrame):
         self.icon_export = AnabellIcons.obtener_imagen('export')
         self.icon_agregar_stock = AnabellIcons.obtener_imagen('add_stock')
         self.icon_borrar = AnabellIcons.obtener_imagen('delete')
+        self.vista_actual = "tabla_inventario"
 
         # Frame búsqueda
         self.frame_contenedor_filtros = ctk.CTkFrame(
@@ -147,74 +149,152 @@ class VentanaInventario(ctk.CTkFrame):
         tabla_scroll_frame = ctk.CTkFrame(self.frame_tabla, fg_color="transparent")
         tabla_scroll_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
 
-        self.columnas = ("id", "nombre", "descripcion", "presentacion", "categoria", "precio_compra", "precio_venta", "precio_blister", "precio_caja", 
-                        "stock", "utilidad", "stock_minimo")
-        self.tabla_productos = ttk.Treeview(tabla_scroll_frame, columns=self.columnas, show="headings", height=10)
+        # self.columnas = ("id", "nombre", "descripcion", "presentacion", "categoria", "precio_compra", "precio_venta", "precio_blister", "precio_caja",
+        #                 "stock", "utilidad", "stock_minimo")
+        # self.tabla_productos = ttk.Treeview(tabla_scroll_frame, columns=self.columnas, show="headings", height=10)
+        #
+        # # Configurar headings
+        # self.tabla_productos.heading("id", text="ID")
+        # self.tabla_productos.heading("nombre", text="Producto")
+        # self.tabla_productos.heading("descripcion", text="Descripción")
+        # self.tabla_productos.heading("presentacion", text="Presentación")
+        # self.tabla_productos.heading("categoria", text="Categoría")
+        # self.tabla_productos.heading("precio_compra", text="P. Compra")
+        # self.tabla_productos.heading("precio_venta", text="P. Venta")
+        # self.tabla_productos.heading("precio_blister", text="P. Blíster")
+        # self.tabla_productos.heading("precio_caja", text="P. Caja")
+        # self.tabla_productos.heading("stock", text="Stock")
+        # self.tabla_productos.heading("utilidad", text="Utilidad")
+        # self.tabla_productos.heading("stock_minimo", text="Stock Mínimo")
+        # # Configurar ancho de columnas
+        # self.tabla_productos.column("id", width=0, stretch=False)
+        # self.tabla_productos.column("nombre", width=130, anchor="w")
+        # self.tabla_productos.column("descripcion", width=160, anchor="w")
+        # self.tabla_productos.column("presentacion", width=100, anchor="center")
+        # self.tabla_productos.column("categoria", width=100, anchor="center")
+        # self.tabla_productos.column("precio_compra", width=90, anchor="center")
+        # self.tabla_productos.column("precio_venta", width=90, anchor="center")
+        # self.tabla_productos.column("precio_blister", width=90, anchor="center")
+        # self.tabla_productos.column("precio_caja", width=90, anchor="center")
+        # self.tabla_productos.column("stock", width=70, anchor="center")
+        # self.tabla_productos.column("utilidad", width=80, anchor="center")
+        # self.tabla_productos.column("stock_minimo", width=90, anchor="center")
+        # style = ttk.Style()
+        # style.theme_use("clam")
+        #
+        # style.configure("Treeview",
+        #                 background="#ffffff",
+        #                 foreground="#2d3436",
+        #                 rowheight=34,
+        #                 fieldbackground="#ffffff",
+        #                 borderwidth=0,
+        #                 font=("Segoe UI", 12))
+        #
+        # style.configure("Treeview.Heading",
+        #                 background="#f1f2f6",
+        #                 foreground="#2d3436",
+        #                 relief="flat",
+        #                 font=("Segoe UI", 12, "bold"))
+        #
+        # style.map("Treeview",
+        #         background=[('selected', "#74b9ff")],
+        #         foreground=[('selected', "white")])
+        #
+        # # Scrollbars
+        # self.scroll_bar = ttk.Scrollbar(tabla_scroll_frame, orient="vertical", command=self.tabla_productos.yview)
+        # self.tabla_productos.configure(yscrollcommand=self.scroll_bar.set)
+        #
+        # self.scroll_barx = ttk.Scrollbar(tabla_scroll_frame, orient="horizontal", command=self.tabla_productos.xview)
+        # self.tabla_productos.configure(xscrollcommand=self.scroll_barx.set)
+        #
+        # self.tabla_productos.grid(row=0, column=0, sticky="nsew")
+        # self.scroll_bar.grid(row=0, column=1, sticky="ns")
+        # self.scroll_barx.grid(row=1, column=0, sticky="ew")
+        #
+        # tabla_scroll_frame.grid_rowconfigure(0, weight=1)
+        # tabla_scroll_frame.grid_columnconfigure(0, weight=1)
 
-        # Configurar headings
-        self.tabla_productos.heading("id", text="ID")
-        self.tabla_productos.heading("nombre", text="Producto")
-        self.tabla_productos.heading("descripcion", text="Descripción")
-        self.tabla_productos.heading("presentacion", text="Presentación")
-        self.tabla_productos.heading("categoria", text="Categoría")
-        self.tabla_productos.heading("precio_compra", text="P. Compra")
-        self.tabla_productos.heading("precio_venta", text="P. Venta")
-        self.tabla_productos.heading("precio_blister", text="P. Blíster")
-        self.tabla_productos.heading("precio_caja", text="P. Caja")
-        self.tabla_productos.heading("stock", text="Stock")
-        self.tabla_productos.heading("utilidad", text="Utilidad")
-        self.tabla_productos.heading("stock_minimo", text="Stock Mínimo")
-        # Configurar ancho de columnas
-        self.tabla_productos.column("id", width=0, stretch=False)
-        self.tabla_productos.column("nombre", width=130, anchor="w")
-        self.tabla_productos.column("descripcion", width=160, anchor="w")
-        self.tabla_productos.column("presentacion", width=100, anchor="center")
-        self.tabla_productos.column("categoria", width=100, anchor="center")
-        self.tabla_productos.column("precio_compra", width=90, anchor="center")
-        self.tabla_productos.column("precio_venta", width=90, anchor="center")
-        self.tabla_productos.column("precio_blister", width=90, anchor="center")
-        self.tabla_productos.column("precio_caja", width=90, anchor="center")
-        self.tabla_productos.column("stock", width=70, anchor="center")
-        self.tabla_productos.column("utilidad", width=80, anchor="center")
-        self.tabla_productos.column("stock_minimo", width=90, anchor="center")
-        style = ttk.Style()
-        style.theme_use("clam")
+        self.tabla_inventario = TI.TablaInventario(
+            tabla_scroll_frame,
+            self.inventario.productos
+        )
+        self.tabla_inventario.pack(fill="both", expand=True)
 
-        style.configure("Treeview",
-                        background="#ffffff",
-                        foreground="#2d3436",
-                        rowheight=34,
-                        fieldbackground="#ffffff",
-                        borderwidth=0,
-                        font=("Segoe UI", 12))
+        self.frame_treeview = ctk.CTkFrame(
+            tabla_scroll_frame,
+            fg_color="transparent"
+        )
+        self.frame_treeview.grid_rowconfigure(0, weight=1)
+        self.frame_treeview.grid_columnconfigure(0, weight=1)
 
-        style.configure("Treeview.Heading",
-                        background="#f1f2f6",
-                        foreground="#2d3436",
-                        relief="flat",
-                        font=("Segoe UI", 12, "bold"))
+        self.columnas = (
+            "id", "nombre", "descripcion", "presentacion", "categoria",
+            "precio_compra", "precio_venta", "precio_blister", "precio_caja",
+            "stock", "utilidad", "stock_minimo"
+        )
+        self.tabla_productos = ttk.Treeview(
+            self.frame_treeview,
+            columns=self.columnas,
+            show="headings",
+            height=10
+        )
+        encabezados = (
+            "ID", "Producto", "Descripción", "Presentación", "Categoría",
+            "P. Compra", "P. Venta", "P. Blíster", "P. Caja", "Stock",
+            "Utilidad", "Stock Mínimo"
+        )
+        anchos = (0, 130, 160, 100, 100, 90, 90, 90, 90, 70, 80, 90)
+        for columna, encabezado, ancho in zip(
+            self.columnas, encabezados, anchos
+        ):
+            self.tabla_productos.heading(columna, text=encabezado)
+            self.tabla_productos.column(
+                columna,
+                width=ancho,
+                minwidth=50 if ancho else 0,
+                stretch=bool(ancho),
+                anchor="e" if columna in {
+                    "id", "precio_compra", "precio_venta", "precio_blister",
+                    "precio_caja", "stock", "utilidad", "stock_minimo"
+                } else "w"
+            )
+        self.tabla_productos.tag_configure(
+            "stock_bajo",
+            background="#fff1f0",
+            foreground="#c0392b"
+        )
 
-        style.map("Treeview", 
-                background=[('selected', "#74b9ff")],
-                foreground=[('selected', "white")])
-
-        # Scrollbars
-        self.scroll_bar = ttk.Scrollbar(tabla_scroll_frame, orient="vertical", command=self.tabla_productos.yview)
+        self.scroll_bar = ttk.Scrollbar(
+            self.frame_treeview,
+            orient="vertical",
+            command=self.tabla_productos.yview
+        )
         self.tabla_productos.configure(yscrollcommand=self.scroll_bar.set)
-        
-        self.scroll_barx = ttk.Scrollbar(tabla_scroll_frame, orient="horizontal", command=self.tabla_productos.xview)
+        self.scroll_barx = ttk.Scrollbar(
+            self.frame_treeview,
+            orient="horizontal",
+            command=self.tabla_productos.xview
+        )
         self.tabla_productos.configure(xscrollcommand=self.scroll_barx.set)
-
         self.tabla_productos.grid(row=0, column=0, sticky="nsew")
         self.scroll_bar.grid(row=0, column=1, sticky="ns")
         self.scroll_barx.grid(row=1, column=0, sticky="ew")
-        
-        tabla_scroll_frame.grid_rowconfigure(0, weight=1)
-        tabla_scroll_frame.grid_columnconfigure(0, weight=1)
 
         # Frame de botones
         self.frame_botones = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.frame_botones.pack(fill="x")
+
+        self.btn_cambiar_vista = ctk.CTkButton(
+            self.frame_botones,
+            text="Ver Treeview",
+            fg_color="#636e72",
+            hover_color="#4b5457",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=40,
+            command=self.cambiar_vista
+        )
+        self.btn_cambiar_vista.pack(side="right", padx=(10, 0), pady=5)
 
         self.btn_ingresar = ctk.CTkButton(
             self.frame_botones,
@@ -329,24 +409,79 @@ class VentanaInventario(ctk.CTkFrame):
         self.cargar_productos()
 
     def mostrar_productos(self):
+        # Código original de carga del Treeview conservado:
+        # for item in self.tabla_productos.get_children():
+        #     self.tabla_productos.delete(item)
+        # for producto in self.inventario.productos:
+        #     self.tabla_productos.insert("", tk.END, values=(
+        #         producto.id_producto,
+        #         producto.nombre,
+        #         producto.descripcion,
+        #         producto.presentacion,
+        #         producto.categoria,
+        #         f"Q{producto.precio_compra:.2f}",
+        #         f"Q{producto.precio_venta:.2f}",
+        #         f"Q{producto.precio_blister:.2f}",
+        #         f"Q{producto.precio_caja:.2f}",
+        #         producto.stock,
+        #         f"Q{producto.utilidad:.2f}",
+        #         producto.stock_minimo
+        #     ))
+        self.tabla_inventario.actualizar(self.inventario.productos)
         for item in self.tabla_productos.get_children():
             self.tabla_productos.delete(item)
 
         for producto in self.inventario.productos:
-            self.tabla_productos.insert("", tk.END, values=(
-                producto.id_producto,
-                producto.nombre,
-                producto.descripcion,
-                producto.presentacion,
-                producto.categoria,
-                f"Q{producto.precio_compra:.2f}",
-                f"Q{producto.precio_venta:.2f}",
-                f"Q{producto.precio_blister:.2f}",
-                f"Q{producto.precio_caja:.2f}",
-                producto.stock,
-                f"Q{producto.utilidad:.2f}",
-                producto.stock_minimo
-            ))
+            stock_bajo = producto.stock <= producto.stock_minimo
+            self.tabla_productos.insert(
+                "",
+                tk.END,
+                iid=str(producto.id_producto),
+                values=(
+                    producto.id_producto,
+                    producto.nombre,
+                    producto.descripcion,
+                    producto.presentacion,
+                    producto.categoria,
+                    f"Q{float(producto.precio_compra or 0):.2f}",
+                    f"Q{float(producto.precio_venta or 0):.2f}",
+                    f"Q{float(producto.precio_blister or 0):.2f}",
+                    f"Q{float(producto.precio_caja or 0):.2f}",
+                    producto.stock,
+                    f"Q{float(producto.utilidad or 0):.2f}",
+                    producto.stock_minimo
+                ),
+                tags=("stock_bajo",) if stock_bajo else ()
+            )
+
+    def cambiar_vista(self):
+        if self.vista_actual == "tabla_inventario":
+            self.tabla_inventario.pack_forget()
+            self.frame_treeview.pack(fill="both", expand=True)
+            self.vista_actual = "treeview"
+            self.btn_cambiar_vista.configure(text="Ver TablaInventario")
+        else:
+            self.frame_treeview.pack_forget()
+            self.tabla_inventario.pack(fill="both", expand=True)
+            self.vista_actual = "tabla_inventario"
+            self.btn_cambiar_vista.configure(text="Ver Treeview")
+
+    def obtener_producto_seleccionado(self):
+        if self.vista_actual == "treeview":
+            seleccion = self.tabla_productos.selection()
+            if not seleccion:
+                return None
+            id_producto = self.tabla_productos.item(
+                seleccion[0], "values"
+            )[0]
+            return next(
+                (
+                    producto for producto in self.inventario.productos
+                    if str(producto.id_producto) == str(id_producto)
+                ),
+                None
+            )
+        return self.tabla_inventario.producto_seleccionado
 
     def buscar_producto(self, nombre="", descripcion="", codigo=""):
         if self.timer_id:
@@ -354,52 +489,61 @@ class VentanaInventario(ctk.CTkFrame):
             self.timer_id = None
 
         self.inventario.buscar_producto(nombre, descripcion, codigo)
-        for item in self.tabla_productos.get_children():
-            self.tabla_productos.delete(item)
-
-        for producto in self.inventario.productos:
-            self.tabla_productos.insert("", tk.END, values=(
-                producto.id_producto,
-                producto.nombre,
-                producto.descripcion,
-                producto.presentacion,
-                producto.categoria,
-                f"Q{producto.precio_compra:.2f}",
-                f"Q{producto.precio_venta:.2f}",
-                f"Q{producto.precio_blister:.2f}",
-                f"Q{producto.precio_caja:.2f}",
-                producto.stock,
-                f"Q{producto.utilidad:.2f}",
-                producto.stock_minimo
-            ))
+        # Código original de búsqueda del Treeview conservado:
+        # for item in self.tabla_productos.get_children():
+        #     self.tabla_productos.delete(item)
+        # for producto in self.inventario.productos:
+        #     self.tabla_productos.insert("", tk.END, values=(
+        #         producto.id_producto,
+        #         producto.nombre,
+        #         producto.descripcion,
+        #         producto.presentacion,
+        #         producto.categoria,
+        #         f"Q{producto.precio_compra:.2f}",
+        #         f"Q{producto.precio_venta:.2f}",
+        #         f"Q{producto.precio_blister:.2f}",
+        #         f"Q{producto.precio_caja:.2f}",
+        #         producto.stock,
+        #         f"Q{producto.utilidad:.2f}",
+        #         producto.stock_minimo
+        #     ))
+        self.mostrar_productos()
 
     def abrir_editar_formulario(self):
-        seleccion = self.tabla_productos.selection()
-        if not seleccion:
+        # seleccion = self.tabla_productos.selection()
+        # if not seleccion:
+        #     messagebox.showwarning("Selección requerida", "Por favor, seleccione un producto de la tabla para editar.")
+        #     return
+        # item = self.tabla_productos.item(seleccion[0])
+        # id_producto = item['values'][0]
+        # producto_seleccionado = None
+        # for producto in self.inventario.productos:
+        #     if producto.id_producto == id_producto:
+        #         producto_seleccionado = producto
+        #         break
+        producto_seleccionado = self.obtener_producto_seleccionado()
+        if not producto_seleccionado:
             messagebox.showwarning("Selección requerida", "Por favor, seleccione un producto de la tabla para editar.")
             return
 
-        item = self.tabla_productos.item(seleccion[0])
-        id_producto = item['values'][0]
-
-        producto_seleccionado = None
-        for producto in self.inventario.productos:
-            if producto.id_producto == id_producto:
-                producto_seleccionado = producto
-                break
-
-        if producto_seleccionado:
-            formulario = EP.EditarProducto(self, self.inventario, producto_seleccionado, self.actualizar_tabla)
+        formulario = EP.EditarProducto(self, self.inventario, producto_seleccionado, self.actualizar_tabla)
 
     def eliminar_producto_seleccionado(self):
-        seleccion = self.tabla_productos.selection()
-        if not seleccion:
+        # seleccion = self.tabla_productos.selection()
+        # if not seleccion:
+        #     messagebox.showwarning("Selección requerida", "Por favor, seleccione un producto de la tabla para eliminar.")
+        #     return
+        # item = self.tabla_productos.item(seleccion[0])
+        # id_producto = item['values'][0]
+        # nombre_producto = item['values'][1]
+        producto_seleccionado = self.obtener_producto_seleccionado()
+        if not producto_seleccionado:
             messagebox.showwarning("Selección requerida", "Por favor, seleccione un producto de la tabla para eliminar.")
             return
 
-        item = self.tabla_productos.item(seleccion[0])
-        id_producto = item['values'][0]
-        nombre_producto = item['values'][1]
+        # item = self.tabla_productos.item(seleccion[0])
+        id_producto = producto_seleccionado.id_producto
+        nombre_producto = producto_seleccionado.nombre
 
         respuesta = messagebox.askyesno(
             "Confirmar eliminación",
