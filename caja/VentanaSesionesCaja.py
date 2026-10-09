@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import customtkinter as ctk
 import caja.SesionesCaja as SC
-import caja.TablaSesionesCaja as TSC
 import datetime
 import caja.CrearReporteSesionCaja as CRSC
 from assets.icons.AnabellIcons import AnabellIcons
@@ -181,8 +180,76 @@ class VentanaSesionesCaja(ctk.CTkFrame):
             text_color=self.color_primario
         ).grid(row=0, column=0, sticky="w", padx=15, pady=(10, 5))
 
-        self.tabla_sesiones = TSC.TablaSesionesCaja(self.frame_tabla, self.logica.sesiones)
-        self.tabla_sesiones.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
+        self.frame_treeview = ctk.CTkFrame(
+            self.frame_tabla,
+            fg_color="transparent"
+        )
+        self.frame_treeview.grid(
+            row=1, column=0, sticky="nsew", padx=10, pady=(0, 10)
+        )
+        self.frame_treeview.grid_rowconfigure(0, weight=1)
+        self.frame_treeview.grid_columnconfigure(0, weight=1)
+
+        self.columnas = (
+            "fecha", "usuario", "saldo_inicial", "ventas", "gastos",
+            "saldo_final", "cierre", "diferencia", "estado"
+        )
+        self.tabla_sesiones = ttk.Treeview(
+            self.frame_treeview,
+            columns=self.columnas,
+            show="headings",
+            height=10
+        )
+        encabezados = (
+            "Fecha", "Usuario", "Saldo inicial", "Ventas", "Gastos",
+            "Saldo final", "Cierre", "Diferencia", "Estado"
+        )
+        anchos = (100, 120, 110, 100, 100, 110, 100, 110, 80)
+        for columna, encabezado, ancho in zip(
+            self.columnas, encabezados, anchos
+        ):
+            self.tabla_sesiones.heading(columna, text=encabezado)
+            self.tabla_sesiones.column(
+                columna,
+                width=ancho,
+                minwidth=70,
+                stretch=True,
+                anchor="e" if columna in {
+                    "saldo_inicial", "ventas", "gastos", "saldo_final",
+                    "cierre", "diferencia"
+                } else ("center" if columna == "estado" else "w")
+            )
+        self.tabla_sesiones.tag_configure(
+            "abierta",
+            background="#82e0aa",
+            foreground="#145a32"
+        )
+        self.tabla_sesiones.tag_configure(
+            "cerrada",
+            background="#ebf5fb",
+            foreground="#154360"
+        )
+        self.tabla_sesiones.tag_configure(
+            "descuadre",
+            background="#f5b7b1",
+            foreground="#78281f"
+        )
+
+        self.scroll_bar = ttk.Scrollbar(
+            self.frame_treeview,
+            orient="vertical",
+            command=self.tabla_sesiones.yview
+        )
+        self.tabla_sesiones.configure(yscrollcommand=self.scroll_bar.set)
+        self.scroll_barx = ttk.Scrollbar(
+            self.frame_treeview,
+            orient="horizontal",
+            command=self.tabla_sesiones.xview
+        )
+        self.tabla_sesiones.configure(xscrollcommand=self.scroll_barx.set)
+        self.tabla_sesiones.grid(row=0, column=0, sticky="nsew")
+        self.scroll_bar.grid(row=0, column=1, sticky="ns")
+        self.scroll_barx.grid(row=1, column=0, sticky="ew")
 
         # 3. FRAME BOTÓN EXPORTAR
         self.frame_botones_opciones = ctk.CTkFrame(self, fg_color="transparent")
@@ -211,7 +278,32 @@ class VentanaSesionesCaja(ctk.CTkFrame):
         self.mostrar_sesiones()
 
     def mostrar_sesiones(self):
-        self.tabla_sesiones.actualizar(self.logica.sesiones)
+        for item in self.tabla_sesiones.get_children():
+            self.tabla_sesiones.delete(item)
+
+        for sesion in self.logica.sesiones:
+            descuadre = float(sesion.diferencia or 0) != 0
+            etiqueta_estado = "abierta" if sesion.estado else "cerrada"
+            etiquetas_color = (
+                ("descuadre",) if descuadre else (etiqueta_estado,)
+            )
+            self.tabla_sesiones.insert(
+                "",
+                tk.END,
+                iid=str(sesion.id_sesion),
+                values=(
+                    str(sesion.fecha),
+                    str(sesion.usuario),
+                    f"Q {float(sesion.saldo_inicial or 0):,.2f}",
+                    f"Q {float(sesion.ingresos_ventas or 0):,.2f}",
+                    f"Q {float(sesion.egresos or 0):,.2f}",
+                    f"Q {float(sesion.saldo_final or 0):,.2f}",
+                    f"Q {float(sesion.efectivo_final or 0):,.2f}",
+                    f"Q {float(sesion.diferencia or 0):,.2f}",
+                    "Abierta" if sesion.estado else "Cerrada"
+                ),
+                tags=etiquetas_color
+            )
 
     def filtrar_sesiones(self):
         self.logica.filtrar_sesiones(self.entry_fecha_inicio.get(), self.entry_fecha_fin.get(), self.entry_usuario.get())

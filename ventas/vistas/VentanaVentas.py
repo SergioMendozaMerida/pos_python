@@ -364,12 +364,10 @@ class VentanaVentas(ctk.CTkFrame):
         self.carrito = CV.CarrtioVenta(self.usuario)
         self.timer_id = None
 
-        self.show_productos()
+        self.show_productos_inicio()
         self.show_carrito()
 
         self.entry_codigo.focus()
-        self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
-        self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
 
     def actualizar_ui_caja(self):
         """Actualiza el diseño, color e icono del botón según el estado de la caja"""
@@ -453,13 +451,21 @@ class VentanaVentas(ctk.CTkFrame):
         self.inventario.buscar_producto(nombre, descripcion)
         self.show_productos()
 
-    def show_productos(self):
+    def show_productos_inicio(self):
+        self.show_productos(cantidad=10)  # Mostrar solo los primeros 10 productos al inicio
+
+    def show_productos(self, cantidad=None):
         for item in self.frame_item_productos.winfo_children():
             item.destroy()
 
         self.stock_labels = {}
-            
-        for producto in self.inventario.productos:
+
+        if cantidad is not None:
+            productos_a_mostrar = self.inventario.productos[:cantidad]
+        else:
+            productos_a_mostrar = self.inventario.productos  # Mostrar solo los primeros 10 productos
+
+        for producto in productos_a_mostrar:
             card = ctk.CTkFrame(
                 self.frame_item_productos,
                 fg_color="#ffffff",

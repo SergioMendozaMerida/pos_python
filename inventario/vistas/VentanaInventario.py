@@ -5,7 +5,6 @@ import inventario.logica.Inventario as inv
 import inventario.vistas.FormProductos as FP
 import inventario.vistas.EditarProducto as EP
 import inventario.vistas.FrameIngresoStock as FIS
-import inventario.vistas.tabla_inventario as TI
 import categoria.FrameCategoria as FCAT
 import inventario.logica.crearReporteInventario as CRI
 from assets.icons.AnabellIcons import AnabellIcons
@@ -37,8 +36,6 @@ class VentanaInventario(ctk.CTkFrame):
         self.icon_export = AnabellIcons.obtener_imagen('export')
         self.icon_agregar_stock = AnabellIcons.obtener_imagen('add_stock')
         self.icon_borrar = AnabellIcons.obtener_imagen('delete')
-        self.vista_actual = "treeview"  # Valor inicial de la vista
-
         # Frame búsqueda
         self.frame_contenedor_filtros = ctk.CTkFrame(
             self.main_frame, 
@@ -76,8 +73,7 @@ class VentanaInventario(ctk.CTkFrame):
         )
         self.entry_nombre.pack(side="left", padx=(0, 15))
         self.entry_nombre.bind("<Return>", lambda e: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get()))
-        self.entry_nombre.bind("<KeyRelease>", self.iniciar_espera)
-
+        
         ctk.CTkLabel(
             self.frame_filtros, 
             text="Descripción:", 
@@ -94,8 +90,7 @@ class VentanaInventario(ctk.CTkFrame):
         )
         self.entry_descripcion.pack(side="left", padx=(0, 15))
         self.entry_descripcion.bind("<Return>", lambda e: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get()))
-        self.entry_descripcion.bind("<KeyRelease>", self.iniciar_espera)
-
+        
         ctk.CTkLabel(
             self.frame_filtros, 
             text="Código:", 
@@ -112,7 +107,6 @@ class VentanaInventario(ctk.CTkFrame):
         )
         self.entry_codigo.pack(side="left", padx=(0, 15))
         self.entry_codigo.bind("<Return>", lambda e: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get()))
-        self.entry_codigo.bind("<KeyRelease>", self.iniciar_espera)
         self.entry_codigo.focus()
 
         btn_buscar = ctk.CTkButton(
@@ -214,11 +208,6 @@ class VentanaInventario(ctk.CTkFrame):
         # tabla_scroll_frame.grid_rowconfigure(0, weight=1)
         # tabla_scroll_frame.grid_columnconfigure(0, weight=1)
 
-        self.tabla_inventario = TI.TablaInventario(
-            tabla_scroll_frame,
-            self.inventario.productos
-        )
-
         self.frame_treeview = ctk.CTkFrame(
             tabla_scroll_frame,
             fg_color="transparent"
@@ -283,18 +272,6 @@ class VentanaInventario(ctk.CTkFrame):
         # Frame de botones
         self.frame_botones = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.frame_botones.pack(fill="x")
-
-        self.btn_cambiar_vista = ctk.CTkButton(
-            self.frame_botones,
-            text="Ver TablaInventario",
-            fg_color="#636e72",
-            hover_color="#4b5457",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=40,
-            command=self.cambiar_vista
-        )
-        self.btn_cambiar_vista.pack(side="right", padx=(10, 0), pady=5)
 
         self.btn_ingresar = ctk.CTkButton(
             self.frame_botones,
@@ -427,7 +404,6 @@ class VentanaInventario(ctk.CTkFrame):
         #         f"Q{producto.utilidad:.2f}",
         #         producto.stock_minimo
         #     ))
-        self.tabla_inventario.actualizar(self.inventario.productos)
         for item in self.tabla_productos.get_children():
             self.tabla_productos.delete(item)
 
@@ -454,34 +430,20 @@ class VentanaInventario(ctk.CTkFrame):
                 tags=("stock_bajo",) if stock_bajo else ()
             )
 
-    def cambiar_vista(self):
-        if self.vista_actual == "tabla_inventario":
-            self.tabla_inventario.pack_forget()
-            self.frame_treeview.pack(fill="both", expand=True)
-            self.vista_actual = "treeview"
-            self.btn_cambiar_vista.configure(text="Ver TablaInventario")
-        else:
-            self.frame_treeview.pack_forget()
-            self.tabla_inventario.pack(fill="both", expand=True)
-            self.vista_actual = "tabla_inventario"
-            self.btn_cambiar_vista.configure(text="Ver Treeview")
-
     def obtener_producto_seleccionado(self):
-        if self.vista_actual == "treeview":
-            seleccion = self.tabla_productos.selection()
-            if not seleccion:
-                return None
-            id_producto = self.tabla_productos.item(
-                seleccion[0], "values"
-            )[0]
-            return next(
-                (
-                    producto for producto in self.inventario.productos
-                    if str(producto.id_producto) == str(id_producto)
-                ),
-                None
-            )
-        return self.tabla_inventario.producto_seleccionado
+        seleccion = self.tabla_productos.selection()
+        if not seleccion:
+            return None
+        id_producto = self.tabla_productos.item(
+            seleccion[0], "values"
+        )[0]
+        return next(
+            (
+                producto for producto in self.inventario.productos
+                if str(producto.id_producto) == str(id_producto)
+            ),
+            None
+        )
 
     def buscar_producto(self, nombre="", descripcion="", codigo=""):
         if self.timer_id:
