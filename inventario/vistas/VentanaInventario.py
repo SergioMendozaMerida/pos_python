@@ -37,7 +37,7 @@ class VentanaInventario(ctk.CTkFrame):
         self.icon_export = AnabellIcons.obtener_imagen('export')
         self.icon_agregar_stock = AnabellIcons.obtener_imagen('add_stock')
         self.icon_borrar = AnabellIcons.obtener_imagen('delete')
-        self.vista_actual = "tabla_inventario"
+        self.vista_actual = "treeview"  # Valor inicial de la vista
 
         # Frame búsqueda
         self.frame_contenedor_filtros = ctk.CTkFrame(
@@ -218,7 +218,6 @@ class VentanaInventario(ctk.CTkFrame):
             tabla_scroll_frame,
             self.inventario.productos
         )
-        self.tabla_inventario.pack(fill="both", expand=True)
 
         self.frame_treeview = ctk.CTkFrame(
             tabla_scroll_frame,
@@ -279,6 +278,7 @@ class VentanaInventario(ctk.CTkFrame):
         self.tabla_productos.grid(row=0, column=0, sticky="nsew")
         self.scroll_bar.grid(row=0, column=1, sticky="ns")
         self.scroll_barx.grid(row=1, column=0, sticky="ew")
+        self.frame_treeview.pack(fill="both", expand=True)
 
         # Frame de botones
         self.frame_botones = ctk.CTkFrame(self.main_frame, fg_color="transparent")
@@ -286,7 +286,7 @@ class VentanaInventario(ctk.CTkFrame):
 
         self.btn_cambiar_vista = ctk.CTkButton(
             self.frame_botones,
-            text="Ver Treeview",
+            text="Ver TablaInventario",
             fg_color="#636e72",
             hover_color="#4b5457",
             text_color="white",
