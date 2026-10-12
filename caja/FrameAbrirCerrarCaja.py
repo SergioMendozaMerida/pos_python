@@ -100,7 +100,7 @@ class FrameAbrirCaja(ctk.CTkToplevel):
             saldo_inicial = float(self.entry_saldo_inicial.get())
             self.caja.abrir_caja(saldo_inicial)
             self.actualizar_caja_callback()
-            self.show_productos()
+            self.show_productos(cantidad=10)
             self.destroy()
         except ValueError:
             messagebox.showerror("Error", "Ingrese un monto numérico válido para el saldo inicial.")
@@ -206,7 +206,7 @@ class FrameCerrarCaja(ctk.CTkToplevel):
 
             self.caja.cerrar_caja(efectivo_final)
             self.actualizar_caja_callback()
-            self.show_productos()
+            self.show_productos(cantidad=10)  # Mostrar solo los primeros 10 productos después del cierre
             self.destroy()
         except ValueError:
             messagebox.showerror("Error", "Ingrese un monto numérico válido para el cierre.")

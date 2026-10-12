@@ -4,7 +4,7 @@ import recibos.logica.CrearRecibo as RV
 
 
 class FrameTerminarVenta(ctk.CTkToplevel):
-    def __init__(self, parent, carrito, limpiar_carrito, actualizar_recibos, actualizar_ventas, usuario, calcular_total):
+    def __init__(self, parent, carrito, limpiar_carrito, usuario, calcular_total):
         super().__init__(parent)
         self.title("Resumen de Venta")
         self.geometry("440x550")
@@ -15,8 +15,6 @@ class FrameTerminarVenta(ctk.CTkToplevel):
 
         self.carrito = carrito
         self.limpiar_carrito = limpiar_carrito
-        self.actualizar_recibos = actualizar_recibos
-        self.actualizar_ventas = actualizar_ventas
         self.usuario = usuario
         self.calcular_total = calcular_total
         self.timer_id = None
@@ -150,7 +148,5 @@ class FrameTerminarVenta(ctk.CTkToplevel):
         cv.crear_recibo()
         self.carrito.vaciar_carrito()
         self.limpiar_carrito()
-        self.actualizar_ventas()
-        self.actualizar_recibos()
         self.calcular_total()
         self.cerrar()

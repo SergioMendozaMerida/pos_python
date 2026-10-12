@@ -11,13 +11,10 @@ from assets.icons.AnabellIcons import AnabellIcons
 
 class VentanaVentas(ctk.CTkFrame):
 
-    def __init__(self, master, inventario, reporte_ventas, actualizar_recibos, actualizar_ventas, usuario, caja):
+    def __init__(self, master, inventario, usuario, caja):
         super().__init__(master, fg_color="#f5f6fa")
 
         self.inventario = inventario
-        self.reporte_ventas = reporte_ventas
-        self.actualizar_recibos = actualizar_recibos
-        self.actualizar_ventas = actualizar_ventas
         self.usuario = usuario
         self.caja = caja
         self.app_bg = "#f5f6fa"
@@ -438,7 +435,6 @@ class VentanaVentas(ctk.CTkFrame):
         self.carrito.agregar_producto(producto.id_producto, 1)
         self.actualizar_stock_escaneado(producto)
         self.show_carrito()
-        #self.show_productos()
         self.entry_codigo.delete(0, tk.END)
         self.calcular_total()
 
@@ -449,9 +445,10 @@ class VentanaVentas(ctk.CTkFrame):
 
     def buscar(self, nombre, descripcion):
         self.inventario.buscar_producto(nombre, descripcion)
-        self.show_productos()
+        self.show_productos(cantidad=10)  # Mostrar solo los primeros 10 productos después de la búsqueda
 
     def show_productos_inicio(self):
+        self.inventario.obtener_productos()
         self.show_productos(cantidad=10)  # Mostrar solo los primeros 10 productos al inicio
 
     def show_productos(self, cantidad=None):
@@ -609,7 +606,7 @@ class VentanaVentas(ctk.CTkFrame):
         self.entry_telefono.delete(0, tk.END)
         self.carrito.cancelar_venta()
         self.show_carrito()
-        self.show_productos()
+        self.show_productos(cantidad=10)
         messagebox.showinfo("Canelado", "La venta se ha cancelado")
 
     def quitar_producto(self):
@@ -626,7 +623,7 @@ class VentanaVentas(ctk.CTkFrame):
             self.carrito.quitar_producto(item)
             messagebox.showinfo("Exito", "El producto ha sido removido.")
             self.show_carrito()
-            self.show_productos()
+            self.show_productos(cantidad=10)
 
     def cambiar_cantidad(self):
         selection = self.tabla_carrito.selection()
@@ -661,8 +658,8 @@ class VentanaVentas(ctk.CTkFrame):
 
         self.carrito.set_datos_cliente(nombre, direccion, dpi, nit, telefono)
 
-        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito, self.actualizar_recibos, 
-                                               self.actualizar_ventas, self.usuario, self.calcular_total)
+        frm_ter_venta = FTV.FrameTerminarVenta(self, self.carrito, self.limpiar_carrito, 
+                                               self.usuario, self.calcular_total)
 
         #self.show_carrito()
         

@@ -224,6 +224,6 @@ class FrameModificarVenta(ctk.CTkToplevel):
 
         if res:
             self.show_carrito()
-            self.actualizar_productos()
+            self.actualizar_productos(cantidad=10)
             self.parent.entry_codigo.focus_set()
             self.destroy()

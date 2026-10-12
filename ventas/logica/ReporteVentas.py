@@ -36,7 +36,7 @@ class ReporteVentas:
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("SELECT * FROM ventas ORDER BY fecha DESC")
+            cursor.execute("SELECT * FROM ventas ORDER BY id_venta DESC")
             ventas = cursor.fetchall()
             self.ventas.clear()
             self.total_ventas = 0.0

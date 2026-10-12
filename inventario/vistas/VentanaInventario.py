@@ -10,7 +10,7 @@ import inventario.logica.crearReporteInventario as CRI
 from assets.icons.AnabellIcons import AnabellIcons
 
 class VentanaInventario(ctk.CTkFrame):
-    def __init__(self, parent, usuario, actualizar_tabla_ingresos):
+    def __init__(self, parent, usuario, inventario):
         super().__init__(parent, fg_color="#f4f6f9")
         
         # Configuración de colores
@@ -22,8 +22,7 @@ class VentanaInventario(ctk.CTkFrame):
         self.color_border = "#dfe6e9"
         
         self.usuario = usuario
-        self.actualizar_tabla_ingresos = actualizar_tabla_ingresos
-        self.inventario = inv.Inventario(usuario)
+        self.inventario = inventario  
 
         # Frame principal con padding
         self.main_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -375,7 +374,7 @@ class VentanaInventario(ctk.CTkFrame):
         formulario = FP.FormProductos(self, self.inventario, self.actualizar_tabla)
 
     def abrir_ingreso_stock(self):
-        ingreso_stock = FIS.FrameIngresoStock(self, self.inventario, self.actualizar_tabla, self.actualizar_tabla_ingresos)
+        ingreso_stock = FIS.FrameIngresoStock(self, self.inventario, self.actualizar_tabla)
         ingreso_stock.focus()
 
     def cargar_productos(self):

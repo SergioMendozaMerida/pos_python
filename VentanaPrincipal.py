@@ -2,6 +2,7 @@ import ctypes
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import messagebox
+import inventario.logica.Inventario as inv
 import inventario.vistas.VentanaInventario as vi
 import ventas.vistas.VentanaVentas as Vv
 import ventas.vistas.VentanaReporteVentas as Vrv
@@ -67,22 +68,20 @@ class VentanaPrincipal(ctk.CTk):
 
         self.resizable(True, True)
 
-        self.usuario = self.login_frame.login.usuario
-        self.empresa = E.Empresa()
         
-        self.caja = Caja.Caja(self.usuario)
-        self.ingresos_stock = VIS.VentanaIngresosStock(self)
-        self.inventario = vi.VentanaInventario(self, self.usuario, self.ingresos_stock.actualizar_tabla)
+
+        self.usuario = self.login_frame.login.usuario
+        self.inventario = inv.Inventario(self.usuario)
+        self.empresa = E.Empresa()
         self.reporte_ventas = Rv.ReporteVentas()
-        self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
-        self.recibos = VR.VentanaRecibos(self)
-        self.ventas = Vv.VentanaVentas(self, self.inventario.inventario,self.ventana_reporte_ventas,self.recibos.actualizar_recibos,
-                                       self.ventana_reporte_ventas.actualizar_ventas, self.usuario, self.caja)
-        self.datos_empresa = FE.FrameEmpresa(self, self.empresa, self.usuario)
-        self.admin_usuarios = FU.FrameUsuarios(self)   
-        self.ventana_egresos = VE.VentanaEgresos(self, self.caja)
-        self.ventana_sesiones_caja = VSC.VentanaSesionesCaja(self)
-        self.terminos_condiciones = TC.TerminosYCondiciones(self)
+        self.caja = Caja.Caja(self.usuario)
+
+        #self.ingresos_stock = VIS.VentanaIngresosStock(self)
+        #self.ventana_inventario = vi.VentanaInventario(self, self.usuario, self.ingresos_stock.actualizar_tabla, self.inventario)
+        #self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
+        #self.recibos = VR.VentanaRecibos(self)
+        self.ventas = Vv.VentanaVentas(self, self.inventario,
+                                       self.usuario, self.caja)
         
 # 1. Configuración de la barra (Navbar) con un color más sobrio
         # Un azul más profundo o un gris oscuro profesional
@@ -111,7 +110,7 @@ class VentanaPrincipal(ctk.CTk):
             self.frm_menu_bar, 
             text="Inventario",
             image=self.icon_inventory,
-            command=lambda: self.draw_frames(self.inventario, self.btn_inventario),
+            command=lambda: self.draw_ventana_inventario(self.btn_inventario),
             **self.btn_style
         )
         self.btn_inventario.pack(side="left", padx=3, pady=7)
@@ -131,7 +130,7 @@ class VentanaPrincipal(ctk.CTk):
             self.frm_menu_bar, 
             text="R. Ventas",
             image=self.icon_reports,
-            command=lambda: self.draw_frames(self.ventana_reporte_ventas, self.btn_reporte_ventas),
+            command=lambda: self.draw_ventana_reporte_ventas(self.btn_reporte_ventas),
             **self.btn_style
         )
         self.btn_reporte_ventas.pack(side="left", padx=3, pady=7)
@@ -140,7 +139,7 @@ class VentanaPrincipal(ctk.CTk):
             self.frm_menu_bar, 
             text="Recibos",
             image=self.icon_recibos, 
-            command=lambda: self.draw_frames(self.recibos, self.btn_recibos),
+            command=lambda: self.draw_ventana_recibos(self.btn_recibos),
             **self.btn_style
         )
         self.btn_recibos.pack(side="left", padx=3, pady=7)
@@ -149,7 +148,7 @@ class VentanaPrincipal(ctk.CTk):
             self.frm_menu_bar,
             text="R.I. Stock", 
             image=self.icon_reports,
-            command=lambda: self.draw_frames(self.ingresos_stock, self.btn_ingresos_stock),
+            command=lambda: self.draw_ventana_ingresos_stock(self.btn_ingresos_stock),
             **self.btn_style
         )
         self.btn_ingresos_stock.pack(side="left", padx=3, pady=7)
@@ -158,7 +157,7 @@ class VentanaPrincipal(ctk.CTk):
             self.frm_menu_bar,
             text="Egresos",
             image=self.icon_egresos,
-            command=lambda: self.draw_frames(self.ventana_egresos, self.btn_egresos),
+            command=lambda: self.draw_ventana_egresos(self.btn_egresos),
             **self.btn_style
         )
         self.btn_egresos.pack(side="left", padx=3, pady=7)
@@ -167,7 +166,7 @@ class VentanaPrincipal(ctk.CTk):
             self.frm_menu_bar,
             text="Sesiones Caja",
             image=self.icon_caja,
-            command=lambda: self.draw_frames(self.ventana_sesiones_caja, self.btn_sesiones_caja),
+            command=lambda: self.draw_ventana_sesiones_caja(self.btn_sesiones_caja),
             **self.btn_style
         )
         self.btn_sesiones_caja.pack(side="left", padx=3, pady=7)
@@ -177,7 +176,7 @@ class VentanaPrincipal(ctk.CTk):
             self.frm_menu_bar, 
             text="Configuración",
             image=self.icon_settings,
-            command=lambda: self.draw_frames(self.datos_empresa, self.btn_datos_empresa),
+            command=lambda: self.draw_ventana_datos_empresa(self.btn_datos_empresa),
             **self.btn_style
         )
         self.btn_datos_empresa.pack(side="left", padx=3, pady=7)
@@ -189,7 +188,7 @@ class VentanaPrincipal(ctk.CTk):
                 self.frm_menu_bar, 
                 text="Usuarios",
                 image=self.icon_users,
-                command=lambda: self.draw_frames(self.admin_usuarios, self.btn_usuarios),
+                command=lambda: self.draw_ventana_usuarios(self.btn_usuarios),
                 **self.btn_style
             )
             self.btn_usuarios.pack(side="left", padx=3, pady=7)
@@ -199,7 +198,7 @@ class VentanaPrincipal(ctk.CTk):
             self.frm_menu_bar, 
             text="Info",
             image=self.icon_info,
-            command=lambda: self.draw_frames(self.terminos_condiciones, self.btn_terminos),
+            command=lambda: self.draw_ventana_terminos_condiciones(self.btn_terminos),
             **self.btn_style
         )
         self.btn_terminos.pack(side="left", padx=3, pady=7)
@@ -216,9 +215,7 @@ class VentanaPrincipal(ctk.CTk):
         self.btn_logout.configure(fg_color="#a93226", hover_color="#e74c3c")
         self.btn_logout.pack(side="right", padx=6, pady=7)
 
-        self.frames = [self.inventario, self.ventas, self.ventana_reporte_ventas, self.recibos, self.datos_empresa, 
-                       self.admin_usuarios, self.ingresos_stock, self.ventana_egresos, self.ventana_sesiones_caja, self.terminos_condiciones]
-        #self.ventas.pack(fill="both", expand=True)
+        self.frames = [self.ventas]
 
         self.botones = [self.btn_inventario, self.btn_ventas, self.btn_reporte_ventas, self.btn_recibos, self.btn_datos_empresa, 
                         self.btn_usuarios if self.usuario.rol == "admin" else None, self.btn_ingresos_stock, self.btn_egresos, 
@@ -247,6 +244,108 @@ class VentanaPrincipal(ctk.CTk):
         x = (self.winfo_screenwidth() - ancho) // 2
         y = (self.winfo_screenheight() - alto) // 2
         self.geometry(f"{ancho}x{alto}+{x}+{y}")
+
+    def draw_ventana_inventario(self, boton):
+        res = self.validar_existencia_ventana(vi.VentanaInventario)
+        if res:
+            self.draw_frames(self.ventana_inventario, boton)
+            return
+
+        self.ventana_inventario = vi.VentanaInventario(self, self.usuario, self.inventario)
+        self.frames.append(self.ventana_inventario)
+        self.draw_frames(self.ventana_inventario, boton)
+
+    def draw_ventana_datos_empresa(self, boton):
+        res = self.validar_existencia_ventana(FE.FrameEmpresa)
+        if res:
+            self.draw_frames(self.datos_empresa, boton)
+            return
+
+        self.datos_empresa = FE.FrameEmpresa(self, self.empresa, self.usuario)
+        self.frames.append(self.datos_empresa)
+        self.draw_frames(self.datos_empresa, boton)
+
+    def draw_ventana_usuarios(self, boton):
+        res = self.validar_existencia_ventana(FU.FrameUsuarios)
+        if res:
+            self.draw_frames(self.admin_usuarios, boton)
+            return
+
+        self.admin_usuarios = FU.FrameUsuarios(self)
+        self.frames.append(self.admin_usuarios)
+        self.draw_frames(self.admin_usuarios, boton)
+
+    def draw_ventana_egresos(self, boton):
+        res = self.validar_existencia_ventana(VE.VentanaEgresos)
+        if res:
+            self.draw_frames(self.ventana_egresos, boton)
+            return
+
+        self.ventana_egresos = VE.VentanaEgresos(self, self.caja)
+        self.frames.append(self.ventana_egresos)
+        self.draw_frames(self.ventana_egresos, boton)
+
+    def draw_ventana_sesiones_caja(self, boton):
+        res = self.validar_existencia_ventana(VSC.VentanaSesionesCaja)
+        if res:
+            self.draw_frames(self.ventana_sesiones_caja, boton)
+            return
+
+        self.ventana_sesiones_caja = VSC.VentanaSesionesCaja(self)
+        self.frames.append(self.ventana_sesiones_caja)
+        self.draw_frames(self.ventana_sesiones_caja, boton)
+
+    def draw_ventana_terminos_condiciones(self, boton):
+        res = self.validar_existencia_ventana(TC.TerminosYCondiciones)
+        if res:
+            self.draw_frames(self.terminos_condiciones, boton)
+            return
+
+        self.terminos_condiciones = TC.TerminosYCondiciones(self)
+        self.frames.append(self.terminos_condiciones)
+        self.draw_frames(self.terminos_condiciones, boton)
+
+    def draw_ventana_reporte_ventas(self, boton):
+        res = self.validar_existencia_ventana(Vrv.VentanaReporteVentas)
+        if res:
+            self.draw_frames(self.ventana_reporte_ventas, boton)
+            self.ventana_reporte_ventas.actualizar_ventas()
+            return
+
+        self.ventana_reporte_ventas = Vrv.VentanaReporteVentas(self, self.reporte_ventas)
+        self.frames.append(self.ventana_reporte_ventas)
+        self.draw_frames(self.ventana_reporte_ventas, boton)
+        self.ventana_reporte_ventas.actualizar_ventas()
+
+    def draw_ventana_recibos(self, boton):
+        res = self.validar_existencia_ventana(VR.VentanaRecibos)
+        if res:
+            self.draw_frames(self.recibos, boton)
+            self.recibos.actualizar_recibos()
+            return
+
+        self.recibos = VR.VentanaRecibos(self)
+        self.frames.append(self.recibos)
+        self.draw_frames(self.recibos, boton)
+        self.recibos.actualizar_recibos()
+
+    def draw_ventana_ingresos_stock(self, boton):
+        res = self.validar_existencia_ventana(VIS.VentanaIngresosStock)
+        if res:
+            self.draw_frames(self.ingresos_stock, boton)
+            self.ingresos_stock.actualizar_tabla()
+            return
+
+        self.ingresos_stock = VIS.VentanaIngresosStock(self)
+        self.frames.append(self.ingresos_stock)
+        self.draw_frames(self.ingresos_stock, boton)
+        self.ingresos_stock.actualizar_tabla()
+
+    def validar_existencia_ventana(self, ventana_clase):
+        for frame in self.frames:
+            if isinstance(frame, ventana_clase):
+                return True
+        return False
 
     def draw_frames(self, new_frame, boton=None):
         for frame in self.frames:
