@@ -1,63 +1,149 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import messagebox
+import customtkinter as ctk
 import datetime
 import egresos.Egresos as E
 
-class FormRegistrarEgreso(tk.Toplevel):
+
+class FormRegistrarEgreso(ctk.CTkToplevel):
     def __init__(self, parent, caja, actualizarEgresos=None):
         super().__init__(parent)
         self.title("Registrar Egreso")
-        self.geometry("400x420")
+        self.geometry("480x570")
         self.resizable(False, False)
         self.parent = parent
         self.actualizarEgresos = actualizarEgresos
         self.caja = caja
 
-        self.configure(bg="#f5f6fa")
+        self.configure(fg_color="#f4f6f9")
 
-        # Estilos y Colores
+        # Estilos y colores
         self.primary_color = "#0984e3"
         self.success_color = "#00b894"
-        self.danger_color = "#d63031"
+        self.neutral_color = "#636e72"
+        self.header_color = "#2c3e50"
+        self.text_color = "#2d3436"
+        self.border_color = "#dfe6e9"
 
-        # Hacer la ventana modal
         self.transient(parent)
         self.grab_set()
 
-        tk.Label(
-            self, text="NUEVO EGRESO", font=("Segoe UI", 14, "bold"), 
-            bg="#f5f6fa", fg=self.primary_color
-        ).pack(pady=20)
+        header = ctk.CTkFrame(
+            self,
+            fg_color=self.header_color,
+            height=96,
+            corner_radius=0
+        )
+        header.pack(fill="x")
+        header.pack_propagate(False)
+        ctk.CTkLabel(
+            header,
+            text="Registrar egreso",
+            font=ctk.CTkFont(family="Segoe UI", size=20, weight="bold"),
+            text_color="white"
+        ).pack(pady=(17, 0))
+        ctk.CTkLabel(
+            header,
+            text="Registra un gasto de la jornada de caja",
+            font=ctk.CTkFont(family="Segoe UI", size=12),
+            text_color="#dfe6e9"
+        ).pack(pady=(2, 12))
 
-        # Contenedor de formulario
-        container = tk.Frame(self, bg="white", padx=20, pady=20, relief="solid", bd=1)
-        container.pack(padx=20, fill="both", expand=True)
+        container = ctk.CTkFrame(
+            self,
+            fg_color="white",
+            corner_radius=14,
+            border_width=1,
+            border_color=self.border_color
+        )
+        container.pack(padx=26, pady=24, fill="both", expand=True)
 
-        tk.Label(container, text="Razón / Concepto:", font=("Segoe UI", 10, "bold"), bg="white").pack(anchor="w")
-        self.entry_razon = tk.Entry(container, font=("Segoe UI", 11), bd=1, relief="solid")
-        self.entry_razon.pack(fill="x", pady=(5, 15))
+        estilo_etiqueta = ctk.CTkFont(
+            family="Segoe UI",
+            size=13,
+            weight="bold"
+        )
+        estilo_entrada = {
+            "font": ctk.CTkFont(family="Segoe UI", size=13),
+            "height": 44,
+            "corner_radius": 8,
+            "border_width": 1,
+            "border_color": self.border_color,
+            "fg_color": "white",
+            "text_color": self.text_color
+        }
 
-        tk.Label(container, text="Proveedor (Opcional):", font=("Segoe UI", 10, "bold"), bg="white").pack(anchor="w")
-        self.entry_proveedor = tk.Entry(container, font=("Segoe UI", 11), bd=1, relief="solid")
-        self.entry_proveedor.pack(fill="x", pady=(5, 15))
+        form = ctk.CTkFrame(container, fg_color="transparent")
+        form.pack(fill="both", expand=True, padx=30, pady=(28, 20))
 
-        tk.Label(container, text="Monto (Q):", font=("Segoe UI", 10, "bold"), bg="white").pack(anchor="w")
-        self.entry_monto = tk.Entry(container, font=("Segoe UI", 11), bd=1, relief="solid")
-        self.entry_monto.pack(fill="x", pady=(5, 15))
+        ctk.CTkLabel(
+            form,
+            text="Razón o concepto",
+            font=estilo_etiqueta,
+            text_color=self.text_color
+        ).pack(anchor="w")
+        self.entry_razon = ctk.CTkEntry(form, **estilo_entrada)
+        self.entry_razon.pack(fill="x", pady=(7, 20))
 
-        # Botones
-        btn_frame = tk.Frame(self, bg="#f5f6fa")
-        btn_frame.pack(fill="x", pady=20)
+        ctk.CTkLabel(
+            form,
+            text="Proveedor (opcional)",
+            font=estilo_etiqueta,
+            text_color=self.text_color
+        ).pack(anchor="w")
+        self.entry_proveedor = ctk.CTkEntry(form, **estilo_entrada)
+        self.entry_proveedor.pack(fill="x", pady=(7, 20))
 
-        tk.Button(
-            btn_frame, text="Registrar", bg=self.success_color, fg="white", 
-            font=("Segoe UI", 10, "bold"), command=self.registrar, cursor="hand2", width=12
-        ).pack(side="left", padx=(40, 10))
+        ctk.CTkLabel(
+            form,
+            text="Monto (Q)",
+            font=estilo_etiqueta,
+            text_color=self.text_color
+        ).pack(anchor="w")
+        self.entry_monto = ctk.CTkEntry(form, **estilo_entrada)
+        self.entry_monto.pack(fill="x", pady=(7, 28))
 
-        tk.Button(
-            btn_frame, text="Cancelar", bg=self.danger_color, fg="white", 
-            font=("Segoe UI", 10, "bold"), command=self.destroy, cursor="hand2", width=12
-        ).pack(side="right", padx=(10, 40))
+        for entry in (
+            self.entry_razon,
+            self.entry_proveedor,
+            self.entry_monto
+        ):
+            entry.bind("<Return>", lambda event: self.registrar())
+
+        btn_frame = ctk.CTkFrame(form, fg_color="transparent")
+        btn_frame.pack(fill="x")
+        ctk.CTkButton(
+            btn_frame,
+            text="Registrar egreso",
+            fg_color=self.success_color,
+            hover_color="#009f7f",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold"),
+            command=self.registrar,
+            cursor="hand2",
+            height=46,
+            corner_radius=10
+        ).pack(side="left", expand=True, fill="x", padx=(0, 8))
+
+        ctk.CTkButton(
+            btn_frame,
+            text="Cancelar",
+            fg_color=self.neutral_color,
+            hover_color="#4d585c",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold"),
+            command=self.destroy,
+            cursor="hand2",
+            height=46,
+            corner_radius=10
+        ).pack(side="left", expand=True, fill="x", padx=(8, 0))
+
+        self.entry_razon.focus_set()
+        self.update_idletasks()
+        ancho = self.winfo_width()
+        alto = self.winfo_height()
+        x = (self.winfo_screenwidth() - ancho) // 2
+        y = (self.winfo_screenheight() - alto) // 2
+        self.geometry(f"{ancho}x{alto}+{x}+{y}")
 
     def registrar(self):
         razon = self.entry_razon.get().strip()

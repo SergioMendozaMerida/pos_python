@@ -289,11 +289,13 @@ class VentanaPrincipal(ctk.CTk):
         res = self.validar_existencia_ventana(VSC.VentanaSesionesCaja)
         if res:
             self.draw_frames(self.ventana_sesiones_caja, boton)
+            self.ventana_sesiones_caja.actualizar_tabla()
             return
 
         self.ventana_sesiones_caja = VSC.VentanaSesionesCaja(self)
         self.frames.append(self.ventana_sesiones_caja)
         self.draw_frames(self.ventana_sesiones_caja, boton)
+        
 
     def draw_ventana_terminos_condiciones(self, boton):
         res = self.validar_existencia_ventana(TC.TerminosYCondiciones)

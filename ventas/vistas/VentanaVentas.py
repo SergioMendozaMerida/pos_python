@@ -8,6 +8,7 @@ import caja.FrameAbrirCerrarCaja as FAC
 import caja.FrameDetalleCaja as FDC
 import ventas.vistas.FrameModificar as FM
 from assets.icons.AnabellIcons import AnabellIcons
+from ventas.vistas.form_cantidad import FormCantidad
 
 class VentanaVentas(ctk.CTkFrame):
 
@@ -551,7 +552,7 @@ class VentanaVentas(ctk.CTkFrame):
                 height=36,
                 width=100,
                 corner_radius=8,
-                command=lambda p=producto: self.agregar(p),
+                command=lambda p=producto: self.abrir_form_cantidad(p),
             )
             btn_agregar.grid(row=1, column=0, sticky="sew")
 
@@ -567,13 +568,18 @@ class VentanaVentas(ctk.CTkFrame):
             self.stock_labels[producto.id_producto].configure(
                 text=f"Disponible: {stock_actual} unidades"
             )
+    def abrir_form_cantidad(self, producto):
+        form_cantidad = FormCantidad(self, producto, self.agregar)
 
-    def agregar(self, producto):
+    def agregar(self, producto, cantidad=None):
         if self.caja.estado == False:
             messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
             return
 
-        cantidad = simpledialog.askinteger("Cantidad", "Ingrese la Cantidad")
+        #cantidad = simpledialog.askinteger("Cantidad", "Ingrese la Cantidad")
+
+        if cantidad <= 0:
+            messagebox.showerror('Error', 'La cantidad no es valida.')
         
         if cantidad is None:
             return

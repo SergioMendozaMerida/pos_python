@@ -10,15 +10,15 @@ class FrameAbrirCaja(ctk.CTkToplevel):
         self.show_productos = show_productos
 
         # Configuración de Colores y Estilos
-        self.color_fondo = "#f8f9fa"
+        self.color_fondo = "#f4f6f9"
         self.color_header = "#2c3e50"
         self.color_primario = "#0984e3"
         self.color_exito = "#00b894"
-        self.color_error = "#d63031"
+        self.color_neutral = "#636e72"
         self.color_texto = "#2d3436"
 
         self.title("Abrir Caja")
-        self.geometry("400x350")
+        self.geometry("460x420")
         self.resizable(False, False)
         self.configure(fg_color=self.color_fondo)
 
@@ -27,51 +27,57 @@ class FrameAbrirCaja(ctk.CTkToplevel):
         self.grab_set()
 
         # Header
-        header = ctk.CTkFrame(self, fg_color=self.color_header, height=60, corner_radius=0)
+        header = ctk.CTkFrame(self, fg_color=self.color_header, height=82, corner_radius=0)
         header.pack(fill="x")
         header.pack_propagate(False)
         ctk.CTkLabel(
             header,
             text="Apertura de Caja",
             text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold")
-        ).pack(pady=15)
+            font=ctk.CTkFont(family="Segoe UI", size=19, weight="bold")
+        ).pack(pady=(13, 0))
+        ctk.CTkLabel(
+            header,
+            text="Inicia una nueva jornada de ventas",
+            text_color="#dfe6e9",
+            font=ctk.CTkFont(family="Segoe UI", size=12)
+        ).pack(pady=(2, 12))
 
         # Contenido
         container = ctk.CTkFrame(
             self,
             fg_color="white",
-            corner_radius=12,
+            corner_radius=14,
             border_width=1,
             border_color="#dfe6e9"
         )
-        container.pack(fill="both", expand=True, padx=20, pady=20)
+        container.pack(fill="both", expand=True, padx=24, pady=22)
 
         ctk.CTkLabel(
             container,
             text="Monto inicial en caja (Q):",
-            font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color=self.color_texto
-        ).pack(anchor="w", padx=30, pady=(25, 5))
+        ).pack(anchor="w", padx=30, pady=(26, 8))
 
         self.entry_saldo_inicial = ctk.CTkEntry(
             container,
             font=ctk.CTkFont(family="Segoe UI", size=14),
             justify="center",
-            border_color="#dfe6e9",
+            border_color=self.color_primario,
             border_width=1,
-            height=40
+            height=48
         )
-        self.entry_saldo_inicial.pack(fill="x", padx=30, pady=(0, 20))
+        self.entry_saldo_inicial.pack(fill="x", padx=30, pady=(0, 24))
         self.entry_saldo_inicial.focus_set()
         self.entry_saldo_inicial.bind("<Return>", lambda e: self.abrir_caja())
 
         # Botones
         btn_style = {
-            "font": ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            "font": ctk.CTkFont(family="Segoe UI", size=13, weight="bold"),
             "text_color": "white",
-            "height": 40,
-            "corner_radius": 8,
+            "height": 46,
+            "corner_radius": 10,
             "cursor": "hand2"
         }
 
@@ -83,17 +89,24 @@ class FrameAbrirCaja(ctk.CTkToplevel):
             command=self.abrir_caja,
             **btn_style
         )
-        self.btn_abrir.pack(fill="x", padx=30, pady=(0, 10))
+        self.btn_abrir.pack(fill="x", padx=30, pady=(0, 12))
 
         self.btn_cancelar = ctk.CTkButton(
             container,
             text="✕ Cancelar",
-            fg_color=self.color_error,
-            hover_color="#b92527",
+            fg_color=self.color_neutral,
+            hover_color="#4d585c",
             command=self.destroy,
             **btn_style
         )
-        self.btn_cancelar.pack(fill="x", padx=30, pady=(0, 25))
+        self.btn_cancelar.pack(fill="x", padx=30, pady=(0, 26))
+
+        self.update_idletasks()
+        ancho = self.winfo_width()
+        alto = self.winfo_height()
+        x = (self.winfo_screenwidth() - ancho) // 2
+        y = (self.winfo_screenheight() - alto) // 2
+        self.geometry(f"{ancho}x{alto}+{x}+{y}")
 
     def abrir_caja(self):
         try:
@@ -114,62 +127,69 @@ class FrameCerrarCaja(ctk.CTkToplevel):
         self.actualizar_caja_callback = actualizar_caja_callback
         self.show_productos = show_productos
 
-        self.color_fondo = "#f8f9fa"
+        self.color_fondo = "#f4f6f9"
         self.color_header = "#2c3e50"
+        self.color_primario = "#0984e3"
         self.color_error = "#d63031"
         self.color_neutral = "#636e72"
 
         self.title("Cerrar Caja")
-        self.geometry("400x350")
+        self.geometry("460x420")
         self.resizable(False, False)
         self.configure(fg_color=self.color_fondo)
 
         self.transient(parent)
         self.grab_set()
 
-        header = ctk.CTkFrame(self, fg_color=self.color_header, height=60, corner_radius=0)
+        header = ctk.CTkFrame(self, fg_color=self.color_header, height=82, corner_radius=0)
         header.pack(fill="x")
         header.pack_propagate(False)
         ctk.CTkLabel(
             header,
             text="Cierre de Caja",
             text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold")
-        ).pack(pady=15)
+            font=ctk.CTkFont(family="Segoe UI", size=19, weight="bold")
+        ).pack(pady=(13, 0))
+        ctk.CTkLabel(
+            header,
+            text="Registra el efectivo al finalizar la jornada",
+            text_color="#dfe6e9",
+            font=ctk.CTkFont(family="Segoe UI", size=12)
+        ).pack(pady=(2, 12))
 
         container = ctk.CTkFrame(
             self,
             fg_color="white",
-            corner_radius=12,
+            corner_radius=14,
             border_width=1,
             border_color="#dfe6e9"
         )
-        container.pack(fill="both", expand=True, padx=20, pady=20)
+        container.pack(fill="both", expand=True, padx=24, pady=22)
 
         ctk.CTkLabel(
             container,
             text="Efectivo real en caja (Q):",
-            font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color=self.color_header
-        ).pack(anchor="w", padx=30, pady=(25, 5))
+        ).pack(anchor="w", padx=30, pady=(26, 8))
 
         self.entry_monto_final = ctk.CTkEntry(
             container,
             font=ctk.CTkFont(family="Segoe UI", size=14),
             justify="center",
-            border_color="#dfe6e9",
+            border_color=self.color_primario,
             border_width=1,
-            height=40
+            height=48
         )
-        self.entry_monto_final.pack(fill="x", padx=30, pady=(0, 20))
+        self.entry_monto_final.pack(fill="x", padx=30, pady=(0, 24))
         self.entry_monto_final.focus_set()
         self.entry_monto_final.bind("<Return>", lambda e: self.cerrar_caja())
 
         btn_style = {
-            "font": ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            "font": ctk.CTkFont(family="Segoe UI", size=13, weight="bold"),
             "text_color": "white",
-            "height": 40,
-            "corner_radius": 8,
+            "height": 46,
+            "corner_radius": 10,
             "cursor": "hand2"
         }
 
@@ -181,7 +201,7 @@ class FrameCerrarCaja(ctk.CTkToplevel):
             command=self.cerrar_caja,
             **btn_style
         )
-        self.btn_cerrar.pack(fill="x", padx=30, pady=(0, 10))
+        self.btn_cerrar.pack(fill="x", padx=30, pady=(0, 12))
 
         self.btn_cancelar = ctk.CTkButton(
             container,
@@ -191,7 +211,14 @@ class FrameCerrarCaja(ctk.CTkToplevel):
             command=self.destroy,
             **btn_style
         )
-        self.btn_cancelar.pack(fill="x", padx=30, pady=(0, 25))
+        self.btn_cancelar.pack(fill="x", padx=30, pady=(0, 26))
+
+        self.update_idletasks()
+        ancho = self.winfo_width()
+        alto = self.winfo_height()
+        x = (self.winfo_screenwidth() - ancho) // 2
+        y = (self.winfo_screenheight() - alto) // 2
+        self.geometry(f"{ancho}x{alto}+{x}+{y}")
 
     def cerrar_caja(self):
         self.caja.obtener_sesion_caja()

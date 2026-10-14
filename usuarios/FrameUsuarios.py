@@ -79,12 +79,13 @@ class FrameUsuarios(ctk.CTkFrame):
         tabla_inner_frame.grid_rowconfigure(0, weight=1)
         tabla_inner_frame.grid_columnconfigure(0, weight=1)
 
-        columnas = ("id", "nombre", "usuario", "rol", "estado")
+        columnas = ("id", "nombre", "dpi", "usuario", "rol", "estado")
         self.tabla = ttk.Treeview(tabla_inner_frame, columns=columnas, show="headings", selectmode="browse")
 
         # Definición de cabeceras
         self.tabla.heading("id", text="ID")
         self.tabla.heading("nombre", text="Nombre Completo")
+        self.tabla.heading("dpi", text="DPI")
         self.tabla.heading("usuario", text="Usuario de Acceso")
         self.tabla.heading("rol", text="Rol / Permisos")
         self.tabla.heading("estado", text="Estado")
@@ -92,6 +93,7 @@ class FrameUsuarios(ctk.CTkFrame):
         # Configuración de columnas
         self.tabla.column("id", width=60, anchor="center")
         self.tabla.column("nombre", width=250, anchor="w")
+        self.tabla.column("dpi", width=200, anchor="w")
         self.tabla.column("usuario", width=150, anchor="center")
         self.tabla.column("rol", width=150, anchor="center")
         self.tabla.column("estado", width=100, anchor="center")
@@ -214,7 +216,7 @@ class FrameUsuarios(ctk.CTkFrame):
         for u in self.usuarios.usuarios:
             estado_texto = "ACTIVO" if int(u.activo) == 1 else "INACTIVO"
             self.tabla.insert("", "end", iid=u.id_usuario, values=(
-                u.id_usuario, u.nombre, u.usuario, u.rol, estado_texto
+                u.id_usuario, u.nombre, u.dpi, u.usuario, u.rol, estado_texto
             ))
 
     def inactivar(self):

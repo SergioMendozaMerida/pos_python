@@ -1,97 +1,168 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import messagebox
 
-class FormUsuarioNuevo(tk.Toplevel):
+import customtkinter as ctk
+
+
+class FormUsuarioNuevo(ctk.CTkToplevel):
     def __init__(self, parent, crear_usuario, actualizar_tabla):
         super().__init__(parent)
-        self.parent = parent
         self.crear_usuario = crear_usuario
         self.actualizar_tabla = actualizar_tabla
 
-        self.title("Crear Nuevo Usuario")
-        self.geometry("400x500")
-        self.configure(bg="#f0f0f0")
-        self.resizable(False, False)
+        self.color_fondo = "#f4f6f9"
+        self.color_header = "#2c3e50"
+        self.color_texto = "#2d3436"
+        self.color_borde = "#dfe6e9"
+        self.color_primario = "#00b894"
 
-        # Hace que la ventana sea modal
+        self.title("Crear nuevo usuario")
+        self.geometry("460x600")
+        self.resizable(False, False)
+        self.configure(fg_color=self.color_fondo)
         self.transient(parent)
         self.grab_set()
-        self.focus_set()
 
-        # Contenedor principal estilo "Card"
-        container = tk.Frame(self, bg="#ffffff", padx=25, pady=25, relief="flat", bd=1)
-        container.pack(fill="both", expand=True, padx=20, pady=20)
+        header = ctk.CTkFrame(self, fg_color=self.color_header, height=76, corner_radius=0)
+        header.pack(fill="x")
+        header.pack_propagate(False)
+        ctk.CTkLabel(
+            header,
+            text="Nuevo usuario",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=18, weight="bold")
+        ).pack(pady=(13, 2))
+        ctk.CTkLabel(
+            header,
+            text="Crea una cuenta y asigna sus permisos de acceso",
+            text_color="#dfe6e9",
+            font=ctk.CTkFont(family="Segoe UI", size=11)
+        ).pack()
 
-        tk.Label(container, text="NUEVO USUARIO", font=("Segoe UI", 13, "bold"), bg="#ffffff", fg="#2c3e50").pack(pady=(0, 20))
-
-        # Campo Nombre
-        tk.Label(container, text="Nombre Completo:", bg="#ffffff", font=("Segoe UI", 10, "bold"), fg="#636e72").pack(anchor="w")
-        self.entry_nombre = tk.Entry(
-            container, font=("Segoe UI", 11), relief="flat", highlightthickness=1, 
-            highlightbackground="#dfe6e9", highlightcolor="#00b894"
+        card = ctk.CTkFrame(
+            self,
+            fg_color="white",
+            corner_radius=14,
+            border_width=1,
+            border_color=self.color_borde
         )
-        self.entry_nombre.pack(fill="x", pady=(5, 15))
-        self.entry_nombre.focus()
+        card.pack(fill="both", expand=True, padx=18, pady=16)
 
-        # Campo Usuario
-        tk.Label(container, text="Usuario de Acceso:", bg="#ffffff", font=("Segoe UI", 10, "bold"), fg="#636e72").pack(anchor="w")
-        self.entry_usuario = tk.Entry(
-            container, font=("Segoe UI", 11), relief="flat", highlightthickness=1, 
-            highlightbackground="#dfe6e9", highlightcolor="#00b894"
+        ctk.CTkLabel(
+            card,
+            text="Nombre completo",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(16, 5))
+        self.entry_nombre = self._crear_entry(card, "Nombre y apellidos")
+        self.entry_nombre.pack(fill="x", padx=18)
+
+        ctk.CTkLabel(
+            card,
+            text="DPI",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(12, 5))
+        self.entry_dpi = self._crear_entry(card, "Número de DPI")
+        self.entry_dpi.pack(fill="x", padx=18)
+
+        ctk.CTkLabel(
+            card,
+            text="Usuario de acceso",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(12, 5))
+        self.entry_usuario = self._crear_entry(card, "Nombre de usuario")
+        self.entry_usuario.pack(fill="x", padx=18)
+
+        ctk.CTkLabel(
+            card,
+            text="Contraseña",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(12, 5))
+        self.entry_contrasenia = self._crear_entry(card, "Mínimo 6 caracteres", show="●")
+        self.entry_contrasenia.pack(fill="x", padx=18)
+
+        ctk.CTkLabel(
+            card,
+            text="Rol / permisos",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(12, 5))
+        self.combo_rol = ctk.CTkComboBox(
+            card,
+            values=["vendedor", "admin"],
+            state="readonly",
+            height=40,
+            corner_radius=8,
+            border_color=self.color_borde,
+            font=ctk.CTkFont(family="Segoe UI", size=13),
+            dropdown_font=ctk.CTkFont(family="Segoe UI", size=13)
         )
-        self.entry_usuario.pack(fill="x", pady=(5, 15))
+        self.combo_rol.set("vendedor")
+        self.combo_rol.pack(fill="x", padx=18)
 
-        # Campo Contraseña
-        tk.Label(container, text="Contraseña:", bg="#ffffff", font=("Segoe UI", 10, "bold"), fg="#636e72").pack(anchor="w")
-        self.entry_contrasenia = tk.Entry(
-            container, font=("Segoe UI", 11), relief="flat", highlightthickness=1, 
-            highlightbackground="#dfe6e9", highlightcolor="#00b894", show="●"
+        buttons = ctk.CTkFrame(card, fg_color="transparent")
+        buttons.pack(fill="x", padx=18, pady=(16, 16))
+
+        self.btn_cancelar = ctk.CTkButton(
+            buttons,
+            text="Cancelar",
+            command=self.destroy,
+            fg_color="#636e72",
+            hover_color="#4d585c",
+            height=40,
+            corner_radius=9,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         )
-        self.entry_contrasenia.pack(fill="x", pady=(5, 15))
+        self.btn_cancelar.pack(side="right", padx=(8, 0))
 
-        # Selector de Rol
-        tk.Label(container, text="Rol / Permisos:", bg="#ffffff", font=("Segoe UI", 10, "bold"), fg="#636e72").pack(anchor="w")
-        self.combo_rol = ttk.Combobox(
-            container, 
-            values=['vendedor', 'admin'], 
-            font=("Segoe UI", 11), 
-            state="readonly"
+        self.btn_crear = ctk.CTkButton(
+            buttons,
+            text="Crear usuario",
+            command=self.validar_y_crear,
+            fg_color=self.color_primario,
+            hover_color="#009476",
+            height=40,
+            corner_radius=9,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         )
-        self.combo_rol.set('vendedor') # Rol por defecto
-        self.combo_rol.pack(fill="x", pady=(5, 25))
+        self.btn_crear.pack(side="right")
 
-        # Panel de botones
-        btn_frame = tk.Frame(container, bg="#ffffff")
-        btn_frame.pack(fill="x", pady=(10, 0))
-
-        self.btn_crear = tk.Button(
-            btn_frame, text="Crear Usuario", bg="#00b894", fg="white", 
-            relief="flat", padx=15, pady=8, cursor="hand2", font=("Segoe UI", 10, "bold"),
-            command=self.validar_y_crear
+    def _crear_entry(self, parent, placeholder, show=None):
+        return ctk.CTkEntry(
+            parent,
+            placeholder_text=placeholder,
+            show=show,
+            height=40,
+            corner_radius=8,
+            border_color=self.color_borde,
+            font=ctk.CTkFont(family="Segoe UI", size=13)
         )
-        self.btn_crear.pack(side="right", padx=(10, 0))
-
-        self.btn_cancelar = tk.Button(
-            btn_frame, text="Cancelar", bg="#b2bec3", fg="white", 
-            relief="flat", padx=15, pady=8, cursor="hand2", font=("Segoe UI", 10, "bold"),
-            command=self.destroy
-        )
-        self.btn_cancelar.pack(side="right")
 
     def validar_y_crear(self):
         nombre = self.entry_nombre.get().strip()
         usuario = self.entry_usuario.get().strip()
         contrasenia = self.entry_contrasenia.get().strip()
         rol = self.combo_rol.get()
+        dpi = self.entry_dpi.get().strip()
 
-        if not nombre or not usuario or not contrasenia or not rol:
-            messagebox.showwarning("Atención", "Todos los campos son obligatorios.")
+        if not nombre or not dpi or not usuario or not contrasenia or not rol:
+            messagebox.showwarning(
+                "Atención",
+                "Todos los campos son obligatorios.",
+                parent=self
+            )
             return
-        
+
         if len(contrasenia) < 6:
-            messagebox.showwarning("Atención", "La contraseña debe tener al menos 6 caracteres.")
+            messagebox.showwarning(
+                "Atención",
+                "La contraseña debe tener al menos 6 caracteres.",
+                parent=self
+            )
             return
 
-        self.crear_usuario(nombre, usuario, contrasenia, rol)
+        self.crear_usuario(nombre, usuario, contrasenia, rol, dpi)
         self.actualizar_tabla()
         self.destroy()

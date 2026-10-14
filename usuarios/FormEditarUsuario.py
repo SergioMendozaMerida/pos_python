@@ -1,66 +1,142 @@
-import tkinter as tk
 from tkinter import messagebox
 
-class FormEditarUsuario(tk.Toplevel):
+import customtkinter as ctk
+
+
+class FormEditarUsuario(ctk.CTkToplevel):
     def __init__(self, parent, usuario, actualizar_usuario, actualizar_tabla):
         super().__init__(parent)
         self.usuario = usuario
         self.actualizar_usuario = actualizar_usuario
         self.actualizar_tabla = actualizar_tabla
-        
-        self.title("Editar Usuario")
-        self.geometry("400x350")
-        self.configure(bg="#f0f0f0")
+
+        self.color_fondo = "#f4f6f9"
+        self.color_header = "#2c3e50"
+        self.color_texto = "#2d3436"
+        self.color_borde = "#dfe6e9"
+        self.color_primario = "#0984e3"
+
+        self.title("Editar usuario")
+        self.geometry("300x350")
         self.resizable(False, False)
-        
-        # Hace que la ventana sea modal
+        self.configure(fg_color=self.color_fondo)
         self.transient(parent)
         self.grab_set()
 
-        # Contenedor principal
-        container = tk.Frame(self, bg="#ffffff", padx=25, pady=25, relief="flat", bd=1)
-        container.pack(fill="both", expand=True, padx=20, pady=20)
+        header = ctk.CTkFrame(self, fg_color=self.color_header, height=76, corner_radius=0)
+        header.pack(fill="x")
+        header.pack_propagate(False)
+        ctk.CTkLabel(
+            header,
+            text="Editar información",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=18, weight="bold")
+        ).pack(pady=(13, 2))
+        ctk.CTkLabel(
+            header,
+            text="Actualiza el nombre y DPI asociados a esta cuenta",
+            text_color="#dfe6e9",
+            font=ctk.CTkFont(family="Segoe UI", size=11)
+        ).pack()
 
-        tk.Label(container, text="EDITAR INFORMACIÓN", font=("Segoe UI", 14, "bold"), bg="#ffffff", fg="#2c3e50").pack(pady=(0, 20))
+        card = ctk.CTkFrame(
+            self,
+            fg_color="white",
+            corner_radius=14,
+            border_width=1,
+            border_color=self.color_borde
+        )
+        card.pack(fill="both", expand=True, padx=18, pady=16)
 
-        # Campo Nombre
-        tk.Label(container, text="Nombre Completo:", bg="#ffffff", font=("Segoe UI", 10, "bold"), fg="#636e72").pack(anchor="w")
-        self.entry_nombre = tk.Entry(container, font=("Segoe UI", 11), relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
+        ctk.CTkLabel(
+            card,
+            text="Nombre completo",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(20, 7))
+
+        self.entry_nombre = ctk.CTkEntry(
+            card,
+            placeholder_text="Escribe el nombre completo",
+            height=40,
+            corner_radius=8,
+            border_color=self.color_borde,
+            font=ctk.CTkFont(family="Segoe UI", size=13)
+        )
+        self.entry_nombre.pack(fill="x", padx=18)
         self.entry_nombre.insert(0, self.usuario.nombre)
-        self.entry_nombre.pack(fill="x", pady=(5, 15))
 
-        # Campo Usuario
-        #tk.Label(container, text="Nombre de Usuario:", bg="#ffffff", font=("Segoe UI", 10, "bold"), fg="#636e72").pack(anchor="w")
-        #self.entry_usuario = tk.Entry(container, font=("Segoe UI", 11), relief="flat", highlightthickness=1, highlightbackground="#dfe6e9", highlightcolor="#0984e3")
-        #self.entry_usuario.insert(0, self.usuario.usuario)
-        #self.entry_usuario.pack(fill="x", pady=(5, 20))
+        ctk.CTkLabel(
+            card,
+            text="DPI",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(14, 7))
 
-        # Panel de botones
-        btn_frame = tk.Frame(container, bg="#ffffff")
-        btn_frame.pack(fill="x", pady=(10, 0))
-
-        self.btn_guardar = tk.Button(
-            btn_frame, text="Guardar Cambios", bg="#00b894", fg="white", 
-            relief="flat", padx=15, pady=8, cursor="hand2", font=("Segoe UI", 10, "bold"),
-            command=self.validar_y_guardar
+        self.entry_dpi = ctk.CTkEntry(
+            card,
+            placeholder_text="Escribe el DPI",
+            height=40,
+            corner_radius=8,
+            border_color=self.color_borde,
+            font=ctk.CTkFont(family="Segoe UI", size=13)
         )
-        self.btn_guardar.pack(side="right", padx=(10, 0))
+        self.entry_dpi.pack(fill="x", padx=18)
+        self.entry_dpi.insert(0, str(self.usuario.dpi or ""))
 
-        self.btn_cancelar = tk.Button(
-            btn_frame, text="Cancelar", bg="#b2bec3", fg="white", 
-            relief="flat", padx=15, pady=8, cursor="hand2", font=("Segoe UI", 10, "bold"),
-            command=self.destroy
+        buttons = ctk.CTkFrame(card, fg_color="transparent")
+        buttons.pack(fill="x", padx=18, pady=(18, 18))
+
+        self.btn_cancelar = ctk.CTkButton(
+            buttons,
+            text="Cancelar",
+            command=self.destroy,
+            fg_color="#636e72",
+            hover_color="#4d585c",
+            height=40,
+            corner_radius=9,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
         )
-        self.btn_cancelar.pack(side="right")
+        self.btn_cancelar.pack(side="right", padx=(8, 0))
+
+        self.btn_guardar = ctk.CTkButton(
+            buttons,
+            text="Guardar cambios",
+            command=self.validar_y_guardar,
+            fg_color=self.color_primario,
+            hover_color="#076dbb",
+            height=40,
+            corner_radius=9,
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold")
+        )
+        self.btn_guardar.pack(side="right")
+
+        self._centrar(parent)
+        self.after(100, self.entry_nombre.focus_set)
+
+    def _centrar(self, parent):
+        self.update_idletasks()
+        ancho = self.winfo_width()
+        alto = self.winfo_height()
+        x = parent.winfo_rootx() + (parent.winfo_width() - ancho) // 2
+        y = parent.winfo_rooty() + (parent.winfo_height() - alto) // 2
+        self.geometry(f"{ancho}x{alto}+{max(0, x)}+{max(0, y)}")
 
     def validar_y_guardar(self):
         nombre = self.entry_nombre.get().strip()
-        #usuario = self.entry_usuario.get().strip()
-
+        dpi = self.entry_dpi.get().strip()
         if not nombre:
-            messagebox.showwarning("Campos Requeridos", "Por favor, complete todos los campos.")
+            messagebox.showwarning(
+                "Campos requeridos",
+                "Por favor, escriba el nombre completo.",
+                parent=self
+            )
             return
 
-        # Ejecuta la función de actualización pasada por el padre
-        self.actualizar_usuario(self.usuario.id_usuario, nombre, self.actualizar_tabla)
+        self.actualizar_usuario(
+            self.usuario.id_usuario,
+            nombre,
+            dpi,
+            self.actualizar_tabla
+        )
         self.destroy()

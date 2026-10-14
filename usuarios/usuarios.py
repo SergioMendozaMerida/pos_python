@@ -18,11 +18,12 @@ class Usuarios:
             usuarios = cursor.fetchall()
             conexion.close()
             for usuario in usuarios:
-                self.usuarios.append(lg.Usuario(usuario[0], usuario[1], usuario[2], usuario[4], usuario[5]))
+                self.usuarios.append(lg.Usuario(usuario[0], usuario[1], usuario[2], usuario[4], 
+                                                usuario[5], usuario[6]))
         except:
             messagebox.showerror("Error", "Se produjo un error al obtener los usuarios.")
 
-    def crear_usuario(self, nombre, usuario, contrasenia, rol):
+    def crear_usuario(self, nombre, usuario, contrasenia, rol, dpi):
 
         for u in self.usuarios:
             if usuario == u.usuario:
@@ -32,7 +33,8 @@ class Usuarios:
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("INSERT INTO usuarios (nombre, usuario, contrasenia, rol, activo) VALUES (?, ?, ?, ?,1)", (nombre, usuario, contrasenia, rol))
+            cursor.execute("INSERT INTO usuarios (nombre, usuario, contrasenia, rol, activo, dpi) VALUES (?, ?, ?, ?,1,?)", 
+                           (nombre, usuario, contrasenia, rol, dpi))
             conexion.commit()
             conexion.close()
             self.obtener_usuarios()
@@ -50,12 +52,15 @@ class Usuarios:
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al reestablecer la contraseña. {e}")
 
-    def editar_usuario(self, id_usuario, nombre, actualizar_tabla):
+    def editar_usuario(self, id_usuario, nombre, dpi, actualizar_tabla):
 
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("UPDATE usuarios SET nombre = ? WHERE id = ?", (nombre, id_usuario))
+            cursor.execute(
+                "UPDATE usuarios SET nombre = ?, dpi = ? WHERE id = ?",
+                (nombre, dpi, id_usuario)
+            )
             conexion.commit()
             conexion.close()
             self.obtener_usuarios()

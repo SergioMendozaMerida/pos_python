@@ -4,7 +4,7 @@ from tkinter import messagebox
 class Login:
     def __init__(self):
         
-        self.usuario = Usuario(0,"","","","")
+        self.usuario = Usuario(0,"","","","","")
 
     def comprobar_credenciales(self, usuario, contrasena):
         try:
@@ -15,7 +15,8 @@ class Login:
             conexion.close()
 
             if usuario_activo:
-                self.usuario = Usuario(usuario_activo[0], usuario_activo[1], usuario_activo[2], usuario_activo[4], usuario_activo[5])
+                self.usuario = Usuario(usuario_activo[0], usuario_activo[1], usuario_activo[2], usuario_activo[4], 
+                                       usuario_activo[5], usuario_activo[6])
                 return True
             else:
                 return False
@@ -24,10 +25,11 @@ class Login:
             return False
         
 class Usuario:
-    def __init__(self, id_usuario, nombre, usuario, activo, rol):
+    def __init__(self, id_usuario, nombre, usuario, activo, rol, dpi):
         self.id_usuario = id_usuario
         self.nombre = nombre
         self.usuario = usuario
         self.contrasenia = ""
         self.activo = activo
         self.rol = rol
+        self.dpi= dpi
