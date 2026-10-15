@@ -4,10 +4,10 @@ import customtkinter as ctk
 
 
 class FormEditarUsuario(ctk.CTkToplevel):
-    def __init__(self, parent, usuario, actualizar_usuario, actualizar_tabla):
+    def __init__(self, parent, usuario, editar_usuario, actualizar_tabla):
         super().__init__(parent)
         self.usuario = usuario
-        self.actualizar_usuario = actualizar_usuario
+        self.editar_usuario = editar_usuario
         self.actualizar_tabla = actualizar_tabla
 
         self.color_fondo = "#f4f6f9"
@@ -17,7 +17,7 @@ class FormEditarUsuario(ctk.CTkToplevel):
         self.color_primario = "#0984e3"
 
         self.title("Editar usuario")
-        self.geometry("300x350")
+        self.geometry("460x550")
         self.resizable(False, False)
         self.configure(fg_color=self.color_fondo)
         self.transient(parent)
@@ -34,7 +34,7 @@ class FormEditarUsuario(ctk.CTkToplevel):
         ).pack(pady=(13, 2))
         ctk.CTkLabel(
             header,
-            text="Actualiza el nombre y DPI asociados a esta cuenta",
+            text="Actualiza los datos, permisos y estado de esta cuenta",
             text_color="#dfe6e9",
             font=ctk.CTkFont(family="Segoe UI", size=11)
         ).pack()
@@ -84,8 +84,66 @@ class FormEditarUsuario(ctk.CTkToplevel):
         self.entry_dpi.pack(fill="x", padx=18)
         self.entry_dpi.insert(0, str(self.usuario.dpi or ""))
 
+        ctk.CTkLabel(
+            card,
+            text="Rol / permisos",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(14, 7))
+
+        self.combo_rol = ctk.CTkComboBox(
+            card,
+            values=["vendedor", "admin"],
+            state="readonly",
+            height=40,
+            corner_radius=8,
+            border_color=self.color_borde,
+            font=ctk.CTkFont(family="Segoe UI", size=13),
+            dropdown_font=ctk.CTkFont(family="Segoe UI", size=13)
+        )
+        self.combo_rol.set(self.usuario.rol)
+        self.combo_rol.pack(fill="x", padx=18)
+
+        ctk.CTkLabel(
+            card,
+            text="Contraseña (opcional)",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(14, 7))
+
+        self.entry_contrasenia = ctk.CTkEntry(
+            card,
+            placeholder_text="Déjalo vacío para conservar la contraseña actual",
+            show="●",
+            height=40,
+            corner_radius=8,
+            border_color=self.color_borde,
+            font=ctk.CTkFont(family="Segoe UI", size=13)
+        )
+        self.entry_contrasenia.pack(fill="x", padx=18)
+
+        ctk.CTkLabel(
+            card,
+            text="Estado",
+            text_color=self.color_texto,
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold")
+        ).pack(anchor="w", padx=18, pady=(14, 7))
+
+        self.combo_estado = ctk.CTkComboBox(
+            card,
+            values=["Activo", "Inactivo"],
+            state="readonly",
+            height=40,
+            corner_radius=8,
+            border_color=self.color_borde,
+            font=ctk.CTkFont(family="Segoe UI", size=13),
+            dropdown_font=ctk.CTkFont(family="Segoe UI", size=13)
+        )
+        self.combo_estado.set("Activo" if int(self.usuario.activo) == 1 else "Inactivo")
+        self.combo_estado.pack(fill="x", padx=18)
+
         buttons = ctk.CTkFrame(card, fg_color="transparent")
-        buttons.pack(fill="x", padx=18, pady=(18, 18))
+        buttons.pack(fill="x", padx=18, pady=(16, 16))
 
         self.btn_cancelar = ctk.CTkButton(
             buttons,
@@ -120,11 +178,14 @@ class FormEditarUsuario(ctk.CTkToplevel):
         alto = self.winfo_height()
         x = parent.winfo_rootx() + (parent.winfo_width() - ancho) // 2
         y = parent.winfo_rooty() + (parent.winfo_height() - alto) // 2
-        self.geometry(f"{ancho}x{alto}+{max(0, x)}+{max(0, y)}")
+        self.geometry(f"{ancho}x{alto}+{max(0, x)}+{max(0, y-120)}")
 
     def validar_y_guardar(self):
         nombre = self.entry_nombre.get().strip()
         dpi = self.entry_dpi.get().strip()
+        rol = self.combo_rol.get()
+        contrasenia = self.entry_contrasenia.get().strip()
+        estado = 1 if self.combo_estado.get() == "Activo" else 0
         if not nombre:
             messagebox.showwarning(
                 "Campos requeridos",
@@ -133,10 +194,21 @@ class FormEditarUsuario(ctk.CTkToplevel):
             )
             return
 
-        self.actualizar_usuario(
-            self.usuario.id_usuario,
+        if contrasenia and len(contrasenia) < 6:
+            messagebox.showwarning(
+                "Atención",
+                "La contraseña debe tener al menos 6 caracteres.",
+                parent=self
+            )
+            return
+
+        self.editar_usuario(
             nombre,
             dpi,
-            self.actualizar_tabla
+            rol,
+            contrasenia,
+            estado,
+            self.usuario.id_usuario
         )
+        self.actualizar_tabla()
         self.destroy()

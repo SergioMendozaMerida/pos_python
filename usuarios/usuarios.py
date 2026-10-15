@@ -42,67 +42,18 @@ class Usuarios:
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al crear el usuario. {e}")
 
-    def reestablcer_contrasenia(self, id_usuario, nueva_contrasenia):
-        try:
-            conexion = sqlite3.connect("db_inventario.db")
-            cursor = conexion.cursor()
-            cursor.execute("UPDATE usuarios SET contrasenia = ? WHERE id = ?", (nueva_contrasenia, id_usuario))
-            conexion.commit()
-            conexion.close()
-        except Exception as e:
-            messagebox.showerror("Error", f"Se produjo un error al reestablecer la contraseña. {e}")
-
-    def editar_usuario(self, id_usuario, nombre, dpi, actualizar_tabla):
+    def editar_usuario(self, nombre, dpi, rol, contrasenia, estado, id):
 
         try:
-            conexion = sqlite3.connect("db_inventario.db")
-            cursor = conexion.cursor()
-            cursor.execute(
-                "UPDATE usuarios SET nombre = ?, dpi = ? WHERE id = ?",
-                (nombre, dpi, id_usuario)
-            )
-            conexion.commit()
-            conexion.close()
-            self.obtener_usuarios()
-            actualizar_tabla()
+            with sqlite3.connect("db_inventario.db") as conexion:
+                cursor = conexion.cursor()
+                cursor.execute(
+                    "UPDATE usuarios SET nombre = ?, dpi = ?, rol = ?, "
+                    "contrasenia = CASE WHEN ? = '' THEN contrasenia ELSE ? END, "
+                    "activo = ? WHERE id = ?",
+                    (nombre, dpi, rol, contrasenia, contrasenia, estado, id)
+                )
         except Exception as e:
-            messagebox.showerror("Error", f"Se produjo un error al editar el usuario. {e}")
-
-    def cambiar_rol(self, id_usuario, nuevo_rol, actualizar_tabla):
-        try:
-            conexion = sqlite3.connect("db_inventario.db")
-            cursor = conexion.cursor()
-            cursor.execute("UPDATE usuarios SET rol = ? WHERE id = ?", (nuevo_rol, id_usuario))
-            conexion.commit()
-            conexion.close()
-            self.obtener_usuarios()
-            actualizar_tabla()
-        except Exception as e:
-            messagebox.showerror("Error", f"Se produjo un error al cambiar el rol del usuario. {e}")
-
-    def inactivar_usuario(self, id_usuario):
-        try:
-            conexion = sqlite3.connect("db_inventario.db")
-            cursor = conexion.cursor()
-            cursor.execute("UPDATE usuarios SET activo = 0 WHERE id = ?", (id_usuario,))
-            conexion.commit()
-            conexion.close()
-            
-        except Exception as e:
-            messagebox.showerror("Error", f"Se produjo un error al inactivar el usuario. {e}")
-
-    def activar_usuario(self, id_usuario):
-        try:
-            conexion = sqlite3.connect("db_inventario.db")
-            cursor = conexion.cursor()
-            cursor.execute("UPDATE usuarios SET activo = 1 WHERE id = ?", (id_usuario,))
-            conexion.commit()
-            conexion.close()
-        except Exception as e:
-            messagebox.showerror("Error", f"Se produjo un error al activar el usuario. {e}")
-
-
-
-
+            messagebox.showerror("Error", f"Se produjo un error al guardar los cambios. {e}")
         
     

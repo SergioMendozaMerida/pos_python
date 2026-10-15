@@ -3,8 +3,6 @@ from tkinter import ttk, messagebox
 import customtkinter as ctk
 import usuarios.usuarios as U
 import usuarios.FormEditarUsuario as FEU
-import usuarios.FormContrasenia as FC
-import usuarios.FormRol as FR
 import usuarios.FormUsuarioNuevo as FUN
 from assets.icons.AnabellIcons import AnabellIcons
 
@@ -25,8 +23,6 @@ class FrameUsuarios(ctk.CTkFrame):
         self.icono_inactivar = AnabellIcons.obtener_imagen("not")
         self.icono_editar = AnabellIcons.obtener_imagen("edit")
         self.icono_activar = AnabellIcons.obtener_imagen("check")
-        self.icono_cambiar_password = AnabellIcons.obtener_imagen("key")
-        self.icono_cambiar_rol = AnabellIcons.obtener_imagen("role")
 
         # Configuración de pesos para que la tabla se expanda
         self.grid_rowconfigure(1, weight=1)
@@ -177,32 +173,6 @@ class FrameUsuarios(ctk.CTkFrame):
         )
         self.btn_editar.pack(side="left", padx=(0, 10), pady=10)
 
-        self.btn_pass = ctk.CTkButton(
-            self.frame_acciones,
-            text="Cambiar Contraseña",
-            image=self.icono_cambiar_password,
-            fg_color="#6c5ce7",
-            hover_color="#574b90",
-            text_color="white",
-            font=btn_act_font,
-            height=40,
-            command=self.cambiar_password
-        )
-        self.btn_pass.pack(side="left", padx=(0, 10), pady=10)
-
-        self.btn_rol = ctk.CTkButton(
-            self.frame_acciones,
-            text="Cambiar Rol",
-            image=self.icono_cambiar_rol,
-            fg_color="#e67e22",
-            hover_color="#d35400",
-            text_color="white",
-            font=btn_act_font,
-            height=40,
-            command=self.cambiar_rol
-        )
-        self.btn_rol.pack(side="left", padx=(0, 10), pady=10)
-
         self.actualizar_tabla()
 
     def actualizar_tabla(self):
@@ -227,9 +197,17 @@ class FrameUsuarios(ctk.CTkFrame):
         for u in self.usuarios.usuarios:
             if int(u.id_usuario) == int(id_u):
                 usuario = u.usuario
+                usuario_seleccionado = u
                 break
         if messagebox.askyesno("Confirmar", f"¿Está seguro que desea INACTIVAR al usuario {usuario}?"):
-            self.usuarios.inactivar_usuario(id_u)
+            self.usuarios.editar_usuario(
+                usuario_seleccionado.nombre,
+                usuario_seleccionado.dpi,
+                usuario_seleccionado.rol,
+                "",
+                0,
+                id_u
+            )
             self.actualizar_tabla()
 
     def activar(self):
@@ -237,7 +215,17 @@ class FrameUsuarios(ctk.CTkFrame):
         if not seleccion:
             return messagebox.showwarning("Atención", "Seleccione un usuario de la tabla.")
         id_u = seleccion[0]
-        self.usuarios.activar_usuario(id_u)
+        for usuario in self.usuarios.usuarios:
+            if int(usuario.id_usuario) == int(id_u):
+                self.usuarios.editar_usuario(
+                    usuario.nombre,
+                    usuario.dpi,
+                    usuario.rol,
+                    "",
+                    1,
+                    id_u
+                )
+                break
         self.actualizar_tabla()
 
     def editar(self):
@@ -253,33 +241,6 @@ class FrameUsuarios(ctk.CTkFrame):
 
         formulario = FEU.FormEditarUsuario(self, seleccion, self.usuarios.editar_usuario, self.actualizar_tabla)
         self.actualizar_tabla()
-
-    def cambiar_password(self):
-        seleccion = self.tabla.selection()
-        if not seleccion:
-            return messagebox.showwarning("Atención", "Seleccione un usuario de la tabla.")
-        id_u = seleccion[0]
-        
-        for u in self.usuarios.usuarios:
-            if int(u.id_usuario) == int(id_u):
-                seleccion = u
-                break
-
-        formulario = FC.FrameContrasenia(self, seleccion, self.usuarios.reestablcer_contrasenia)
-        self.actualizar_tabla()
-
-    def cambiar_rol(self): 
-        seleccion = self.tabla.selection()
-        if not seleccion:
-            return messagebox.showwarning("Atención", "Seleccione un usuario de la tabla.")
-        id_u = seleccion[0]
-
-        for u in self.usuarios.usuarios:
-            if int(u.id_usuario) == int(id_u):
-                seleccion = u
-                break
-
-        formulario = FR.FormRol(self, seleccion, self.usuarios.cambiar_rol, self.actualizar_tabla)
 
     def abrir_formulario_crear(self): 
         formulario = FUN.FormUsuarioNuevo(self, self.usuarios.crear_usuario, self.actualizar_tabla)
