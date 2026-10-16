@@ -1,8 +1,11 @@
-import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox
+
+import customtkinter as ctk
+
 import categoria.Categoria as Cat
 
-class EditarProducto(tk.Toplevel):
+
+class EditarProducto(ctk.CTkToplevel):
     def __init__(self, parent, inventario, producto, actualizar_callback=None):
         super().__init__(parent)
         self.parent = parent
@@ -12,7 +15,6 @@ class EditarProducto(tk.Toplevel):
 
         self.categorias = Cat.Categorias().lista_categorias
 
-        # Colores coordinados
         self.color_fondo = "#f8f9fa"
         self.color_header = "#2c3e50"
         self.color_primario = "#0984e3"
@@ -23,236 +25,192 @@ class EditarProducto(tk.Toplevel):
         self.color_borde = "#dfe6e9"
 
         self.title("Editar Producto")
-        self.geometry("520x620")
+        x = max(0, (self.winfo_screenwidth() - 520) // 2)
+        self.geometry(f"520x620+{x}+20")
         self.resizable(False, False)
-        self.configure(bg=self.color_fondo)
+        self.configure(fg_color=self.color_fondo)
+        self.transient(parent)
+        self.grab_set()
 
-        # Header
-        self.header_frame = tk.Frame(self, bg=self.color_header, height=60)
+        self.header_frame = ctk.CTkFrame(
+            self, fg_color=self.color_header, height=60, corner_radius=0
+        )
         self.header_frame.pack(fill="x")
         self.header_frame.pack_propagate(False)
 
-        tk.Label(
+        ctk.CTkLabel(
             self.header_frame,
             text="Editar Producto",
-            font=("Segoe UI", 16, "bold"),
-            bg=self.color_header,
-            fg="white"
+            font=ctk.CTkFont(family="Segoe UI", size=16, weight="bold"),
+            text_color="white",
         ).pack(pady=15)
 
-        # Frame principal con padding
-        self.main_frame = tk.Frame(self, bg=self.color_fondo)
+        self.main_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
-        # Fila 1: Nombre y Categoría
-        row1_frame = tk.Frame(self.main_frame, bg=self.color_fondo)
-        row1_frame.pack(fill="x", pady=(0, 15))
+        row1_frame = self._crear_fila(self.main_frame, (0, 15))
+        col1_frame = self._crear_columna(row1_frame, (0, 10))
+        self._crear_label(col1_frame, "Nombre *")
+        self.entry_nombre = self._crear_entrada(col1_frame)
 
-        col1_frame = tk.Frame(row1_frame, bg=self.color_fondo)
-        col1_frame.pack(side="left", fill="both", expand=True, padx=(0, 10))
-
-        tk.Label(col1_frame, text="Nombre *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_nombre = tk.Entry(
-            col1_frame, 
-            font=("Segoe UI", 10), 
-            bg=self.color_entrada, 
-            relief="flat", 
-            bd=0, 
-            highlightthickness=1, 
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_nombre.pack(fill="both", expand=True, ipady=4)
-
-        col2_frame = tk.Frame(row1_frame, bg=self.color_fondo)
-        col2_frame.pack(side="left", fill="both", expand=True)
-
-        tk.Label(col2_frame, text="Categoría", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_categoria = ttk.Combobox(
+        col2_frame = self._crear_columna(row1_frame)
+        self._crear_label(col2_frame, "Categoría")
+        self.entry_categoria = ctk.CTkComboBox(
             col2_frame,
-            font=("Segoe UI", 10),
+            font=ctk.CTkFont(family="Segoe UI", size=10),
             values=self.categorias,
-            state='readonly'
-            )
+            state="readonly",
+            height=36,
+            corner_radius=6,
+            border_color=self.color_borde,
+            fg_color=self.color_entrada,
+            text_color=self.color_texto,
+            button_color=self.color_primario,
+            button_hover_color="#74b9ff",
+        )
         if self.categorias:
-            self.entry_categoria.current(0)
-        self.entry_categoria.pack(fill="both", expand=True, ipady=4)
+            self.entry_categoria.set(self.categorias[0])
+        self.entry_categoria.pack(fill="x")
 
-        # Fila 2: Descripción
-        tk.Label(self.main_frame, text="Descripción", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_descripcion = tk.Entry(
-            self.main_frame, 
-            font=("Segoe UI", 10), 
-            bg=self.color_entrada, 
-            relief="flat", 
-            bd=0, 
-            highlightthickness=1, 
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_descripcion.pack(fill="x", pady=(0, 15), ipady=4)
+        self._crear_label(self.main_frame, "Descripción")
+        self.entry_descripcion = self._crear_entrada(self.main_frame)
+        self.entry_descripcion.pack(fill="x", pady=(0, 15))
 
-        # Fila 3: Presentación
-        tk.Label(self.main_frame, text="Presentación", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_presentacion = tk.Entry(
-            self.main_frame, 
-            font=("Segoe UI", 10), 
-            bg=self.color_entrada, 
-            relief="flat", 
-            bd=0, 
-            highlightthickness=1, 
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_presentacion.pack(fill="x", pady=(0, 15), ipady=4)
+        self._crear_label(self.main_frame, "Presentación")
+        self.entry_presentacion = self._crear_entrada(self.main_frame)
+        self.entry_presentacion.pack(fill="x", pady=(0, 15))
 
-        # Fila 4: Precios (Compra y Venta)
-        row_precios = tk.Frame(self.main_frame, bg=self.color_fondo)
-        row_precios.pack(fill="x", pady=(0, 15))
+        row_precios = self._crear_fila(self.main_frame, (0, 15))
+        col_compra = self._crear_columna(row_precios, (0, 10))
+        self._crear_label(col_compra, "Precio Compra Q")
+        self.entry_precio_compra = self._crear_entrada(col_compra)
 
-        col_compra = tk.Frame(row_precios, bg=self.color_fondo)
-        col_compra.pack(side="left", fill="both", expand=True, padx=(0, 10))
+        col_venta = self._crear_columna(row_precios)
+        self._crear_label(col_venta, "Precio Venta Q")
+        self.entry_precio_venta = self._crear_entrada(col_venta)
 
-        tk.Label(col_compra, text="Precio Compra Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_precio_compra = tk.Entry(
-            col_compra, 
-            font=("Segoe UI", 10), 
-            bg=self.color_entrada, 
-            relief="flat", 
-            bd=0, 
-            highlightthickness=1, 
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_precio_compra.pack(fill="both", expand=True, ipady=4)
+        row_precios_adicionales = self._crear_fila(self.main_frame, (0, 15))
+        col_blister = self._crear_columna(row_precios_adicionales, (0, 10))
+        self._crear_label(col_blister, "Precio Blister Q")
+        self.entry_precio_blister = self._crear_entrada(col_blister)
 
-        col_venta = tk.Frame(row_precios, bg=self.color_fondo)
-        col_venta.pack(side="left", fill="both", expand=True)
+        col_caja = self._crear_columna(row_precios_adicionales)
+        self._crear_label(col_caja, "Precio Caja Q")
+        self.entry_precio_caja = self._crear_entrada(col_caja)
 
-        tk.Label(col_venta, text="Precio Venta Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_precio_venta = tk.Entry(
-            col_venta, 
-            font=("Segoe UI", 10), 
-            bg=self.color_entrada, 
-            relief="flat", 
-            bd=0, 
-            highlightthickness=1, 
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_precio_venta.pack(fill="both", expand=True, ipady=4)
+        self._crear_label(self.main_frame, "Stock mínimo *")
+        self.entry_stock_minimo = self._crear_entrada(self.main_frame)
+        self.entry_stock_minimo.pack(fill="x", pady=(0, 15))
 
-        # Fila 4.1: Precios adicionales (Blister y Caja)
-        row_precios_adicionales = tk.Frame(self.main_frame, bg=self.color_fondo)
-        row_precios_adicionales.pack(fill="x", pady=(0, 15))
-
-        col_blister = tk.Frame(row_precios_adicionales, bg=self.color_fondo)
-        col_blister.pack(side="left", fill="both", expand=True, padx=(0, 10))
-
-        tk.Label(col_blister, text="Precio Blister Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_precio_blister = tk.Entry(
-            col_blister,
-            font=("Segoe UI", 10),
-            bg=self.color_entrada,
-            relief="flat",
-            bd=0,
-            highlightthickness=1,
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_precio_blister.pack(fill="both", expand=True, ipady=4)
-
-        col_caja = tk.Frame(row_precios_adicionales, bg=self.color_fondo)
-        col_caja.pack(side="left", fill="both", expand=True)
-
-        tk.Label(col_caja, text="Precio Caja Q", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_precio_caja = tk.Entry(
-            col_caja,
-            font=("Segoe UI", 10),
-            bg=self.color_entrada,
-            relief="flat",
-            bd=0,
-            highlightthickness=1,
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_precio_caja.pack(fill="both", expand=True, ipady=4)
-
-        # Stock mínimo
-        tk.Label(self.main_frame, text="Stock mínimo *", font=("Segoe UI", 9, "bold"), bg=self.color_fondo, fg=self.color_texto).pack(anchor="w", pady=(0, 5))
-        self.entry_stock_minimo = tk.Entry(
-            self.main_frame,
-            font=("Segoe UI", 10),
-            bg=self.color_entrada,
-            relief="flat",
-            bd=0,
-            highlightthickness=1,
-            highlightbackground=self.color_borde,
-            highlightcolor=self.color_primario
-        )
-        self.entry_stock_minimo.pack(fill="x", pady=(0, 15), ipady=4)
-
-        # Cargar datos del producto
         self.cargar_datos_producto()
 
-        # Frame de botones
-        btn_frame = tk.Frame(self.main_frame, bg=self.color_fondo)
+        btn_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         btn_frame.pack(fill="x", side="bottom")
 
-        self.btn_guardar = tk.Button(
+        self.btn_guardar = ctk.CTkButton(
             btn_frame,
             text="✓ Actualizar",
-            font=("Segoe UI", 11, "bold"),
-            bg=self.color_exito,
-            fg="white",
-            relief="flat",
-            bd=0,
-            padx=30,
-            pady=10,
-            cursor="hand2",
-            command=self.actualizar_producto
+            font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+            fg_color=self.color_exito,
+            hover_color="#009f7f",
+            text_color="white",
+            height=40,
+            command=self.actualizar_producto,
         )
         self.btn_guardar.pack(side="left", padx=(0, 10))
 
-        self.btn_cancelar = tk.Button(
+        self.btn_cancelar = ctk.CTkButton(
             btn_frame,
             text="✕ Cancelar",
-            font=("Segoe UI", 11, "bold"),
-            bg=self.color_cancelar,
-            fg="white",
-            relief="flat",
-            bd=0,
-            padx=30,
-            pady=10,
-            cursor="hand2",
-            command=self.cerrar
+            font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+            fg_color=self.color_cancelar,
+            hover_color="#b92525",
+            text_color="white",
+            height=40,
+            command=self.cerrar,
         )
         self.btn_cancelar.pack(side="left")
 
         self.protocol("WM_DELETE_WINDOW", self.cerrar)
-        self.entry_nombre.focus()
-        self.grab_set()
+        self.entry_nombre.focus_set()
+
+    def _crear_fila(self, parent, pady):
+        frame = ctk.CTkFrame(parent, fg_color="transparent")
+        frame.pack(fill="x", pady=pady)
+        return frame
+
+    def _crear_columna(self, parent, padx=(0, 0)):
+        frame = ctk.CTkFrame(parent, fg_color="transparent")
+        frame.pack(side="left", fill="both", expand=True, padx=padx)
+        return frame
+
+    def _crear_label(self, parent, text):
+        ctk.CTkLabel(
+            parent,
+            text=text,
+            font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            text_color=self.color_texto,
+        ).pack(anchor="w", pady=(0, 5))
+
+    def _crear_entrada(self, parent):
+        entry = ctk.CTkEntry(
+            parent,
+            font=ctk.CTkFont(family="Segoe UI", size=11),
+            height=36,
+            corner_radius=6,
+            border_width=1,
+            border_color=self.color_borde,
+            fg_color=self.color_entrada,
+            text_color=self.color_texto,
+        )
+        entry.pack(fill="x")
+        return entry
 
     def cargar_datos_producto(self):
-        """Carga los datos del producto en los campos del formulario"""
-        self.entry_nombre.delete(0, tk.END)
         self.entry_nombre.insert(0, self.producto.nombre)
-        self.entry_descripcion.delete(0, tk.END)
         self.entry_descripcion.insert(0, self.producto.descripcion)
-        self.entry_presentacion.delete(0, tk.END)
         self.entry_presentacion.insert(0, self.producto.presentacion)
-        self.entry_categoria.delete(0, tk.END)
-        self.entry_categoria.insert(0, self.producto.categoria)
-        self.entry_precio_compra.delete(0, tk.END)
-        self.entry_precio_compra.insert(0, str(self.producto.precio_compra if self.producto.precio_compra is not None else 0))
-        self.entry_precio_venta.delete(0, tk.END)
-        self.entry_precio_venta.insert(0, str(self.producto.precio_venta if self.producto.precio_venta is not None else 0))
-        self.entry_precio_blister.delete(0, tk.END)
-        self.entry_precio_blister.insert(0, str(self.producto.precio_blister if self.producto.precio_blister is not None else 0))
-        self.entry_precio_caja.delete(0, tk.END)
-        self.entry_precio_caja.insert(0, str(self.producto.precio_caja if self.producto.precio_caja is not None else 0))
-        self.entry_stock_minimo.delete(0, tk.END)
-        self.entry_stock_minimo.insert(0, str(self.producto.stock_minimo if self.producto.stock_minimo is not None else 0))
+        self.entry_categoria.set(self.producto.categoria)
+        self.entry_precio_compra.insert(
+            0,
+            str(
+                self.producto.precio_compra
+                if self.producto.precio_compra is not None
+                else 0
+            ),
+        )
+        self.entry_precio_venta.insert(
+            0,
+            str(
+                self.producto.precio_venta
+                if self.producto.precio_venta is not None
+                else 0
+            ),
+        )
+        self.entry_precio_blister.insert(
+            0,
+            str(
+                self.producto.precio_blister
+                if self.producto.precio_blister is not None
+                else 0
+            ),
+        )
+        self.entry_precio_caja.insert(
+            0,
+            str(
+                self.producto.precio_caja
+                if self.producto.precio_caja is not None
+                else 0
+            ),
+        )
+        self.entry_stock_minimo.insert(
+            0,
+            str(
+                self.producto.stock_minimo
+                if self.producto.stock_minimo is not None
+                else 0
+            ),
+        )
 
     def actualizar_producto(self):
         nombre = self.entry_nombre.get().strip()
@@ -266,7 +224,11 @@ class EditarProducto(tk.Toplevel):
         stock_minimo = self.entry_stock_minimo.get().strip()
 
         if not nombre:
-            messagebox.showwarning("Validación", "Debe ingresar el nombre del producto.")
+            messagebox.showwarning(
+                "Validación",
+                "Debe ingresar el nombre del producto.",
+                parent=self,
+            )
             return
 
         try:
@@ -276,7 +238,11 @@ class EditarProducto(tk.Toplevel):
             precio_caja_val = float(precio_caja) if precio_caja else 0.0
             stock_minimo_val = int(stock_minimo)
         except ValueError:
-            messagebox.showwarning("Validación", "Precio y stock mínimo deben ser numéricos.")
+            messagebox.showwarning(
+                "Validación",
+                "Precio y stock mínimo deben ser numéricos.",
+                parent=self,
+            )
             return
 
         self.inventario.editar_producto(
@@ -289,13 +255,17 @@ class EditarProducto(tk.Toplevel):
             precio_venta_val,
             precio_blister_val,
             precio_caja_val,
-            stock_minimo_val
+            stock_minimo_val,
         )
 
         if self.actualizar_callback:
             self.actualizar_callback()
 
-        messagebox.showinfo("Éxito", "El producto se ha actualizado correctamente.")
+        messagebox.showinfo(
+            "Éxito",
+            "El producto se ha actualizado correctamente.",
+            parent=self,
+        )
         self.destroy()
 
     def cerrar(self):

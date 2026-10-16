@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import customtkinter as ctk
 from pathlib import Path
+from recibos.logica.GenerarRecibo import GenerarRecibo
 import recibos.logica.Recibos as R
 import recibos.logica.CrearReporteRecibos as CRR
 import datetime
@@ -451,11 +452,17 @@ class VentanaRecibos(ctk.CTkFrame):
             return
 
         item = selection[0]
+
         self.ruta_documentos = Path.home() / "Documents/recibos_pos"
         if os.path.exists(f"{self.ruta_documentos}/recibo_{item}.pdf"):
             os.startfile(f"{self.ruta_documentos}/recibo_{item}.pdf")
+            print('existe')
         else:
-            messagebox.showerror('Error', f'recibo_{item}.pdf no fue encontrado, puede ser que el archivo haya sido eliminado o cambiado de ubicación.')
+            for v in self.recibos.recibos:
+                if int(item) == int(v.no_recibo):
+                    generar = GenerarRecibo(v)
+                    generar.crear_recibo()
+                    break
 
     def exportar_recibos_excel(self):
         if not getattr(self.recibos, 'recibos', None):
