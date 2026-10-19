@@ -68,8 +68,6 @@ class VentanaPrincipal(ctk.CTk):
 
         self.resizable(True, True)
 
-        
-
         self.usuario = self.login_frame.login.usuario
         self.inventario = inv.Inventario(self.usuario)
         self.empresa = E.Empresa()

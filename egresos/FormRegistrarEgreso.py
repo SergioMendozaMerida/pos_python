@@ -156,7 +156,7 @@ class FormRegistrarEgreso(ctk.CTkToplevel):
 
         try:
             monto_val = float(monto)
-            nuevo_egreso = E.Egreso(None, datetime.date.today(), self.caja.usuario, razon, proveedor, monto_val)
+            nuevo_egreso = E.Egreso(None, datetime.date.today(), self.caja.usuario, razon, proveedor, monto_val, self.caja.id_sesion)
             nuevo_egreso.registrar_egreso()
             if self.actualizarEgresos: self.actualizarEgresos()
             messagebox.showinfo("Éxito", "Egreso registrado correctamente.")

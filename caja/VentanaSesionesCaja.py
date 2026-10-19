@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import customtkinter as ctk
+from caja.FrameEgresosPorSesionCaja import FrameEgresosPorSesionCaja
+from caja.FrameRecibosPorSesion import FrameRecibosPorSesion
+from caja.FrameVentasPorSesion import FrameVentasPorSesion
 import caja.SesionesCaja as SC
 import datetime
 import caja.CrearReporteSesionCaja as CRSC
@@ -254,8 +257,43 @@ class VentanaSesionesCaja(ctk.CTkFrame):
         # 3. FRAME BOTÓN EXPORTAR
         self.frame_botones_opciones = ctk.CTkFrame(self, fg_color="transparent")
         self.frame_botones_opciones.grid(row=2, column=0, sticky="ew", padx=10, pady=(2, 10))
-        self.frame_botones_opciones.grid_columnconfigure(0, weight=1)
-        self.frame_botones_opciones.grid_columnconfigure(1, weight=0)
+        self.frame_botones_opciones.grid_columnconfigure(3, weight=1)
+
+        self.btn_ver_ventas = ctk.CTkButton(
+            self.frame_botones_opciones,
+            text="Ver Ventas",
+            fg_color=self.color_secundario,
+            hover_color="#74b9ff",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=40,
+            command=self.ver_ventas_por_sesion
+        )
+        self.btn_ver_ventas.grid(row=0, column=0, sticky="w", padx=(0, 8))
+
+        self.btn_ver_recibos = ctk.CTkButton(
+            self.frame_botones_opciones,
+            text="Ver Recibos",
+            fg_color=self.color_secundario,
+            hover_color="#74b9ff",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=40,
+            command=self.ver_recibos_por_sesion
+        )
+        self.btn_ver_recibos.grid(row=0, column=1, sticky="w", padx=(0, 8))
+
+        self.btn_ver_egresos = ctk.CTkButton(
+            self.frame_botones_opciones,
+            text="Ver Egresos",
+            fg_color=self.color_secundario,
+            hover_color="#74b9ff",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=40,
+            command=self.ver_egresos_por_sesion
+        )
+        self.btn_ver_egresos.grid(row=0, column=2, sticky="w")
 
         self.btn_exportar_sesiones_excel = ctk.CTkButton(
             self.frame_botones_opciones,
@@ -269,7 +307,7 @@ class VentanaSesionesCaja(ctk.CTkFrame):
             width=180,
             command=self.exportar_sesiones_excel
         )
-        self.btn_exportar_sesiones_excel.grid(row=0, column=1, sticky="e")
+        self.btn_exportar_sesiones_excel.grid(row=0, column=4, sticky="e")
 
         self.actualizar_tabla()
 
@@ -304,6 +342,57 @@ class VentanaSesionesCaja(ctk.CTkFrame):
                 ),
                 tags=etiquetas_color
             )
+
+    def ver_ventas_por_sesion(self):
+        seleccion = self.tabla_sesiones.selection()
+        if not seleccion:
+            messagebox.showwarning(
+                "Advertencia",
+                "Selecciona una sesión de caja para ver sus ventas."
+            )
+            return
+
+        id_sesion = int(seleccion[0])
+        ventas = self.logica.obtener_ventas_sesion_caja(id_sesion)
+
+        if ventas[0]:
+            FrameVentasPorSesion(self, ventas[1])
+        else:
+            messagebox.showerror('Error', ventas[1])
+
+    def ver_recibos_por_sesion(self):
+        seleccion = self.tabla_sesiones.selection()
+        if not seleccion:
+            messagebox.showwarning(
+                "Advertencia",
+                "Selecciona una sesión de caja para ver sus recibos."
+            )
+            return
+
+        id_sesion = int(seleccion[0])
+        recibos = self.logica.obtener_recibos_sesion_caja(id_sesion)
+
+        if recibos[0]:
+            FrameRecibosPorSesion(self, recibos[1])
+        else:
+            messagebox.showerror('Error', recibos[1])
+
+    def ver_egresos_por_sesion(self):
+        seleccion = self.tabla_sesiones.selection()
+        if not seleccion:
+            messagebox.showwarning(
+                "Advertencia",
+                "Selecciona una sesión de caja para ver sus egresos."
+            )
+            return
+
+        id_sesion = int(seleccion[0])
+        egresos = self.logica.obtener_egresos_sesion_caja(id_sesion)
+
+        if egresos[0]:
+            FrameEgresosPorSesionCaja(self, egresos[1])
+        else:
+            messagebox.showerror('Error', egresos[1])
 
     def filtrar_sesiones(self):
         self.logica.filtrar_sesiones(self.entry_fecha_inicio.get(), self.entry_fecha_fin.get(), self.entry_usuario.get())

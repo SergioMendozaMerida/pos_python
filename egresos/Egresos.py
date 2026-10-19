@@ -13,7 +13,7 @@ class Egresos:
             egresos_db = cursor.fetchall()
             self.egresos.clear()
             for e in egresos_db:
-                self.egresos.append(Egreso(e[0], e[1], e[2], e[3], e[4], e[5]))
+                self.egresos.append(Egreso(e[0], e[1], e[2], e[3], e[4], e[5], e[6]))
             conexion.close()
             return egresos_db
         except Exception as e:
@@ -40,27 +40,28 @@ class Egresos:
             egresos_db = cursor.fetchall()
             self.egresos.clear()
             for e in egresos_db:
-                self.egresos.append(Egreso(e[0], e[1], e[2], e[3], e[4], e[5]))
+                self.egresos.append(Egreso(e[0], e[1], e[2], e[3], e[4], e[5], e[6]))
             conexion.close()
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al filtrar los egresos {e}.")
 
 class Egreso:
-    def __init__(self, id_egreso, fecha, usuario, razon, proveedor, monto):
+    def __init__(self, id_egreso, fecha, usuario, razon, proveedor, monto, id_sesion_caja):
         self.id_egreso = id_egreso
         self.fecha = fecha
         self.usuario = usuario
         self.razon = razon
         self.proveedor = proveedor
         self.monto = monto
+        self.id_sesion_caja = id_sesion_caja
 
     def registrar_egreso(self):
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor()
-            cursor.execute("""INSERT INTO egresos (fecha, usuario, razon, proveedor, monto) 
-                           VALUES (?, ?, ?, ?, ?)""",
-                           (self.fecha, self.usuario, self.razon, self.proveedor, self.monto))
+            cursor.execute("""INSERT INTO egresos (fecha, usuario, razon, proveedor, monto, id_sesion_caja) 
+                           VALUES (?, ?, ?, ?, ?,?)""",
+                           (self.fecha, self.usuario, self.razon, self.proveedor, self.monto, self.id_sesion_caja))
             conexion.commit()
             conexion.close()
         except Exception as e:

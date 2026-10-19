@@ -3,7 +3,7 @@ import sqlite3
 from tkinter import messagebox
 
 class CarrtioVenta:
-    def __init__(self,usuario):
+    def __init__(self,usuario,caja):
         self.productos = []
         self.numero_recibo = 0
         self.fecha = datetime.date.today()
@@ -16,6 +16,7 @@ class CarrtioVenta:
         self.utilidad = 0
 
         self.usuario = usuario
+        self.caja = caja
 
         self.obtener_numero_recibo()
         
@@ -158,8 +159,8 @@ class CarrtioVenta:
                 messagebox.showerror("Error", f"Error al concretar la venta {e}")
 
         try:
-            cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total,usuario, utilidad) VALUES(?,?,?,?,?,?,?,?,?)',
-                        (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total,self.usuario.usuario,self.utilidad))
+            cursor.execute('INSERT INTO recibos (nombre_cliente,direccion,DPI,NIT,telefono,fecha,total,usuario, utilidad, id_sesion_caja) VALUES(?,?,?,?,?,?,?,?,?,?)',
+                        (self.nombre_cliente,self.direccion,self.dpi,self.nit,self.telefono,self.fecha,self.total,self.usuario.usuario,self.utilidad, self.caja.id_sesion))
             conexion.commit()
             self.utilidad = 0
             #self.vaciar_carrito()

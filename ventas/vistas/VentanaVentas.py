@@ -359,7 +359,7 @@ class VentanaVentas(ctk.CTkFrame):
         )
         btn_cancelar.pack(fill="x", padx=15, pady=(0, 8))
 
-        self.carrito = CV.CarrtioVenta(self.usuario)
+        self.carrito = CV.CarrtioVenta(self.usuario,self.caja)
         self.timer_id = None
 
         self.show_productos_inicio()

@@ -63,7 +63,6 @@ class Caja:
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al cerrar la caja {e}.")
         
-
     def obtener_sesion_caja(self):
         try:
             conexion = sqlite3.connect("db_inventario.db")

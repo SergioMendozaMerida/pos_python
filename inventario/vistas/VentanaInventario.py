@@ -371,7 +371,7 @@ class VentanaInventario(ctk.CTkFrame):
         FCAT.FrameCategoria(self)
 
     def abrir_formulario(self):
-        formulario = FP.FormProductos(self, self.inventario, self.actualizar_tabla)
+        formulario = FP.FormProductos(self, self.inventario, self.actualizar_tabla, self.usuario)
 
     def abrir_ingreso_stock(self):
         ingreso_stock = FIS.FrameIngresoStock(self, self.inventario, self.actualizar_tabla)

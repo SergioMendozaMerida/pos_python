@@ -7,11 +7,12 @@ import categoria.FormAddCategoria as FAC
 
 
 class FormProductos(ctk.CTkToplevel):
-    def __init__(self, parent, inventario, actualizar_callback=None):
+    def __init__(self, parent, inventario, actualizar_callback=None, usuario=None):
         super().__init__(parent)
         self.parent = parent
         self.inventario = inventario
         self.actualizar_callback = actualizar_callback
+        self.usuario = usuario.usuario
 
         self.categorias = Cat.Categorias().lista_categorias
 
@@ -254,6 +255,7 @@ class FormProductos(ctk.CTkToplevel):
             precio_caja_val,
             stock_val,
             stock_minimo_val,
+            self.usuario
         )
 
         if self.actualizar_callback:

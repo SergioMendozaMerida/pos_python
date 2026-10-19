@@ -37,11 +37,13 @@ class Inventario:
         except Exception as e:
             messagebox.showerror("Error", f"Error al obtener los productos {e}")
 
-    def ingresar_producto(self, nombre, codigo, descripcion, presentacion, categoria, precio_compra, precio_venta, precio_blister, precio_caja, stock, stock_minimo):
+    def ingresar_producto(self, nombre, codigo, descripcion, presentacion, categoria, precio_compra, 
+                          precio_venta, precio_blister, precio_caja, stock, stock_minimo, usuario):
         try:
             self.cursor.execute("""INSERT INTO productos (nombre,codigo_producto,descripcion,presentacion,categoria,precio_compra,precio_venta,
-                                precio_blister,precio_caja,stock,stock_minimo) VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
-                                (nombre, codigo, descripcion,presentacion,categoria,precio_compra,precio_venta,precio_blister,precio_caja,stock, stock_minimo))
+                                precio_blister,precio_caja,stock,stock_minimo, usuario) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)""",
+                                (nombre, codigo, descripcion,presentacion,categoria,precio_compra,precio_venta,precio_blister,
+                                 precio_caja,stock, stock_minimo, usuario))
             self.conexion.commit()
             self.obtener_productos()
         except Exception as e:
