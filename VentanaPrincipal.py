@@ -1,4 +1,5 @@
 import ctypes
+import sqlite3
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import messagebox
@@ -225,9 +226,52 @@ class VentanaPrincipal(ctk.CTk):
 
     def cerrar_sesion(self):
         if messagebox.askyesno("Cerrar Sesión", "¿Está seguro de que desea salir del sistema?"):
-            # Limpiar todos los elementos de la ventana actual
+            try:
+                self.inventario.cerrar()
+            except sqlite3.Error as error:
+                messagebox.showerror(
+                    "Error al cerrar sesión",
+                    f"No se pudo cerrar la conexión del inventario: {error}",
+                )
+                return
+
             for widget in self.winfo_children():
                 widget.destroy()
+
+            for atributo in (
+                "login_frame",
+                "usuario",
+                "inventario",
+                "empresa",
+                "reporte_ventas",
+                "caja",
+                "ventas",
+                "ventana_inventario",
+                "datos_empresa",
+                "admin_usuarios",
+                "ventana_egresos",
+                "ventana_sesiones_caja",
+                "terminos_condiciones",
+                "ventana_reporte_ventas",
+                "recibos",
+                "ingresos_stock",
+                "frm_menu_bar",
+                "btn_style",
+                "btn_inventario",
+                "btn_ventas",
+                "btn_reporte_ventas",
+                "btn_recibos",
+                "btn_ingresos_stock",
+                "btn_egresos",
+                "btn_sesiones_caja",
+                "btn_datos_empresa",
+                "btn_usuarios",
+                "btn_terminos",
+                "btn_logout",
+                "frames",
+                "botones",
+            ):
+                self.__dict__.pop(atributo, None)
 
             self.state("normal")
             

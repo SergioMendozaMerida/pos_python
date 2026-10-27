@@ -29,17 +29,20 @@ class Caja:
         self.otros_ingresos = 0
         self.egresos = 0
 
-        self.estado = True
         try:
             conexion = sqlite3.connect("db_inventario.db")
-            cursor = conexion.cursor()
-            cursor.execute("""INSERT INTO caja (fecha, usuario, saldo_inicial, ingresos_ventas, otros_ingresos, egresos, saldo_final, 
-                           efectivo_final, diferencia, utilidad_generada, estado) 
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                           (self.fecha, self.usuario, self.saldo_inicial, self.ingresos_ventas, self.otros_ingresos, self.egresos,
-                            self.saldo_final, self.efectivo_final, self.diferencia, self.utilidad_generada, self.estado))
-            conexion.commit()
-            conexion.close()
+            try:
+                cursor = conexion.cursor()
+                cursor.execute("""INSERT INTO caja (fecha, usuario, saldo_inicial, ingresos_ventas, otros_ingresos, egresos, saldo_final, 
+                               efectivo_final, diferencia, utilidad_generada, estado) 
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                               (self.fecha, self.usuario, self.saldo_inicial, self.ingresos_ventas, self.otros_ingresos, self.egresos,
+                                self.saldo_final, self.efectivo_final, self.diferencia, self.utilidad_generada, True))
+                conexion.commit()
+                self.id_sesion = cursor.lastrowid
+                self.estado = True
+            finally:
+                conexion.close()
         except Exception as e:
             messagebox.showerror("Error", f"Se produjo un error al abrir la caja {e}.")
         
@@ -67,7 +70,7 @@ class Caja:
         try:
             conexion = sqlite3.connect("db_inventario.db")
             cursor = conexion.cursor() 
-            cursor.execute("SELECT * FROM caja WHERE id_sesion = (SELECT MAX(id_sesion) FROM caja) AND usuario LIKE ? AND estado = 1",
+            cursor.execute("SELECT * FROM caja WHERE usuario = ? AND estado = 1 ORDER BY id_sesion DESC LIMIT 1;",
                            (self.usuario,))
             sesion = cursor.fetchone()
             

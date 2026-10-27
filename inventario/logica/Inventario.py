@@ -208,3 +208,6 @@ class Inventario:
             self.obtener_productos()
         except Exception as e:
             messagebox.showerror("Error", f"Error al eliminar el producto {e}")
+
+    def cerrar(self):
+        self.conexion.close()
