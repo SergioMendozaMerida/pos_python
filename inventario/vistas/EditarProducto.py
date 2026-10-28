@@ -23,6 +23,9 @@ class EditarProducto(ctk.CTkToplevel):
         self.color_entrada = "#ffffff"
         self.color_texto = "#2d3436"
         self.color_borde = "#dfe6e9"
+        self.color_entrada_deshabilitada = "#e9ecef"
+        self.color_texto_deshabilitado = "#7f8c8d"
+        self.color_borde_deshabilitado = "#ced4da"
 
         self.title("Editar Producto")
         x = max(0, (self.winfo_screenwidth() - 520) // 2)
@@ -103,6 +106,19 @@ class EditarProducto(ctk.CTkToplevel):
         self.entry_stock_minimo.pack(fill="x", pady=(0, 15))
 
         self.cargar_datos_producto()
+        if self.parent.usuario.rol != "admin":
+            for entry in (
+                self.entry_precio_compra,
+                self.entry_precio_venta,
+                self.entry_precio_blister,
+                self.entry_precio_caja,
+            ):
+                entry.configure(
+                    state="disabled",
+                    fg_color=self.color_entrada_deshabilitada,
+                    text_color=self.color_texto_deshabilitado,
+                    border_color=self.color_borde_deshabilitado,
+                )
 
         btn_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         btn_frame.pack(fill="x", side="bottom")

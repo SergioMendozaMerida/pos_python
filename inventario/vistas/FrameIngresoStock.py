@@ -23,6 +23,10 @@ class FrameIngresoStock(ctk.CTkToplevel):
         self.color_boton = "#00b894"
         self.color_cancelar = "#d63031"
         self.color_borde = "#dfe6e9"
+        self.color_entrada_deshabilitada = "#e9ecef"
+        self.color_texto_deshabilitado = "#7f8c8d"
+        self.color_borde_deshabilitado = "#ced4da"
+        self.es_admin = self.parent.usuario.rol == "admin"
 
         self.title("Ingreso de Stock")
         window_width = 650
@@ -160,6 +164,8 @@ class FrameIngresoStock(ctk.CTkToplevel):
             venta_columna, state="disabled", height=36
         )
         self.entry_precio_venta.pack(fill="x")
+        if not self.es_admin:
+            self._estilizar_precios_deshabilitados()
 
         self._crear_label(proveedor_columna, "Proveedor")
         self.entry_proveedor = self._crear_entrada(
@@ -265,6 +271,15 @@ class FrameIngresoStock(ctk.CTkToplevel):
             state=state,
         )
 
+    def _estilizar_precios_deshabilitados(self):
+        for entry in (self.entry_precio_compra, self.entry_precio_venta):
+            entry.configure(
+                state="disabled",
+                fg_color=self.color_entrada_deshabilitada,
+                text_color=self.color_texto_deshabilitado,
+                border_color=self.color_borde_deshabilitado,
+            )
+
     def _crear_boton_buscar(self, parent, command, state="normal", height=38):
         return ctk.CTkButton(
             parent,
@@ -335,6 +350,8 @@ class FrameIngresoStock(ctk.CTkToplevel):
             self.entry_precio_venta.insert(
                 0, str(self.producto_encontrado.precio_venta)
             )
+            if not self.es_admin:
+                self._estilizar_precios_deshabilitados()
             self.entry_cantidad.focus_set()
         else:
             self.lbl_nombre_producto_encontrado.configure(
@@ -349,6 +366,8 @@ class FrameIngresoStock(ctk.CTkToplevel):
             self.entry_precio_venta.delete(0, "end")
             self.entry_precio_compra.configure(state="disabled")
             self.entry_precio_venta.configure(state="disabled")
+            if not self.es_admin:
+                self._estilizar_precios_deshabilitados()
 
     def guardar_stock(self):
         if not self.producto_encontrado:
@@ -358,7 +377,7 @@ class FrameIngresoStock(ctk.CTkToplevel):
             return
 
         cantidad = self.entry_cantidad.get().strip()
-        if not cantidad:
+        if not cantidad or int(cantidad) <= 0:
             messagebox.showerror("Error", "Ingrese una cantidad válida.", parent=self)
             return
 

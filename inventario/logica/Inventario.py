@@ -209,5 +209,54 @@ class Inventario:
         except Exception as e:
             messagebox.showerror("Error", f"Error al eliminar el producto {e}")
 
+    def productos_sin_movimiento(self):
+        try:
+            self.cursor.execute("SELECT * FROM producto_con_mas_tiempo_sin_vender WHERE dias_desde_la_venta > 30")
+            productos = self.cursor.fetchall()
+            productos_sin_movimiento: list[ViewProductosSinMovimiento] = []
+            for p in productos:
+                productos_sin_movimiento.append(
+                    ViewProductosSinMovimiento(
+                        p[0],
+                        p[1],
+                        p[2]
+                    )
+                )
+            return(productos_sin_movimiento)
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al cargar los productos {e}")
     def cerrar(self):
         self.conexion.close()
+
+    def productos_stock_bajo(self):
+        try:
+            self.cursor.execute("SELECT nombre, stock, stock_minimo FROM productos WHERE stock <= stock_minimo")
+            productos = self.cursor.fetchall()
+            productos_sin_movimiento: list[ViewProductosStockBajo] = []
+            for p in productos:
+                productos_sin_movimiento.append(
+                    ViewProductosStockBajo(
+                        p[0],
+                        p[1],
+                        p[2]
+                    )
+                )
+            return(productos_sin_movimiento)
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al cargar los productos {e}")
+    def cerrar(self):
+        self.conexion.close()
+
+class ViewProductosStockBajo():
+    def __init__(self, nombre, stock, stock_minimo):
+        self.nombre = nombre
+        self.stock = stock
+        self.stock_minimo = stock_minimo
+
+class ViewProductosSinMovimiento():
+    def __init__(self, nombre, fecha, dias):
+        self.nombre = nombre
+        self.fecha = fecha
+        self.dias = dias

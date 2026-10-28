@@ -2,6 +2,7 @@ from collections.abc import Callable
 import tkinter as tk
 from tkinter import messagebox, simpledialog, ttk
 import customtkinter as ctk
+from inventario.logica import Producto
 import ventas.logica.CarritoVenta as CV
 import ventas.vistas.FrameTerminarVenta as FTV
 import caja.FrameAbrirCerrarCaja as FAC
@@ -28,6 +29,8 @@ class VentanaVentas(ctk.CTkFrame):
         self.primary_hover = "#74b9ff"
         self.success_color = "#00b894"
         self.danger_color = "#d63031"
+
+        self.notificaciones: list[str] = []
 
         self.icon_agregar_al_carrito = AnabellIcons.obtener_imagen('add_shopping')
         self.icon_buscar = AnabellIcons.obtener_imagen('search_inventory')
@@ -127,7 +130,7 @@ class VentanaVentas(ctk.CTkFrame):
         )
         btn_buscar.grid(row=0, column=1, padx=(10, 0), sticky="ns")
 
-        self.entry_codigo.bind("<Return>", lambda e: self.buscar_por_codigo(self.entry_codigo.get()))
+        self.entry_codigo.bind("<Return>", lambda e: self.agregar_por_codigo(self.entry_codigo.get()))
         self.entry_nombre.bind("<Return>", lambda e: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get()))
         self.entry_descripcion.bind("<Return>", lambda e: self.buscar(self.entry_nombre.get(), self.entry_descripcion.get()))
 
@@ -280,14 +283,22 @@ class VentanaVentas(ctk.CTkFrame):
         self.tabla_carrito.pack(fill="both", expand=True, padx=0, pady=0)
 
         # 3. Columna Resumen y Botones
+        self.frame_panel_derecho = ctk.CTkFrame(
+            self.main_container,
+            fg_color="transparent",
+        )
+        self.frame_panel_derecho.grid(
+            row=0, column=2, sticky="nsew", padx=(5, 0)
+        )
+
         self.frame_concretar_venta = ctk.CTkFrame(
-            self.main_container, 
+            self.frame_panel_derecho,
             fg_color=self.panel_bg, 
             corner_radius=8,
             border_width=1,
             border_color=self.border_color
         )
-        self.frame_concretar_venta.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
+        self.frame_concretar_venta.pack(fill="x", pady=(0, 8))
 
         self.caja_header = ctk.CTkFrame(self.frame_concretar_venta, fg_color="#f8f9fb", corner_radius=6)
         self.caja_header.pack(fill="x", side="top", pady=(5, 15), padx=5)
@@ -359,6 +370,30 @@ class VentanaVentas(ctk.CTkFrame):
         )
         btn_cancelar.pack(fill="x", padx=15, pady=(0, 8))
 
+        self.frame_notificaciones = ctk.CTkFrame(
+            self.frame_panel_derecho,
+            fg_color=self.panel_bg,
+            corner_radius=8,
+            border_width=1,
+            border_color=self.border_color,
+        )
+        self.frame_notificaciones.pack(fill="both", expand=True)
+        ctk.CTkLabel(
+            self.frame_notificaciones,
+            text="Notificaciones",
+            text_color=self.text_color,
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
+        ).pack(anchor="w", padx=12, pady=(10, 5))
+        self.lista_notificaciones = ctk.CTkScrollableFrame(
+            self.frame_notificaciones,
+            fg_color="transparent",
+            scrollbar_button_color=self.border_color,
+        )
+        self.lista_notificaciones.pack(
+            fill="both", expand=True, padx=6, pady=(0, 8)
+        )
+        self.actualizar_frame_notificaciones()
+
         self.carrito = CV.CarrtioVenta(self.usuario,self.caja)
         self.timer_id = None
 
@@ -366,6 +401,33 @@ class VentanaVentas(ctk.CTkFrame):
         self.show_carrito()
 
         self.entry_codigo.focus()
+
+    def actualizar_frame_notificaciones(self):
+        for widget in self.lista_notificaciones.winfo_children():
+            widget.destroy()
+
+        if not self.notificaciones:
+            ctk.CTkLabel(
+                self.lista_notificaciones,
+                text="No hay notificaciones.",
+                text_color=self.sub_text,
+                font=ctk.CTkFont(family="Segoe UI", size=11),
+                anchor="w",
+            ).pack(fill="x", padx=6, pady=6)
+            return
+
+        for notificacion in self.notificaciones:
+            ctk.CTkLabel(
+                self.lista_notificaciones,
+                text=notificacion,
+                text_color=self.text_color,
+                font=ctk.CTkFont(family="Segoe UI", size=11),
+                fg_color="#fff4e5",
+                corner_radius=6,
+                anchor="w",
+                justify="left",
+                wraplength=220,
+            ).pack(fill="x", padx=4, pady=3, ipady=6)
 
     def actualizar_ui_caja(self):
         """Actualiza el diseño, color e icono del botón según el estado de la caja"""
@@ -418,7 +480,7 @@ class VentanaVentas(ctk.CTkFrame):
     def mostrar_detalle_caja(self):
         FDC.FrameDetalleCaja(self, self.caja)
 
-    def buscar_por_codigo(self, codigo):
+    def agregar_por_codigo(self, codigo):
         if not codigo:
             return
 
@@ -432,6 +494,10 @@ class VentanaVentas(ctk.CTkFrame):
             self.entry_codigo.delete(0, tk.END)
             messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
             return
+
+        if producto.stock <= producto.stock_minimo:
+            self.notificaciones.append(f'{producto.nombre} está por debajo del stock minimo.')
+            self.actualizar_frame_notificaciones()
 
         self.carrito.agregar_producto(producto.id_producto, 1)
         self.actualizar_stock_escaneado(producto)
@@ -571,10 +637,14 @@ class VentanaVentas(ctk.CTkFrame):
     def abrir_form_cantidad(self, producto):
         form_cantidad = FormCantidad(self, producto, self.agregar)
 
-    def agregar(self, producto, cantidad=None):
+    def agregar(self, producto: Producto, cantidad=None):
         if self.caja.estado == False:
             messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
             return
+
+        if producto.stock <= producto.stock_minimo:
+            self.notificaciones.append(f'{producto.nombre} está por debajo del stock minimo.')
+            self.actualizar_frame_notificaciones()
 
         #cantidad = simpledialog.askinteger("Cantidad", "Ingrese la Cantidad")
 

@@ -8,6 +8,7 @@ import inventario.vistas.FrameIngresoStock as FIS
 import categoria.FrameCategoria as FCAT
 import inventario.logica.crearReporteInventario as CRI
 from assets.icons.AnabellIcons import AnabellIcons
+from inventario.vistas.ventana_notificaciones import VentanaNotificaciones
 
 class VentanaInventario(ctk.CTkFrame):
     def __init__(self, parent, usuario, inventario):
@@ -22,7 +23,7 @@ class VentanaInventario(ctk.CTkFrame):
         self.color_border = "#dfe6e9"
         
         self.usuario = usuario
-        self.inventario = inventario  
+        self.inventario = inventario
 
         # Frame principal con padding
         self.main_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -121,6 +122,18 @@ class VentanaInventario(ctk.CTkFrame):
             command=lambda: self.buscar_producto(self.entry_nombre.get(), self.entry_descripcion.get(), self.entry_codigo.get())
         )
         btn_buscar.pack(side="left")
+
+        btn_notificaciones = ctk.CTkButton(
+            self.frame_filtros,
+            text="Notificaciones",
+            fg_color="#e67e22",
+            hover_color="#d35400",
+            text_color="white",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            height=36,
+            command=self.abrir_notificaciones,
+        )
+        btn_notificaciones.pack(side="left", padx=(8, 0))
 
         # Frame para tabla y scrollbars
         self.frame_tabla = ctk.CTkFrame(
@@ -298,18 +311,19 @@ class VentanaInventario(ctk.CTkFrame):
         )
         self.btn_editar.pack(side="left", padx=(0, 10), pady=5)
 
-        self.btn_eliminar = ctk.CTkButton(
-            self.frame_botones,
-            text="Eliminar",
-            image=self.icon_borrar,
-            fg_color=self.color_cancelar,
-            hover_color="#c0392b",
-            text_color="white",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            height=40,
-            command=self.eliminar_producto_seleccionado
-        )
-        self.btn_eliminar.pack(side="left", padx=(0, 10), pady=5)
+        if self.usuario.rol == "admin":
+            self.btn_eliminar = ctk.CTkButton(
+                self.frame_botones,
+                text="Eliminar",
+                image=self.icon_borrar,
+                fg_color=self.color_cancelar,
+                hover_color="#c0392b",
+                text_color="white",
+                font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+                height=40,
+                command=self.eliminar_producto_seleccionado
+            )
+            self.btn_eliminar.pack(side="left", padx=(0, 10), pady=5)
 
         self.btn_categorias = ctk.CTkButton(
             self.frame_botones,
@@ -369,6 +383,9 @@ class VentanaInventario(ctk.CTkFrame):
 
     def abrir_frame_categorias(self):
         FCAT.FrameCategoria(self)
+
+    def abrir_notificaciones(self):
+        VentanaNotificaciones(self, self.inventario)
 
     def abrir_formulario(self):
         formulario = FP.FormProductos(self, self.inventario, self.actualizar_tabla, self.usuario)
