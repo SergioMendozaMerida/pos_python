@@ -5,6 +5,7 @@ import customtkinter as ctk
 from tkinter import messagebox
 import inventario.logica.Inventario as inv
 import inventario.vistas.VentanaInventario as vi
+from ventas.vistas.FrameAnalisisDeVentas import FrameAnalisisDeVentas
 import ventas.vistas.VentanaVentas as Vv
 import ventas.vistas.VentanaReporteVentas as Vrv
 import ventas.logica.ReporteVentas as Rv
@@ -133,6 +134,15 @@ class VentanaPrincipal(ctk.CTk):
             **self.btn_style
         )
         self.btn_reporte_ventas.pack(side="left", padx=3, pady=7)
+        
+        self.btn_analisis_ventas = ctk.CTkButton(
+            self.frm_menu_bar, 
+            text="Analitycs",
+            image=self.icon_reports,
+            command=lambda: self.draw_ventana_analisis_ventas(self.btn_analisis_ventas),
+            **self.btn_style
+        )
+        self.btn_analisis_ventas.pack(side="left", padx=3, pady=7)
 
         self.btn_recibos = ctk.CTkButton(
             self.frm_menu_bar, 
@@ -218,7 +228,7 @@ class VentanaPrincipal(ctk.CTk):
 
         self.botones = [self.btn_inventario, self.btn_ventas, self.btn_reporte_ventas, self.btn_recibos, self.btn_datos_empresa, 
                         self.btn_usuarios if self.usuario.rol == "admin" else None, self.btn_ingresos_stock, self.btn_egresos, 
-                        self.btn_sesiones_caja, self.btn_terminos, self.btn_logout]
+                        self.btn_sesiones_caja, self.btn_terminos, self.btn_logout, self.btn_analisis_ventas]
 
         self.draw_frames(self.ventas, self.btn_ventas)
         self.state("zoomed")  # Maximiza la ventana al iniciar
@@ -296,6 +306,16 @@ class VentanaPrincipal(ctk.CTk):
         self.ventana_inventario = vi.VentanaInventario(self, self.usuario, self.inventario)
         self.frames.append(self.ventana_inventario)
         self.draw_frames(self.ventana_inventario, boton)
+
+    def draw_ventana_analisis_ventas(self, boton):
+        res = self.validar_existencia_ventana(FrameAnalisisDeVentas)
+        if res:
+            self.draw_frames(self.ventana_analisis_ventas, boton)
+            return
+
+        self.ventana_analisis_ventas = FrameAnalisisDeVentas(self)
+        self.frames.append(self.ventana_analisis_ventas)
+        self.draw_frames(self.ventana_analisis_ventas, boton)
 
     def draw_ventana_datos_empresa(self, boton):
         res = self.validar_existencia_ventana(FE.FrameEmpresa)
