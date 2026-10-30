@@ -125,8 +125,8 @@ class FrameTerminarVenta(ctk.CTkToplevel):
     def calcular_cambio(self, event=None):
         self.timer_id = None
         try:
-            cambio = float(self.entry_pago.get()) - self.carrito.total
-            self.lbl_cambio.configure(text=f"Cambio: Q {cambio:,.2f}")
+            self.carrito.cambio = float(self.entry_pago.get()) - self.carrito.total
+            self.lbl_cambio.configure(text=f"Cambio: Q {self.carrito.cambio:,.2f}")
             return True
         except ValueError:
             self.lbl_cambio.configure(
@@ -141,6 +141,7 @@ class FrameTerminarVenta(ctk.CTkToplevel):
         self.destroy()
 
     def concretar_venta(self, event=None):
+        self.carrito.denominacion_pago = self.entry_pago.get()
         self.carrito.concretar_venta()
         messagebox.showinfo("Venta exitosa", "Venta registrada exitosamente.")
         self.limpiar_carrito()

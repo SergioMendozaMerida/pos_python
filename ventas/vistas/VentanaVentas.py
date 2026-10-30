@@ -495,7 +495,7 @@ class VentanaVentas(ctk.CTkFrame):
             messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
             return
 
-        if producto.stock <= producto.stock_minimo:
+        if producto.stock - 1 <= producto.stock_minimo:
             self.notificaciones.append(f'{producto.nombre} está por debajo del stock minimo.')
             self.actualizar_frame_notificaciones()
 
@@ -642,7 +642,7 @@ class VentanaVentas(ctk.CTkFrame):
             messagebox.showerror("Error", "La caja se encuentra cerrada. Debe aperturar caja para registrar una venta.")
             return
 
-        if producto.stock <= producto.stock_minimo:
+        if producto.stock - cantidad <= producto.stock_minimo:
             self.notificaciones.append(f'{producto.nombre} está por debajo del stock minimo.')
             self.actualizar_frame_notificaciones()
 

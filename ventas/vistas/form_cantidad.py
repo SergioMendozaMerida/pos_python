@@ -75,6 +75,7 @@ class FormCantidad(ctk.CTkToplevel):
         self.entry_cantidad.pack(padx=16, fill="x")
         self.entry_cantidad.set(1)
         self.entry_cantidad.bind("<Return>", lambda event: self.aceptar())
+        self.entry_cantidad.focus_set()
 
         botones = ctk.CTkFrame(card, fg_color="transparent")
         botones.pack(fill="x", padx=16, pady=(12, 12))
